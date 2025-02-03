@@ -22,9 +22,12 @@ The `cef-ui-tools` crate exists to deal with platform-specific issues in pure Ru
 
 ## Installation
 
+First, download the necessary CEF artifacts from the following link: [CEF Artifacts](https://github.com/hytopiagg/cef-ui/releases/tag/cef-artifacts-v0.1.0)
+
 If you're using VSCode, there are `Debug` and `Release` configurations. If you're on the command line, you can do the following:
 
 ```
+export CEF_ARTIFACTS_DIR=/path/to/cef/artifacts
 cargo cef-build-debug
 cargo cef-build-release
 ```

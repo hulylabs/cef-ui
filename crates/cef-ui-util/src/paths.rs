@@ -32,8 +32,3 @@ pub fn get_cef_target_dir(profile: &str) -> Result<PathBuf> {
 pub fn get_cef_artifacts_dir() -> Result<PathBuf> {
     Ok(var(CEF_ARTIFACTS_DIR)?.into())
 }
-
-/// Get the cef directory. Only call within build.rs!
-pub fn get_cef_cef_dir() -> Result<PathBuf> {
-    Ok(get_cef_artifacts_dir()?.join(CEF_DIRECTORY))
-}
