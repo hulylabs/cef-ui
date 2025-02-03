@@ -1,6 +1,6 @@
 use crate::{
     ref_counted_ptr, BrowserProcessHandler, CefString, CommandLine, RefCountedPtr, Wrappable,
-    Wrapped
+    RenderProcesshandler, Wrapped
 };
 use cef_ui_sys::{
     cef_app_t, cef_browser_process_handler_t, cef_command_line_t, cef_render_process_handler_t,
@@ -46,11 +46,9 @@ pub trait AppCallbacks: Send + Sync + 'static {
     /// function is called on multiple threads in the browser process.
     fn get_browser_process_handler(&mut self) -> Option<BrowserProcessHandler>;
 
-    // TODO: Fix this!
-
-    // /// Return the handler for functionality specific to the render process. This
-    // /// function is called on the render process main thread.
-    // fn get_render_process_handler(&mut self) -> Option<RenderProcessHandler>;
+    /// Return the handler for functionality specific to the render process. This
+    /// function is called on the render process main thread.
+    fn get_render_process_handler(&mut self) -> Option<RenderProcessHandler>;
 }
 
 // Implement this structure to provide handler implementations. Methods will be
@@ -141,7 +139,12 @@ impl AppWrapper {
     unsafe extern "C" fn c_get_render_process_handler(
         this: *mut cef_app_t
     ) -> *mut cef_render_process_handler_t {
-        todo!()
+        let this: &mut Self = Wrapped::wrappable(this);
+
+        this.0
+            .get_render_process_handler()
+            .map(|handler| handler.into_raw())
+            .unwrap_or_else(null_mut)
     }
 }
 
@@ -159,7 +162,7 @@ impl Wrappable for AppWrapper {
                 on_register_custom_schemes:        None,
                 get_resource_bundle_handler:       None,
                 get_browser_process_handler:       Some(Self::c_get_browser_process_handler),
-                get_render_process_handler:        None
+                get_render_process_handler:        Some(Self::c_get_render_process_handler),
             },
             self
         )

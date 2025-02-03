@@ -22,6 +22,7 @@ mod platform;
 mod process;
 mod refcounted;
 mod render_handler;
+mod render_process_handler;
 mod request;
 mod request_context;
 mod request_context_handler;
