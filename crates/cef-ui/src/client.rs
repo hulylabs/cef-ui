@@ -1,14 +1,8 @@
 use crate::{
-    keyboard_handler::KeyboardHandler, ref_counted_ptr, ContextMenuHandler, LifeSpanHandler,
-    RefCountedPtr, RenderHandler, Wrappable, Wrapped
+    browser, frame, keyboard_handler::KeyboardHandler, ref_counted_ptr, Browser, ContextMenuHandler, Frame, LifeSpanHandler, ProcessId, ProcessMessage, RefCountedPtr, RenderHandler, Wrappable, Wrapped
 };
 use cef_ui_sys::{
-    cef_audio_handler_t, cef_browser_t, cef_client_t, cef_command_handler_t,
-    cef_context_menu_handler_t, cef_dialog_handler_t, cef_display_handler_t,
-    cef_download_handler_t, cef_drag_handler_t, cef_find_handler_t, cef_focus_handler_t,
-    cef_frame_handler_t, cef_frame_t, cef_jsdialog_handler_t, cef_keyboard_handler_t,
-    cef_life_span_handler_t, cef_load_handler_t, cef_permission_handler_t, cef_print_handler_t,
-    cef_process_id_t, cef_process_message_t, cef_render_handler_t, cef_request_handler_t
+    cef_audio_handler_t, cef_browser_t, cef_client_t, cef_command_handler_t, cef_context_menu_handler_t, cef_dialog_handler_t, cef_display_handler_t, cef_download_handler_t, cef_drag_handler_t, cef_find_handler_t, cef_focus_handler_t, cef_focus_source_t, cef_frame_handler_t, cef_frame_t, cef_jsdialog_handler_t, cef_keyboard_handler_t, cef_life_span_handler_t, cef_load_handler_t, cef_permission_handler_t, cef_print_handler_t, cef_process_id_t, cef_process_message_t, cef_render_handler_t, cef_request_handler_t
 };
 use std::{ffi::c_int, mem::zeroed, ptr::null_mut};
 
@@ -92,15 +86,10 @@ pub trait ClientCallbacks: Send + Sync + 'static {
     // struct _cef_request_handler_t*(CEF_CALLBACK* get_request_handler)(
     // struct _cef_client_t* self);
 
-    // /// Called when a new message is received from a different process. Return
-    // /// true (1) if the message was handled or false (0) otherwise.  It is safe to
-    // /// keep a reference to |message| outside of this callback.
-    // int(CEF_CALLBACK* on_process_message_received)(
-    // struct _cef_client_t* self,
-    // struct _cef_browser_t* browser,
-    // struct _cef_frame_t* frame,
-    // cef_process_id_t source_process,
-    // struct _cef_process_message_t* message);
+    /// Called when a new message is received from a different process. Return
+    /// true (1) if the message was handled or false (0) otherwise.  It is safe to
+    /// keep a reference to |message| outside of this callback.
+    fn on_process_message_received(&mut self, browser: Browser, frame: Frame, source_process: ProcessId, message: ProcessMessage) -> bool;
 }
 
 // Implement this structure to provide handler implementations.
@@ -267,14 +256,24 @@ impl ClientWrapper {
     /// Called when a new message is received from a different process. Return
     /// true (1) if the message was handled or false (0) otherwise.  It is safe to
     /// keep a reference to |message| outside of this callback.
-    unsafe extern "C" fn c_process_message_received(
+    unsafe extern "C" fn c_on_process_message_received(
         this: *mut cef_client_t,
         browser: *mut cef_browser_t,
         frame: *mut cef_frame_t,
         source_process: cef_process_id_t,
         message: *mut cef_process_message_t
     ) -> c_int {
-        todo!()
+        let this: &mut Self = Wrapped::wrappable(this);
+        let browser = Browser::from_ptr_unchecked(browser);
+        let frame = Frame::from_ptr_unchecked(frame);
+        let source_process = match source_process {
+            cef_process_id_t::PID_BROWSER => ProcessId::Browser,
+            cef_process_id_t::PID_RENDERER => ProcessId::Renderer,
+        };
+        let message = ProcessMessage::from_ptr_unchecked(message);
+
+        this.0
+            .on_process_message_received(browser, frame, source_process, message) as c_int
     }
 }
 
@@ -306,7 +305,7 @@ impl Wrappable for ClientWrapper {
                 get_print_handler:           None,
                 get_render_handler:          Some(Self::c_get_render_handler),
                 get_request_handler:         None,
-                on_process_message_received: None
+                on_process_message_received: Some(Self::c_on_process_message_received)
             },
             self
         )
