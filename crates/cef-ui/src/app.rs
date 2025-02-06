@@ -1,6 +1,6 @@
 use crate::{
     ref_counted_ptr, BrowserProcessHandler, CefString, CommandLine, RefCountedPtr, Wrappable,
-    RenderProcesshandler, Wrapped
+    RenderProcessHandler, Wrapped
 };
 use cef_ui_sys::{
     cef_app_t, cef_browser_process_handler_t, cef_command_line_t, cef_render_process_handler_t,

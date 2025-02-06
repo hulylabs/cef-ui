@@ -38,6 +38,7 @@ mod types;
 mod url_request;
 mod values;
 mod x509_certificate;
+mod v8_context;
 
 pub use accessibility_handler::*;
 pub use app::*;
@@ -63,6 +64,7 @@ pub use platform::*;
 pub use process::*;
 pub use refcounted::*;
 pub use render_handler::*;
+pub use render_process_handler::*;
 pub use request::*;
 pub use request_context::*;
 pub use request_context_handler::*;
@@ -78,6 +80,7 @@ pub use types::*;
 pub use url_request::*;
 pub use values::*;
 pub use x509_certificate::*;
+pub use v8_context::*;
 
 // TODO: Make a macro for all the pointer conversion functions.
 

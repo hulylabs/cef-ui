@@ -17,7 +17,7 @@ impl Display for FfiError {
 
 impl std::error::Error for FfiError {}
 
-/// A macro to simplify the process of calling of calling CEF functions.
+/// A macro to simplify the process of calling CEF functions.
 /// This will check if the function pointer is available and return an
 /// error if it is not.
 #[macro_export]
