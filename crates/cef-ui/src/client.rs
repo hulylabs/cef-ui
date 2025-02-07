@@ -1,8 +1,8 @@
 use crate::{
-    browser, frame, keyboard_handler::KeyboardHandler, ref_counted_ptr, Browser, ContextMenuHandler, Frame, LifeSpanHandler, ProcessId, ProcessMessage, RefCountedPtr, RenderHandler, Wrappable, Wrapped
+    keyboard_handler::KeyboardHandler, ref_counted_ptr, Browser, ContextMenuHandler, Frame, LifeSpanHandler, ProcessId, ProcessMessage, RefCountedPtr, RenderHandler, Wrappable, Wrapped
 };
 use cef_ui_sys::{
-    cef_audio_handler_t, cef_browser_t, cef_client_t, cef_command_handler_t, cef_context_menu_handler_t, cef_dialog_handler_t, cef_display_handler_t, cef_download_handler_t, cef_drag_handler_t, cef_find_handler_t, cef_focus_handler_t, cef_focus_source_t, cef_frame_handler_t, cef_frame_t, cef_jsdialog_handler_t, cef_keyboard_handler_t, cef_life_span_handler_t, cef_load_handler_t, cef_permission_handler_t, cef_print_handler_t, cef_process_id_t, cef_process_message_t, cef_render_handler_t, cef_request_handler_t
+    cef_audio_handler_t, cef_browser_t, cef_client_t, cef_command_handler_t, cef_context_menu_handler_t, cef_dialog_handler_t, cef_display_handler_t, cef_download_handler_t, cef_drag_handler_t, cef_find_handler_t, cef_focus_handler_t, cef_frame_handler_t, cef_frame_t, cef_jsdialog_handler_t, cef_keyboard_handler_t, cef_life_span_handler_t, cef_load_handler_t, cef_permission_handler_t, cef_print_handler_t, cef_process_id_t, cef_process_message_t, cef_render_handler_t, cef_request_handler_t
 };
 use std::{ffi::c_int, mem::zeroed, ptr::null_mut};
 

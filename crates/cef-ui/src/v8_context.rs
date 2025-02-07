@@ -1,9 +1,9 @@
 
-use std::{fmt::Arguments, mem::zeroed};
+use std::mem::zeroed;
 
 use anyhow::Result;
 
-use cef_ui_sys::{cef_string_t, cef_v8_propertyattribute_t, cef_v8context_get_current_context, cef_v8context_get_entered_context, cef_v8context_in_context, cef_v8context_t, cef_v8exception_t, cef_v8handler_t, cef_v8value_create_function, cef_v8value_create_int, cef_v8value_create_string, cef_v8value_t, _SC_TYPED_MEMORY_OBJECTS};
+use cef_ui_sys::{cef_string_t, cef_v8_propertyattribute_t, cef_v8context_get_current_context, cef_v8context_get_entered_context, cef_v8context_in_context, cef_v8context_t, cef_v8handler_t, cef_v8value_create_function, cef_v8value_create_int, cef_v8value_create_string, cef_v8value_t};
 
 use crate::{ref_counted_ptr, try_c, Browser, CefString, Frame, RefCountedPtr, Wrappable, Wrapped};
 
@@ -148,7 +148,7 @@ impl V8HandlerWrapper {
         Self(Box::new(delegate))
     }
 
-    // TODO: use arguments, retval and exception
+    // TODO: use retval and exception
     /// Handle execution of the function identified by |name|. |object| is the
     /// receiver ('this' object) of the function. |arguments| is the list of
     /// arguments passed to the function. If execution succeeds set |retval| to
@@ -160,8 +160,8 @@ impl V8HandlerWrapper {
         object: *mut cef_v8value_t,
         arguments_count: usize,
         arguments: *const *mut cef_v8value_t,
-        retval: *mut *mut cef_v8value_t,
-        exception: *mut cef_string_t
+        _retval: *mut *mut cef_v8value_t,
+        _exception: *mut cef_string_t
     ) -> std::os::raw::c_int {
         let this: &mut Self = Wrapped::wrappable(this);
         let name = CefString::from_ptr_unchecked(name).into();
