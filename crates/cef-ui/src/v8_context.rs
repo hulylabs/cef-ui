@@ -1,5 +1,5 @@
 
-use std::mem::zeroed;
+use std::{fmt::Arguments, mem::zeroed};
 
 use anyhow::Result;
 
@@ -120,7 +120,13 @@ pub trait V8HandlerCallbacks: Send + Sync + 'static {
     /// arguments passed to the function. If execution succeeds set |retval| to
     /// the function return value. If execution fails set |exception| to the
     /// exception that will be thrown. Return true (1) if execution was handled.
-    fn execute(&mut self, name: String, object: V8Value, arguments_count: usize) -> Result<i32>;
+    fn execute(
+        &mut self,
+        name: String,
+        object: V8Value,
+        arguments_count: usize,
+        arguments: Vec<V8Value>
+    ) -> Result<i32>;
 }
 
 // Structure that should be implemented to handle V8 function calls. The
@@ -160,9 +166,17 @@ impl V8HandlerWrapper {
         let this: &mut Self = Wrapped::wrappable(this);
         let name = CefString::from_ptr_unchecked(name).into();
         let object: V8Value = V8Value::from_ptr_unchecked(object);
+        let arguments = if arguments_count > 0 {
+            std::slice::from_raw_parts(arguments, arguments_count)
+            .iter()
+            .map(|&arg| V8Value::from_ptr_unchecked(arg))
+            .collect()
+        } else {
+            vec![]
+        };
 
         this.0
-            .execute(name, object, arguments_count).unwrap()
+            .execute(name, object, arguments_count, arguments).unwrap()
     }
 }
 
