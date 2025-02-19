@@ -18,12 +18,12 @@ fn main() -> Result<()> {
     // Linker flags on x86_64 Windows.
     #[cfg(all(target_os = "windows", target_arch = "x86_64"))]
     {
-        use cef_ui_util::get_cef_cef_dir;
+        use cef_ui_util::get_cef_artifacts_dir;
 
-        let cef_dir = get_cef_cef_dir()?;
+        let artifacts_dir = get_cef_artifacts_dir()?;
 
         // Link statically to the CEF sandbox.
-        println!("cargo:rustc-link-search=native={}", cef_dir.display());
+        println!("cargo:rustc-link-search=native={}", artifacts_dir.display());
         println!("cargo:rustc-link-lib=static=cef_sandbox");
 
         // Link dynamically to CEF.

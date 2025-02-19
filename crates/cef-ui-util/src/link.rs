@@ -1,8 +1,6 @@
 use std::env::var;
 
-use crate::{
-    copy_files, get_cef_artifacts_dir, get_cef_target_dir
-};
+use crate::{copy_files, get_cef_artifacts_dir, get_cef_target_dir};
 use anyhow::Result;
 
 /// Call this in your binary crate's build.rs
@@ -27,7 +25,10 @@ pub fn link_cef() -> Result<()> {
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
     {
         // This tells Rust where to find the CEF framework at compile time.
-        println!("cargo:rustc-link-search=framework={}", cef_dir.display());
+        println!(
+            "cargo:rustc-link-search=framework={}",
+            artifacts_dir.display()
+        );
     }
 
     // Linker flags on x86_64 Windows.
@@ -37,7 +38,7 @@ pub fn link_cef() -> Result<()> {
         copy_cef_windows()?;
 
         // This tells Rust where to find libcef.lib at compile time.
-        println!("cargo:rustc-link-search=native={}", cef_dir.display());
+        println!("cargo:rustc-link-search=native={}", artifacts_dir.display());
     }
 
     Ok(())
