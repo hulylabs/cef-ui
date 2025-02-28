@@ -33,12 +33,13 @@ mod settings;
 mod shared_memory_region;
 mod ssl;
 mod string;
+mod task;
 mod time;
 mod types;
 mod url_request;
+mod v8_context;
 mod values;
 mod x509_certificate;
-mod v8_context;
 
 pub use accessibility_handler::*;
 pub use app::*;
@@ -75,12 +76,13 @@ pub use settings::*;
 pub use shared_memory_region::*;
 pub use ssl::*;
 pub use string::*;
+pub use task::*;
 pub use time::*;
 pub use types::*;
 pub use url_request::*;
+pub use v8_context::*;
 pub use values::*;
 pub use x509_certificate::*;
-pub use v8_context::*;
 
 // TODO: Make a macro for all the pointer conversion functions.
 
