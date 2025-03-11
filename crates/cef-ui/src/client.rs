@@ -1,8 +1,15 @@
 use crate::{
-    keyboard_handler::KeyboardHandler, ref_counted_ptr, Browser, ContextMenuHandler, Frame, LifeSpanHandler, ProcessId, ProcessMessage, RefCountedPtr, RenderHandler, Wrappable, Wrapped
+    Browser, ContextMenuHandler, Frame, LifeSpanHandler, LoadHandler, ProcessId, ProcessMessage,
+    RefCountedPtr, RenderHandler, Wrappable, Wrapped, keyboard_handler::KeyboardHandler,
+    ref_counted_ptr
 };
 use cef_ui_sys::{
-    cef_audio_handler_t, cef_browser_t, cef_client_t, cef_command_handler_t, cef_context_menu_handler_t, cef_dialog_handler_t, cef_display_handler_t, cef_download_handler_t, cef_drag_handler_t, cef_find_handler_t, cef_focus_handler_t, cef_frame_handler_t, cef_frame_t, cef_jsdialog_handler_t, cef_keyboard_handler_t, cef_life_span_handler_t, cef_load_handler_t, cef_permission_handler_t, cef_print_handler_t, cef_process_id_t, cef_process_message_t, cef_render_handler_t, cef_request_handler_t
+    cef_audio_handler_t, cef_browser_t, cef_client_t, cef_command_handler_t,
+    cef_context_menu_handler_t, cef_dialog_handler_t, cef_display_handler_t,
+    cef_download_handler_t, cef_drag_handler_t, cef_find_handler_t, cef_focus_handler_t,
+    cef_frame_handler_t, cef_frame_t, cef_jsdialog_handler_t, cef_keyboard_handler_t,
+    cef_life_span_handler_t, cef_load_handler_t, cef_permission_handler_t, cef_print_handler_t,
+    cef_process_id_t, cef_process_message_t, cef_render_handler_t, cef_request_handler_t
 };
 use std::{ffi::c_int, mem::zeroed, ptr::null_mut};
 
@@ -70,9 +77,8 @@ pub trait ClientCallbacks: Send + Sync + 'static {
     /// Return the handler for browser life span events.
     fn get_life_span_handler(&mut self) -> Option<LifeSpanHandler>;
 
-    // /// Return the handler for browser load status events.
-    // struct _cef_load_handler_t*(CEF_CALLBACK* get_load_handler)(
-    // struct _cef_client_t* self);
+    /// Return the handler for browser load status events.
+    fn get_load_handler(&mut self) -> Option<LoadHandler>;
 
     // /// Return the handler for printing on Linux. If a print handler is not
     // /// provided then printing will not be supported on the Linux platform.
@@ -89,7 +95,13 @@ pub trait ClientCallbacks: Send + Sync + 'static {
     /// Called when a new message is received from a different process. Return
     /// true (1) if the message was handled or false (0) otherwise.  It is safe to
     /// keep a reference to |message| outside of this callback.
-    fn on_process_message_received(&mut self, browser: Browser, frame: Frame, source_process: ProcessId, message: ProcessMessage) -> bool;
+    fn on_process_message_received(
+        &mut self,
+        browser: Browser,
+        frame: Frame,
+        source_process: ProcessId,
+        message: ProcessMessage
+    ) -> bool;
 }
 
 // Implement this structure to provide handler implementations.
@@ -268,7 +280,7 @@ impl ClientWrapper {
         let frame = Frame::from_ptr_unchecked(frame);
         let source_process = match source_process {
             cef_process_id_t::PID_BROWSER => ProcessId::Browser,
-            cef_process_id_t::PID_RENDERER => ProcessId::Renderer,
+            cef_process_id_t::PID_RENDERER => ProcessId::Renderer
         };
         let message = ProcessMessage::from_ptr_unchecked(message);
 
