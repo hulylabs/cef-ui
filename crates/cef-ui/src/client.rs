@@ -237,7 +237,12 @@ impl ClientWrapper {
 
     /// Return the handler for browser load status events.
     unsafe extern "C" fn c_get_load_handler(this: *mut cef_client_t) -> *mut cef_load_handler_t {
-        todo!()
+        let this: &mut Self = Wrapped::wrappable(this);
+
+        this.0
+            .get_load_handler()
+            .map(|handler| handler.into_raw())
+            .unwrap_or(null_mut())
     }
 
     /// Return the handler for printing on Linux. If a print handler is not
@@ -313,7 +318,7 @@ impl Wrappable for ClientWrapper {
                 get_jsdialog_handler:        None,
                 get_keyboard_handler:        Some(Self::c_get_keyboard_handler),
                 get_life_span_handler:       Some(Self::c_get_life_span_handler),
-                get_load_handler:            None,
+                get_load_handler:            Some(Self::c_get_load_handler),
                 get_print_handler:           None,
                 get_render_handler:          Some(Self::c_get_render_handler),
                 get_request_handler:         None,
