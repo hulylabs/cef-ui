@@ -1,7 +1,7 @@
 use crate::{copy_files, get_cef_target_dir};
 use anyhow::Result;
 use std::{
-    fs::{copy, create_dir_all, remove_dir_all, File},
+    fs::{File, copy, create_dir_all, remove_dir_all},
     io::{Read, Write},
     path::{Path, PathBuf}
 };
@@ -92,7 +92,7 @@ impl AppBundleSettings {
         copy_files(
             &self
                 .artifacts_dir
-                .join("cef/Chromium Embedded Framework.framework"),
+                .join("Chromium Embedded Framework.framework"),
             &app_dir.join("Contents/Frameworks/Chromium Embedded Framework.framework")
         )?;
 
