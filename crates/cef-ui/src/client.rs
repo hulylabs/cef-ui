@@ -1,6 +1,6 @@
 use crate::{
-    keyboard_handler::KeyboardHandler, ref_counted_ptr, ContextMenuHandler, LifeSpanHandler,
-    RefCountedPtr, RenderHandler, Wrappable, Wrapped
+    ContextMenuHandler, DisplayHandler, LifeSpanHandler, RefCountedPtr, RenderHandler, Wrappable,
+    Wrapped, keyboard_handler::KeyboardHandler, ref_counted_ptr
 };
 use cef_ui_sys::{
     cef_audio_handler_t, cef_browser_t, cef_client_t, cef_command_handler_t,
@@ -34,9 +34,8 @@ pub trait ClientCallbacks: Send + Sync + 'static {
     // struct _cef_dialog_handler_t*(CEF_CALLBACK* get_dialog_handler)(
     // struct _cef_client_t* self);
 
-    // /// Return the handler for browser display state events.
-    // struct _cef_display_handler_t*(CEF_CALLBACK* get_display_handler)(
-    // struct _cef_client_t* self);
+    /// Return the handler for browser display state events.
+    fn get_display_handler(&mut self) -> Option<DisplayHandler>;
 
     // /// Return the handler for download events. If no handler is returned
     // /// downloads will not be allowed.
@@ -162,7 +161,12 @@ impl ClientWrapper {
     unsafe extern "C" fn c_get_display_handler(
         this: *mut cef_client_t
     ) -> *mut cef_display_handler_t {
-        todo!()
+        let this: &mut Self = Wrapped::wrappable(this);
+
+        this.0
+            .get_display_handler()
+            .map(|handler| handler.into_raw())
+            .unwrap_or(null_mut())
     }
 
     /// Return the handler for download events. If no handler is returned
@@ -292,7 +296,7 @@ impl Wrappable for ClientWrapper {
                 get_command_handler:         None,
                 get_context_menu_handler:    Some(Self::c_get_context_menu_handler),
                 get_dialog_handler:          None,
-                get_display_handler:         None,
+                get_display_handler:         Some(Self::c_get_display_handler),
                 get_download_handler:        None,
                 get_drag_handler:            None,
                 get_find_handler:            None,
