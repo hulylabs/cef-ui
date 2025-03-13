@@ -1,10 +1,11 @@
 use bitflags::bitflags;
 use cef_ui_sys::{
-    cef_cursor_info_t, cef_cursor_type_t, cef_errorcode_t, cef_horizontal_alignment_t,
-    cef_insets_t, cef_log_items_t, cef_log_severity_t, cef_paint_element_type_t, cef_point_t,
-    cef_range_t, cef_rect_t, cef_referrer_policy_t, cef_resource_type_t, cef_screen_info_t,
-    cef_size_t, cef_state_t, cef_termination_status_t, cef_text_input_mode_t, cef_thread_id_t,
-    cef_touch_handle_state_flags_t, cef_touch_handle_state_flags_t_CEF_THS_FLAG_ALPHA,
+    cef_cursor_handle_t, cef_cursor_info_t, cef_cursor_type_t, cef_errorcode_t,
+    cef_horizontal_alignment_t, cef_insets_t, cef_log_items_t, cef_log_severity_t,
+    cef_paint_element_type_t, cef_point_t, cef_range_t, cef_rect_t, cef_referrer_policy_t,
+    cef_resource_type_t, cef_screen_info_t, cef_size_t, cef_state_t, cef_termination_status_t,
+    cef_text_input_mode_t, cef_thread_id_t, cef_touch_handle_state_flags_t,
+    cef_touch_handle_state_flags_t_CEF_THS_FLAG_ALPHA,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ENABLED,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_NONE,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ORIENTATION,
@@ -3559,6 +3560,15 @@ impl From<CursorType> for cef_cursor_type_t {
             CursorType::DndCopy => Self::CT_DND_COPY,
             CursorType::DndLink => Self::CT_DND_LINK
         }
+    }
+}
+
+// TODO: I don't understand how to handle CursorHandle since it's different on Windows, Linux and MacOS.
+pub struct CursorHandle;
+
+impl From<cef_cursor_handle_t> for CursorHandle {
+    fn from(_value: cef_cursor_handle_t) -> Self {
+        Self
     }
 }
 
