@@ -1,10 +1,11 @@
 use crate::{
-    Browser, CefString, CursorInfo, CursorType, Frame, LogSeverity, RefCountedPtr, Size, Wrappable,
-    Wrapped, ref_counted_ptr
+    Browser, CefString, CursorHandle, CursorInfo, CursorType, Frame, LogSeverity, RefCountedPtr,
+    Size, Wrappable, Wrapped, ref_counted_ptr
 };
 use cef_ui_sys::{
-    cef_browser_t, cef_cursor_info_t, cef_cursor_type_t, cef_display_handler_t, cef_frame_t,
-    cef_log_severity_t, cef_size_t, cef_string_list_t, cef_string_t
+    cef_browser_t, cef_cursor_handle_t, cef_cursor_info_t, cef_cursor_type_t,
+    cef_display_handler_t, cef_frame_t, cef_log_severity_t, cef_size_t, cef_string_list_t,
+    cef_string_t
 };
 use std::{ffi::c_int, mem::zeroed};
 
@@ -69,7 +70,7 @@ pub trait DisplayHandlerCallbacks: Send + Sync + 'static {
     fn on_cursor_change(
         &mut self,
         browser: Browser,
-        cursor: u64,
+        cursor: CursorHandle,
         cursor_type: CursorType,
         custom_cursor_info: Option<CursorInfo>
     ) -> bool;
@@ -252,7 +253,7 @@ impl DisplayHandlerWrapper {
     unsafe extern "C" fn c_on_cursor_change(
         this: *mut cef_display_handler_t,
         browser: *mut cef_browser_t,
-        cursor: ::std::os::raw::c_ulong,
+        cursor: cef_cursor_handle_t,
         cursor_type: cef_cursor_type_t,
         custom_cursor_info: *const cef_cursor_info_t
     ) -> ::std::os::raw::c_int {
@@ -266,7 +267,7 @@ impl DisplayHandlerWrapper {
         };
 
         this.0
-            .on_cursor_change(browser, cursor, cursor_type, custom_cursor_info)
+            .on_cursor_change(browser, cursor.into(), cursor_type, custom_cursor_info)
             as ::std::os::raw::c_int
     }
 
