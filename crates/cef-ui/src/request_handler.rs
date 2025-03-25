@@ -1,7 +1,7 @@
 use crate::{
-    ref_counted_ptr, try_c, AuthCallback, Browser, Callback, CefString, ErrorCode, Frame,
-    RefCountedPtr, Request, ResourceRequestHandler, SslInfo, TerminationStatus,
-    WindowOpenDisposition, Wrappable, Wrapped, X509Certificate
+    AuthCallback, Browser, Callback, CefString, ErrorCode, Frame, RefCountedPtr, Request,
+    ResourceRequestHandler, SslInfo, TerminationStatus, WindowOpenDisposition, Wrappable, Wrapped,
+    X509Certificate, ref_counted_ptr, try_c
 };
 use anyhow::Result;
 use cef_ui_sys::{
@@ -166,7 +166,13 @@ pub trait RequestHandlerCallbacks: Send + Sync + 'static {
 
     /// Called on the browser process UI thread when the render process terminates
     /// unexpectedly. |status| indicates how the process terminated.
-    fn on_render_process_terminated(&mut self, browser: Browser, status: TerminationStatus);
+    fn on_render_process_terminated(
+        &mut self,
+        browser: Browser,
+        status: TerminationStatus,
+        error_code: i32,
+        error_string: Option<String>
+    );
 
     /// Called on the browser process UI thread when the window.document object of
     /// the main frame has been created.
@@ -430,13 +436,16 @@ impl RequestHandlerWrapper {
     unsafe extern "C" fn c_on_render_process_terminated(
         this: *mut cef_request_handler_t,
         browser: *mut cef_browser_t,
-        status: cef_termination_status_t
+        status: cef_termination_status_t,
+        error_code: i32,
+        error_string: *const cef_string_t
     ) {
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
+        let error_string: Option<String> = CefString::from_ptr(error_string).map(|s| s.into());
 
         this.0
-            .on_render_process_terminated(browser, status.into())
+            .on_render_process_terminated(browser, status.into(), error_code, error_string)
     }
 
     /// Called on the browser process UI thread when the window.document object of
@@ -471,7 +480,9 @@ impl Wrappable for RequestHandlerWrapper {
                 on_render_process_terminated:        Some(Self::c_on_render_process_terminated),
                 on_document_available_in_main_frame: Some(
                     Self::c_on_document_available_in_main_frame
-                )
+                ),
+                on_render_process_responsive:        None,
+                on_render_process_unresponsive:      None
             },
             self
         )

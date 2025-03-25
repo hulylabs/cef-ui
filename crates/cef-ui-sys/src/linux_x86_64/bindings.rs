@@ -31,7 +31,6 @@ pub const __USE_ATFILE: u32 = 1;
 pub const __USE_FORTIFY_LEVEL: u32 = 0;
 pub const __GLIBC_USE_DEPRECATED_GETS: u32 = 0;
 pub const __GLIBC_USE_DEPRECATED_SCANF: u32 = 0;
-pub const __GLIBC_USE_C2X_STRTOL: u32 = 0;
 pub const _STDC_PREDEF_H: u32 = 1;
 pub const __STDC_IEC_559__: u32 = 1;
 pub const __STDC_IEC_60559_BFP__: u32 = 201404;
@@ -40,7 +39,7 @@ pub const __STDC_IEC_60559_COMPLEX__: u32 = 201404;
 pub const __STDC_ISO_10646__: u32 = 201706;
 pub const __GNU_LIBRARY__: u32 = 6;
 pub const __GLIBC__: u32 = 2;
-pub const __GLIBC_MINOR__: u32 = 39;
+pub const __GLIBC_MINOR__: u32 = 35;
 pub const _SYS_CDEFS_H: u32 = 1;
 pub const __glibc_c99_flexarr_available: u32 = 1;
 pub const __LDOUBLE_REDIRECTS_TO_FLOAT128_ABI: u32 = 0;
@@ -64,7 +63,6 @@ pub const _BITS_TIME64_H: u32 = 1;
 pub const _BITS_WCHAR_H: u32 = 1;
 pub const _BITS_STDINT_INTN_H: u32 = 1;
 pub const _BITS_STDINT_UINTN_H: u32 = 1;
-pub const _BITS_STDINT_LEAST_H: u32 = 1;
 pub const INT8_MIN: i32 = -128;
 pub const INT16_MIN: i32 = -32768;
 pub const INT32_MIN: i32 = -2147483648;
@@ -102,6 +100,8 @@ pub const SIG_ATOMIC_MAX: u32 = 2147483647;
 pub const SIZE_MAX: i32 = -1;
 pub const WINT_MIN: u32 = 0;
 pub const WINT_MAX: u32 = 4294967295;
+pub const CEF_X11: u32 = 1;
+pub const CEF_V8_ENABLE_SANDBOX: u32 = 1;
 pub const OS_LINUX: u32 = 1;
 pub const _UNISTD_H: u32 = 1;
 pub const _POSIX_VERSION: u32 = 200809;
@@ -333,9 +333,9 @@ pub const __itimerspec_defined: u32 = 1;
 pub const _BITS_TYPES_LOCALE_T_H: u32 = 1;
 pub const _BITS_TYPES___LOCALE_T_H: u32 = 1;
 pub const TIME_UTC: u32 = 1;
-pub const CEF_X11: u32 = 1;
 pub const kNullCursorHandle: u32 = 0;
 pub const kNullWindowHandle: u32 = 0;
+pub const kAcceleratedPaintMaxPlanes: u32 = 4;
 pub const _PTHREAD_H: u32 = 1;
 pub const _SCHED_H: u32 = 1;
 pub const _BITS_SCHED_H: u32 = 1;
@@ -366,17 +366,17 @@ pub const PTHREAD_ONCE_INIT: u32 = 0;
 pub const PTHREAD_BARRIER_SERIAL_THREAD: i32 = -1;
 pub const kInvalidPlatformThreadId: u32 = 0;
 pub const kInvalidPlatformThreadHandle: u32 = 0;
-pub const CEF_VERSION: &[u8; 42] = b"121.3.15+g4d3b0b4+chromium-121.0.6167.184\0";
-pub const CEF_VERSION_MAJOR: u32 = 121;
-pub const CEF_VERSION_MINOR: u32 = 3;
-pub const CEF_VERSION_PATCH: u32 = 15;
-pub const CEF_COMMIT_NUMBER: u32 = 2912;
-pub const CEF_COMMIT_HASH: &[u8; 41] = b"4d3b0b471a5e15a0de692cdfe8a65f0cefcb4228\0";
-pub const COPYRIGHT_YEAR: u32 = 2024;
-pub const CHROME_VERSION_MAJOR: u32 = 121;
+pub const CEF_VERSION: &[u8; 41] = b"131.4.1+g437feba+chromium-131.0.6778.265\0";
+pub const CEF_VERSION_MAJOR: u32 = 131;
+pub const CEF_VERSION_MINOR: u32 = 4;
+pub const CEF_VERSION_PATCH: u32 = 1;
+pub const CEF_COMMIT_NUMBER: u32 = 3111;
+pub const CEF_COMMIT_HASH: &[u8; 41] = b"437feba0099fe581b25c41ad49e1f1ed935a38bd\0";
+pub const COPYRIGHT_YEAR: u32 = 2025;
+pub const CHROME_VERSION_MAJOR: u32 = 131;
 pub const CHROME_VERSION_MINOR: u32 = 0;
-pub const CHROME_VERSION_BUILD: u32 = 6167;
-pub const CHROME_VERSION_PATCH: u32 = 184;
+pub const CHROME_VERSION_BUILD: u32 = 6778;
+pub const CHROME_VERSION_PATCH: u32 = 265;
 pub type __u_char = ::std::os::raw::c_uchar;
 pub type __u_short = ::std::os::raw::c_ushort;
 pub type __u_int = ::std::os::raw::c_uint;
@@ -2261,7 +2261,7 @@ pub enum cef_content_setting_types_t {
     CEF_CONTENT_SETTING_TYPE_SOUND = 30,
     CEF_CONTENT_SETTING_TYPE_CLIENT_HINTS = 31,
     CEF_CONTENT_SETTING_TYPE_SENSORS = 32,
-    CEF_CONTENT_SETTING_TYPE_ACCESSIBILITY_EVENTS = 33,
+    CEF_CONTENT_SETTING_TYPE_DEPRECATED_ACCESSIBILITY_EVENTS = 33,
     CEF_CONTENT_SETTING_TYPE_PAYMENT_HANDLER = 34,
     CEF_CONTENT_SETTING_TYPE_USB_GUARD = 35,
     CEF_CONTENT_SETTING_TYPE_BACKGROUND_FETCH = 36,
@@ -2317,13 +2317,32 @@ pub enum cef_content_setting_types_t {
     CEF_CONTENT_SETTING_TYPE_HTTPS_ENFORCED = 86,
     CEF_CONTENT_SETTING_TYPE_ALL_SCREEN_CAPTURE = 87,
     CEF_CONTENT_SETTING_TYPE_COOKIE_CONTROLS_METADATA = 88,
-    CEF_CONTENT_SETTING_TYPE_TPCD_SUPPORT = 89,
-    CEF_CONTENT_SETTING_TYPE_AUTO_PICTURE_IN_PICTURE = 90,
-    CEF_CONTENT_SETTING_TYPE_TPCD_METADATA_GRANTS = 91,
-    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_EXTENDED_PERMISSION = 92,
-    CEF_CONTENT_SETTING_TYPE_TPCD_HEURISTICS_GRANTS = 93,
-    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_RESTORE_PERMISSION = 94,
-    CEF_CONTENT_SETTING_TYPE_NUM_TYPES = 95
+    CEF_CONTENT_SETTING_TYPE_TPCD_HEURISTICS_GRANTS = 89,
+    CEF_CONTENT_SETTING_TYPE_TPCD_METADATA_GRANTS = 90,
+    CEF_CONTENT_SETTING_TYPE_TPCD_TRIAL = 91,
+    CEF_CONTENT_SETTING_TYPE_TOP_LEVEL_TPCD_TRIAL = 92,
+    CEF_CONTENT_SETTING_TOP_LEVEL_TPCD_ORIGIN_TRIAL = 93,
+    CEF_CONTENT_SETTING_TYPE_AUTO_PICTURE_IN_PICTURE = 94,
+    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_EXTENDED_PERMISSION = 95,
+    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_RESTORE_PERMISSION = 96,
+    CEF_CONTENT_SETTING_TYPE_CAPTURED_SURFACE_CONTROL = 97,
+    CEF_CONTENT_SETTING_TYPE_SMART_CARD_GUARD = 98,
+    CEF_CONTENT_SETTING_TYPE_SMART_CARD_DATA = 99,
+    CEF_CONTENT_SETTING_TYPE_WEB_PRINTING = 100,
+    CEF_CONTENT_SETTING_TYPE_AUTOMATIC_FULLSCREEN = 101,
+    CEF_CONTENT_SETTING_TYPE_SUB_APP_INSTALLATION_PROMPTS = 102,
+    CEF_CONTENT_SETTING_TYPE_SPEAKER_SELECTION = 103,
+    CEF_CONTENT_SETTING_TYPE_DIRECT_SOCKETS = 104,
+    CEF_CONTENT_SETTING_TYPE_KEYBOARD_LOCK = 105,
+    CEF_CONTENT_SETTING_TYPE_POINTER_LOCK = 106,
+    CEF_CONTENT_SETTING_TYPE_REVOKED_ABUSIVE_NOTIFICATION_PERMISSIONS = 107,
+    CEF_CONTENT_SETTING_TYPE_TRACKING_PROTECTION = 108,
+    CEF_CONTENT_SETTING_TYPE_DISPLAY_MEDIA_SYSTEM_AUDIO = 109,
+    CEF_CONTENT_SETTING_TYPE_JAVASCRIPT_OPTIMIZER = 110,
+    CEF_CONTENT_SETTING_TYPE_STORAGE_ACCESS_HEADER_ORIGIN_TRIAL = 111,
+    CEF_CONTENT_SETTING_TYPE_HAND_TRACKING = 112,
+    CEF_CONTENT_SETTING_TYPE_WEB_APP_INSTALLATION = 113,
+    CEF_CONTENT_SETTING_TYPE_DIRECT_SOCKETS_PRIVATE_NETWORK_ACCESS = 114
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -2380,6 +2399,19 @@ pub struct _XDisplay {
     _unused: [u8; 0]
 }
 pub type XDisplay = _XDisplay;
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_color_type_t {
+    CEF_COLOR_TYPE_RGBA_8888 = 0,
+    CEF_COLOR_TYPE_BGRA_8888 = 1
+}
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_runtime_style_t {
+    CEF_RUNTIME_STYLE_DEFAULT = 0,
+    CEF_RUNTIME_STYLE_CHROME = 1,
+    CEF_RUNTIME_STYLE_ALLOY = 2
+}
 extern "C" {
     pub fn cef_get_xdisplay() -> *mut XDisplay;
 }
@@ -2399,9 +2431,29 @@ pub struct _cef_window_info_t {
     pub windowless_rendering_enabled: ::std::os::raw::c_int,
     pub shared_texture_enabled:       ::std::os::raw::c_int,
     pub external_begin_frame_enabled: ::std::os::raw::c_int,
-    pub window:                       ::std::os::raw::c_ulong
+    pub window:                       ::std::os::raw::c_ulong,
+    pub runtime_style:                cef_runtime_style_t
 }
 pub type cef_window_info_t = _cef_window_info_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_accelerated_paint_native_pixmap_plane_info_t {
+    pub stride: u32,
+    pub offset: u64,
+    pub size:   u64,
+    pub fd:     ::std::os::raw::c_int
+}
+pub type cef_accelerated_paint_native_pixmap_plane_t =
+    _cef_accelerated_paint_native_pixmap_plane_info_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_accelerated_paint_info_t {
+    pub planes:      [cef_accelerated_paint_native_pixmap_plane_t; 4usize],
+    pub plane_count: ::std::os::raw::c_int,
+    pub modifier:    u64,
+    pub format:      cef_color_type_t
+}
+pub type cef_accelerated_paint_info_t = _cef_accelerated_paint_info_t;
 pub type cef_color_t = u32;
 impl cef_log_severity_t {
     pub const LOGSEVERITY_DEBUG: cef_log_severity_t = cef_log_severity_t::LOGSEVERITY_VERBOSE;
@@ -2442,7 +2494,6 @@ pub struct _cef_settings_t {
     pub browser_subprocess_path:             cef_string_t,
     pub framework_dir_path:                  cef_string_t,
     pub main_bundle_path:                    cef_string_t,
-    pub chrome_runtime:                      ::std::os::raw::c_int,
     pub multi_threaded_message_loop:         ::std::os::raw::c_int,
     pub external_message_pump:               ::std::os::raw::c_int,
     pub windowless_rendering_enabled:        ::std::os::raw::c_int,
@@ -2450,7 +2501,6 @@ pub struct _cef_settings_t {
     pub cache_path:                          cef_string_t,
     pub root_cache_path:                     cef_string_t,
     pub persist_session_cookies:             ::std::os::raw::c_int,
-    pub persist_user_preferences:            ::std::os::raw::c_int,
     pub user_agent:                          cef_string_t,
     pub user_agent_product:                  cef_string_t,
     pub locale:                              cef_string_t,
@@ -2460,7 +2510,6 @@ pub struct _cef_settings_t {
     pub javascript_flags:                    cef_string_t,
     pub resources_dir_path:                  cef_string_t,
     pub locales_dir_path:                    cef_string_t,
-    pub pack_loading_disabled:               ::std::os::raw::c_int,
     pub remote_debugging_port:               ::std::os::raw::c_int,
     pub uncaught_exception_stack_size:       ::std::os::raw::c_int,
     pub background_color:                    cef_color_t,
@@ -2468,7 +2517,8 @@ pub struct _cef_settings_t {
     pub cookieable_schemes_list:             cef_string_t,
     pub cookieable_schemes_exclude_defaults: ::std::os::raw::c_int,
     pub chrome_policy_id:                    cef_string_t,
-    pub chrome_app_icon_id:                  ::std::os::raw::c_int
+    pub chrome_app_icon_id:                  ::std::os::raw::c_int,
+    pub disable_signal_handlers:             ::std::os::raw::c_int
 }
 pub type cef_settings_t = _cef_settings_t;
 #[repr(C)]
@@ -2477,7 +2527,6 @@ pub struct _cef_request_context_settings_t {
     pub size:                                usize,
     pub cache_path:                          cef_string_t,
     pub persist_session_cookies:             ::std::os::raw::c_int,
-    pub persist_user_preferences:            ::std::os::raw::c_int,
     pub accept_language_list:                cef_string_t,
     pub cookieable_schemes_list:             cef_string_t,
     pub cookieable_schemes_exclude_defaults: ::std::os::raw::c_int
@@ -2576,7 +2625,9 @@ pub enum cef_termination_status_t {
     TS_ABNORMAL_TERMINATION = 0,
     TS_PROCESS_WAS_KILLED = 1,
     TS_PROCESS_CRASHED = 2,
-    TS_PROCESS_OOM = 3
+    TS_PROCESS_OOM = 3,
+    TS_LAUNCH_FAILED = 4,
+    TS_INTEGRITY_FAILURE = 5
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -2631,6 +2682,7 @@ pub enum cef_errorcode_t {
     ERR_BLOCKED_BY_CSP = -30,
     ERR_H2_OR_QUIC_REQUIRED = -31,
     ERR_BLOCKED_BY_ORB = -32,
+    ERR_NETWORK_ACCESS_REVOKED = -33,
     ERR_CONNECTION_CLOSED = -100,
     ERR_CONNECTION_RESET = -101,
     ERR_CONNECTION_REFUSED = -102,
@@ -2783,6 +2835,9 @@ pub enum cef_errorcode_t {
     ERR_INCONSISTENT_IP_ADDRESS_SPACE = -383,
     ERR_CACHED_IP_ADDRESS_SPACE_BLOCKED_BY_PRIVATE_NETWORK_ACCESS_POLICY = -384,
     ERR_BLOCKED_BY_PRIVATE_NETWORK_ACCESS_CHECKS = -385,
+    ERR_ZSTD_WINDOW_SIZE_TOO_BIG = -386,
+    ERR_DICTIONARY_LOAD_FAILED = -387,
+    ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER = -388,
     ERR_CACHE_MISS = -400,
     ERR_CACHE_READ_FAILURE = -401,
     ERR_CACHE_WRITE_FAILURE = -402,
@@ -2804,13 +2859,6 @@ pub enum cef_errorcode_t {
     ERR_INVALID_WEB_BUNDLE = -505,
     ERR_TRUST_TOKEN_OPERATION_FAILED = -506,
     ERR_TRUST_TOKEN_OPERATION_SUCCESS_WITHOUT_SENDING_REQUEST = -507,
-    ERR_FTP_FAILED = -601,
-    ERR_FTP_SERVICE_UNAVAILABLE = -602,
-    ERR_FTP_TRANSFER_ABORTED = -603,
-    ERR_FTP_FILE_BUSY = -604,
-    ERR_FTP_SYNTAX_ERROR = -605,
-    ERR_FTP_COMMAND_NOT_SUPPORTED = -606,
-    ERR_FTP_BAD_COMMAND_SEQUENCE = -607,
     ERR_PKCS12_IMPORT_BAD_PASSWORD = -701,
     ERR_PKCS12_IMPORT_FAILED = -702,
     ERR_IMPORT_CA_CERT_NOT_CA = -703,
@@ -2836,7 +2884,7 @@ pub enum cef_errorcode_t {
     ERR_DNS_NAME_HTTPS_ONLY = -809,
     ERR_DNS_REQUEST_CANCELLED = -810,
     ERR_DNS_NO_MATCHING_SUPPORTED_ALPN = -811,
-    ERR_DICTIONARY_LOAD_FAILED = -812
+    ERR_DNS_SECURE_PROBE_RECORD_INVALID = -814
 }
 pub const cef_cert_status_t_CERT_STATUS_NONE: cef_cert_status_t = 0;
 pub const cef_cert_status_t_CERT_STATUS_COMMON_NAME_INVALID: cef_cert_status_t = 1;
@@ -2857,6 +2905,41 @@ pub const cef_cert_status_t_CERT_STATUS_REV_CHECKING_ENABLED: cef_cert_status_t 
 pub const cef_cert_status_t_CERT_STATUS_SHA1_SIGNATURE_PRESENT: cef_cert_status_t = 524288;
 pub const cef_cert_status_t_CERT_STATUS_CT_COMPLIANCE_FAILED: cef_cert_status_t = 1048576;
 pub type cef_cert_status_t = ::std::os::raw::c_uint;
+impl cef_resultcode_t {
+    pub const CEF_RESULT_CODE_SANDBOX_FATAL_INTEGRITY: cef_resultcode_t =
+        cef_resultcode_t::CEF_RESULT_CODE_SANDBOX_FATAL_FIRST;
+}
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_resultcode_t {
+    CEF_RESULT_CODE_NORMAL_EXIT = 0,
+    CEF_RESULT_CODE_KILLED = 1,
+    CEF_RESULT_CODE_HUNG = 2,
+    CEF_RESULT_CODE_KILLED_BAD_MESSAGE = 3,
+    CEF_RESULT_CODE_GPU_DEAD_ON_ARRIVAL = 4,
+    CEF_RESULT_CODE_CHROME_FIRST = 5,
+    CEF_RESULT_CODE_MISSING_DATA = 7,
+    CEF_RESULT_CODE_UNSUPPORTED_PARAM = 13,
+    CEF_RESULT_CODE_PROFILE_IN_USE = 21,
+    CEF_RESULT_CODE_PACK_EXTENSION_ERROR = 22,
+    CEF_RESULT_CODE_NORMAL_EXIT_PROCESS_NOTIFIED = 24,
+    CEF_RESULT_CODE_INVALID_SANDBOX_STATE = 31,
+    CEF_RESULT_CODE_CLOUD_POLICY_ENROLLMENT_FAILED = 32,
+    CEF_RESULT_CODE_GPU_EXIT_ON_CONTEXT_LOST = 34,
+    CEF_RESULT_CODE_NORMAL_EXIT_PACK_EXTENSION_SUCCESS = 36,
+    CEF_RESULT_CODE_SYSTEM_RESOURCE_EXHAUSTED = 37,
+    CEF_RESULT_CODE_CHROME_LAST = 38,
+    CEF_RESULT_CODE_SANDBOX_FATAL_FIRST = 7006,
+    CEF_RESULT_CODE_SANDBOX_FATAL_DROPTOKEN = 7007,
+    CEF_RESULT_CODE_SANDBOX_FATAL_FLUSHANDLES = 7008,
+    CEF_RESULT_CODE_SANDBOX_FATAL_CACHEDISABLE = 7009,
+    CEF_RESULT_CODE_SANDBOX_FATAL_CLOSEHANDLES = 7010,
+    CEF_RESULT_CODE_SANDBOX_FATAL_MITIGATION = 7011,
+    CEF_RESULT_CODE_SANDBOX_FATAL_MEMORY_EXCEEDED = 7012,
+    CEF_RESULT_CODE_SANDBOX_FATAL_WARMUP = 7013,
+    CEF_RESULT_CODE_SANDBOX_FATAL_BROKER_SHUTDOWN_HUNG = 7014,
+    CEF_RESULT_CODE_SANDBOX_FATAL_LAST = 7015
+}
 impl cef_window_open_disposition_t {
     pub const CEF_WOD_MAX_VALUE: cef_window_open_disposition_t =
         cef_window_open_disposition_t::CEF_WOD_NEW_PICTURE_IN_PICTURE;
@@ -2902,14 +2985,6 @@ pub enum cef_text_input_mode_t {
     CEF_TEXT_INPUT_MODE_NUMERIC = 6,
     CEF_TEXT_INPUT_MODE_DECIMAL = 7,
     CEF_TEXT_INPUT_MODE_SEARCH = 8
-}
-#[repr(u32)]
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum cef_v8_accesscontrol_t {
-    V8_ACCESS_CONTROL_DEFAULT = 0,
-    V8_ACCESS_CONTROL_ALL_CAN_READ = 1,
-    V8_ACCESS_CONTROL_ALL_CAN_WRITE = 2,
-    V8_ACCESS_CONTROL_PROHIBITS_OVERWRITING = 4
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -3073,6 +3148,15 @@ pub struct _cef_screen_info_t {
     pub available_rect:      cef_rect_t
 }
 pub type cef_screen_info_t = _cef_screen_info_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_linux_window_properties_t {
+    pub wayland_app_id: cef_string_t,
+    pub wm_class_class: cef_string_t,
+    pub wm_class_name:  cef_string_t,
+    pub wm_role_name:   cef_string_t
+}
+pub type cef_linux_window_properties_t = _cef_linux_window_properties_t;
 impl cef_menu_id_t {
     pub const MENU_ID_SPELLCHECK_SUGGESTION_LAST: cef_menu_id_t =
         cef_menu_id_t::MENU_ID_SPELLCHECK_SUGGESTION_4;
@@ -3090,8 +3174,9 @@ pub enum cef_menu_id_t {
     MENU_ID_CUT = 112,
     MENU_ID_COPY = 113,
     MENU_ID_PASTE = 114,
-    MENU_ID_DELETE = 115,
-    MENU_ID_SELECT_ALL = 116,
+    MENU_ID_PASTE_MATCH_STYLE = 115,
+    MENU_ID_DELETE = 116,
+    MENU_ID_SELECT_ALL = 117,
     MENU_ID_FIND = 130,
     MENU_ID_PRINT = 131,
     MENU_ID_VIEW_SOURCE = 132,
@@ -3398,7 +3483,7 @@ pub enum cef_dom_form_control_type_t {
     DOM_FORM_CONTROL_TYPE_BUTTON_BUTTON = 1,
     DOM_FORM_CONTROL_TYPE_BUTTON_SUBMIT = 2,
     DOM_FORM_CONTROL_TYPE_BUTTON_RESET = 3,
-    DOM_FORM_CONTROL_TYPE_BUTTON_SELECT_LIST = 4,
+    DOM_FORM_CONTROL_TYPE_BUTTON_POPOVER = 4,
     DOM_FORM_CONTROL_TYPE_FIELDSET = 5,
     DOM_FORM_CONTROL_TYPE_INPUT_BUTTON = 6,
     DOM_FORM_CONTROL_TYPE_INPUT_CHECKBOX = 7,
@@ -3425,8 +3510,7 @@ pub enum cef_dom_form_control_type_t {
     DOM_FORM_CONTROL_TYPE_OUTPUT = 28,
     DOM_FORM_CONTROL_TYPE_SELECT_ONE = 29,
     DOM_FORM_CONTROL_TYPE_SELECT_MULTIPLE = 30,
-    DOM_FORM_CONTROL_TYPE_SELECT_LIST = 31,
-    DOM_FORM_CONTROL_TYPE_TEXT_AREA = 32
+    DOM_FORM_CONTROL_TYPE_TEXT_AREA = 31
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -3628,12 +3712,6 @@ pub enum cef_response_filter_status_t {
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum cef_color_type_t {
-    CEF_COLOR_TYPE_RGBA_8888 = 0,
-    CEF_COLOR_TYPE_BGRA_8888 = 1
-}
-#[repr(u32)]
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum cef_alpha_type_t {
     CEF_ALPHA_TYPE_OPAQUE = 0,
     CEF_ALPHA_TYPE_PREMULTIPLIED = 1,
@@ -3650,18 +3728,11 @@ pub enum cef_text_style_t {
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum cef_main_axis_alignment_t {
-    CEF_MAIN_AXIS_ALIGNMENT_START = 0,
-    CEF_MAIN_AXIS_ALIGNMENT_CENTER = 1,
-    CEF_MAIN_AXIS_ALIGNMENT_END = 2
-}
-#[repr(u32)]
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum cef_cross_axis_alignment_t {
-    CEF_CROSS_AXIS_ALIGNMENT_STRETCH = 0,
-    CEF_CROSS_AXIS_ALIGNMENT_START = 1,
-    CEF_CROSS_AXIS_ALIGNMENT_CENTER = 2,
-    CEF_CROSS_AXIS_ALIGNMENT_END = 3
+pub enum cef_axis_alignment_t {
+    CEF_AXIS_ALIGNMENT_START = 0,
+    CEF_AXIS_ALIGNMENT_CENTER = 1,
+    CEF_AXIS_ALIGNMENT_END = 2,
+    CEF_AXIS_ALIGNMENT_STRETCH = 3
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -3671,8 +3742,8 @@ pub struct _cef_box_layout_settings_t {
     pub inside_border_vertical_spacing:   ::std::os::raw::c_int,
     pub inside_border_insets:             cef_insets_t,
     pub between_child_spacing:            ::std::os::raw::c_int,
-    pub main_axis_alignment:              cef_main_axis_alignment_t,
-    pub cross_axis_alignment:             cef_cross_axis_alignment_t,
+    pub main_axis_alignment:              cef_axis_alignment_t,
+    pub cross_axis_alignment:             cef_axis_alignment_t,
     pub minimum_cross_axis_size:          ::std::os::raw::c_int,
     pub default_flex:                     ::std::os::raw::c_int
 }
@@ -3768,7 +3839,7 @@ pub struct _cef_composition_underline_t {
 pub type cef_composition_underline_t = _cef_composition_underline_t;
 impl cef_channel_layout_t {
     pub const CEF_CHANNEL_LAYOUT_MAX: cef_channel_layout_t =
-        cef_channel_layout_t::CEF_CHANNEL_LAYOUT_5_1_4_DOWNMIX;
+        cef_channel_layout_t::CEF_CHANNEL_LAYOUT_3_1_BACK;
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -3806,7 +3877,9 @@ pub enum cef_channel_layout_t {
     CEF_CHANNEL_LAYOUT_STEREO_AND_KEYBOARD_MIC = 30,
     CEF_CHANNEL_LAYOUT_4_1_QUAD_SIDE = 31,
     CEF_CHANNEL_LAYOUT_BITSTREAM = 32,
-    CEF_CHANNEL_LAYOUT_5_1_4_DOWNMIX = 33
+    CEF_CHANNEL_LAYOUT_5_1_4_DOWNMIX = 33,
+    CEF_CHANNEL_LAYOUT_1_1 = 34,
+    CEF_CHANNEL_LAYOUT_3_1_BACK = 35
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -3879,7 +3952,7 @@ pub enum cef_chrome_toolbar_type_t {
 }
 impl cef_chrome_page_action_icon_type_t {
     pub const CEF_CPAIT_MAX_VALUE: cef_chrome_page_action_icon_type_t =
-        cef_chrome_page_action_icon_type_t::CEF_CPAIT_PRICE_READ_ANYTHING;
+        cef_chrome_page_action_icon_type_t::CEF_CPAIT_DISCOUNTS;
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -3889,18 +3962,18 @@ pub enum cef_chrome_page_action_icon_type_t {
     CEF_CPAIT_COOKIE_CONTROLS = 2,
     CEF_CPAIT_FILE_SYSTEM_ACCESS = 3,
     CEF_CPAIT_FIND = 4,
-    CEF_CPAIT_HIGH_EFFICIENCY = 5,
+    CEF_CPAIT_MEMORY_SAVER = 5,
     CEF_CPAIT_INTENT_PICKER = 6,
     CEF_CPAIT_LOCAL_CARD_MIGRATION = 7,
     CEF_CPAIT_MANAGE_PASSWORDS = 8,
     CEF_CPAIT_PAYMENTS_OFFER_NOTIFICATION = 9,
     CEF_CPAIT_PRICE_TRACKING = 10,
     CEF_CPAIT_PWA_INSTALL = 11,
-    CEF_CPAIT_QR_CODE_GENERATOR = 12,
-    CEF_CPAIT_READER_MODE = 13,
+    CEF_CPAIT_QR_CODE_GENERATOR_DEPRECATED = 12,
+    CEF_CPAIT_READER_MODE_DEPRECATED = 13,
     CEF_CPAIT_SAVE_AUTOFILL_ADDRESS = 14,
     CEF_CPAIT_SAVE_CARD = 15,
-    CEF_CPAIT_SEND_TAB_TO_SELF = 16,
+    CEF_CPAIT_SEND_TAB_TO_SELF_DEPRECATED = 16,
     CEF_CPAIT_SHARING_HUB = 17,
     CEF_CPAIT_SIDE_SEARCH = 18,
     CEF_CPAIT_SMS_REMOTE_FETCHER = 19,
@@ -3911,7 +3984,10 @@ pub enum cef_chrome_page_action_icon_type_t {
     CEF_CPAIT_SAVE_IBAN = 24,
     CEF_CPAIT_MANDATORY_REAUTH = 25,
     CEF_CPAIT_PRICE_INSIGHTS = 26,
-    CEF_CPAIT_PRICE_READ_ANYTHING = 27
+    CEF_CPAIT_PRICE_READ_ANYTHING = 27,
+    CEF_CPAIT_PRODUCT_SPECIFICATIONS = 28,
+    CEF_CPAIT_LENS_OVERLAY = 29,
+    CEF_CPAIT_DISCOUNTS = 30
 }
 impl cef_chrome_toolbar_button_type_t {
     pub const CEF_CTBT_MAX_VALUE: cef_chrome_toolbar_button_type_t =
@@ -3976,27 +4052,31 @@ pub enum cef_media_access_permission_types_t {
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum cef_permission_request_types_t {
     CEF_PERMISSION_TYPE_NONE = 0,
-    CEF_PERMISSION_TYPE_ACCESSIBILITY_EVENTS = 1,
-    CEF_PERMISSION_TYPE_AR_SESSION = 2,
-    CEF_PERMISSION_TYPE_CAMERA_PAN_TILT_ZOOM = 4,
-    CEF_PERMISSION_TYPE_CAMERA_STREAM = 8,
+    CEF_PERMISSION_TYPE_AR_SESSION = 1,
+    CEF_PERMISSION_TYPE_CAMERA_PAN_TILT_ZOOM = 2,
+    CEF_PERMISSION_TYPE_CAMERA_STREAM = 4,
+    CEF_PERMISSION_TYPE_CAPTURED_SURFACE_CONTROL = 8,
     CEF_PERMISSION_TYPE_CLIPBOARD = 16,
     CEF_PERMISSION_TYPE_TOP_LEVEL_STORAGE_ACCESS = 32,
     CEF_PERMISSION_TYPE_DISK_QUOTA = 64,
     CEF_PERMISSION_TYPE_LOCAL_FONTS = 128,
     CEF_PERMISSION_TYPE_GEOLOCATION = 256,
-    CEF_PERMISSION_TYPE_IDLE_DETECTION = 512,
-    CEF_PERMISSION_TYPE_MIC_STREAM = 1024,
-    CEF_PERMISSION_TYPE_MIDI = 2048,
-    CEF_PERMISSION_TYPE_MIDI_SYSEX = 4096,
-    CEF_PERMISSION_TYPE_MULTIPLE_DOWNLOADS = 8192,
-    CEF_PERMISSION_TYPE_NOTIFICATIONS = 16384,
-    CEF_PERMISSION_TYPE_PROTECTED_MEDIA_IDENTIFIER = 32768,
-    CEF_PERMISSION_TYPE_REGISTER_PROTOCOL_HANDLER = 65536,
-    CEF_PERMISSION_TYPE_STORAGE_ACCESS = 131072,
-    CEF_PERMISSION_TYPE_VR_SESSION = 262144,
-    CEF_PERMISSION_TYPE_WINDOW_MANAGEMENT = 524288,
-    CEF_PERMISSION_TYPE_FILE_SYSTEM_ACCESS = 1048576
+    CEF_PERMISSION_TYPE_HAND_TRACKING = 512,
+    CEF_PERMISSION_TYPE_IDENTITY_PROVIDER = 1024,
+    CEF_PERMISSION_TYPE_IDLE_DETECTION = 2048,
+    CEF_PERMISSION_TYPE_MIC_STREAM = 4096,
+    CEF_PERMISSION_TYPE_MIDI_SYSEX = 8192,
+    CEF_PERMISSION_TYPE_MULTIPLE_DOWNLOADS = 16384,
+    CEF_PERMISSION_TYPE_NOTIFICATIONS = 32768,
+    CEF_PERMISSION_TYPE_KEYBOARD_LOCK = 65536,
+    CEF_PERMISSION_TYPE_POINTER_LOCK = 131072,
+    CEF_PERMISSION_TYPE_PROTECTED_MEDIA_IDENTIFIER = 262144,
+    CEF_PERMISSION_TYPE_REGISTER_PROTOCOL_HANDLER = 524288,
+    CEF_PERMISSION_TYPE_STORAGE_ACCESS = 1048576,
+    CEF_PERMISSION_TYPE_VR_SESSION = 2097152,
+    CEF_PERMISSION_TYPE_WEB_APP_INSTALLATION = 4194304,
+    CEF_PERMISSION_TYPE_WINDOW_MANAGEMENT = 8388608,
+    CEF_PERMISSION_TYPE_FILE_SYSTEM_ACCESS = 16777216
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -4066,6 +4146,48 @@ pub enum cef_zoom_command_t {
     CEF_ZOOM_COMMAND_RESET = 1,
     CEF_ZOOM_COMMAND_IN = 2
 }
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_color_variant_t {
+    CEF_COLOR_VARIANT_SYSTEM = 0,
+    CEF_COLOR_VARIANT_LIGHT = 1,
+    CEF_COLOR_VARIANT_DARK = 2,
+    CEF_COLOR_VARIANT_TONAL_SPOT = 3,
+    CEF_COLOR_VARIANT_NEUTRAL = 4,
+    CEF_COLOR_VARIANT_VIBRANT = 5,
+    CEF_COLOR_VARIANT_EXPRESSIVE = 6
+}
+#[repr(u32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_task_type_t {
+    CEF_TASK_TYPE_UNKNOWN = 0,
+    CEF_TASK_TYPE_BROWSER = 1,
+    CEF_TASK_TYPE_GPU = 2,
+    CEF_TASK_TYPE_ZYGOTE = 3,
+    CEF_TASK_TYPE_UTILITY = 4,
+    CEF_TASK_TYPE_RENDERER = 5,
+    CEF_TASK_TYPE_EXTENSION = 6,
+    CEF_TASK_TYPE_GUEST = 7,
+    CEF_TASK_TYPE_PLUGIN = 8,
+    CEF_TASK_TYPE_SANDBOX_HELPER = 9,
+    CEF_TASK_TYPE_DEDICATED_WORKER = 10,
+    CEF_TASK_TYPE_SHARED_WORKER = 11,
+    CEF_TASK_TYPE_SERVICE_WORKER = 12
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_task_info_t {
+    pub id:                     i64,
+    pub type_:                  cef_task_type_t,
+    pub is_killable:            ::std::os::raw::c_int,
+    pub title:                  cef_string_t,
+    pub cpu_usage:              f64,
+    pub number_of_processors:   ::std::os::raw::c_int,
+    pub memory:                 i64,
+    pub gpu_memory:             i64,
+    pub is_gpu_memory_inflated: ::std::os::raw::c_int
+}
+pub type cef_task_info_t = _cef_task_info_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_base_ref_counted_t {
@@ -4091,49 +4213,21 @@ pub struct _cef_base_scoped_t {
 pub type cef_base_scoped_t = _cef_base_scoped_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _cef_dev_tools_message_observer_t {
-    pub base:                        cef_base_ref_counted_t,
-    pub on_dev_tools_message: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_dev_tools_message_observer_t,
-            browser: *mut _cef_browser_t,
-            message: *const ::std::os::raw::c_void,
-            message_size: usize
-        ) -> ::std::os::raw::c_int
+pub struct _cef_shared_memory_region_t {
+    pub base:     cef_base_ref_counted_t,
+    pub is_valid: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_shared_memory_region_t) -> ::std::os::raw::c_int
     >,
-    pub on_dev_tools_method_result: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_dev_tools_message_observer_t,
-            browser: *mut _cef_browser_t,
-            message_id: ::std::os::raw::c_int,
-            success: ::std::os::raw::c_int,
-            result: *const ::std::os::raw::c_void,
-            result_size: usize
-        )
+    pub size: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_shared_memory_region_t) -> usize
     >,
-    pub on_dev_tools_event: ::std::option::Option<
+    pub memory: ::std::option::Option<
         unsafe extern "C" fn(
-            self_: *mut _cef_dev_tools_message_observer_t,
-            browser: *mut _cef_browser_t,
-            method: *const cef_string_t,
-            params: *const ::std::os::raw::c_void,
-            params_size: usize
-        )
-    >,
-    pub on_dev_tools_agent_attached: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_dev_tools_message_observer_t,
-            browser: *mut _cef_browser_t
-        )
-    >,
-    pub on_dev_tools_agent_detached: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_dev_tools_message_observer_t,
-            browser: *mut _cef_browser_t
-        )
+            self_: *mut _cef_shared_memory_region_t
+        ) -> *mut ::std::os::raw::c_void
     >
 }
-pub type cef_dev_tools_message_observer_t = _cef_dev_tools_message_observer_t;
+pub type cef_shared_memory_region_t = _cef_shared_memory_region_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_value_t {
@@ -4585,6 +4679,481 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct _cef_process_message_t {
+    pub base:                     cef_base_ref_counted_t,
+    pub is_valid: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> ::std::os::raw::c_int
+    >,
+    pub is_read_only: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> ::std::os::raw::c_int
+    >,
+    pub copy: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> *mut _cef_process_message_t
+    >,
+    pub get_name: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> cef_string_userfree_t
+    >,
+    pub get_argument_list: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> *mut _cef_list_value_t
+    >,
+    pub get_shared_memory_region: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_process_message_t
+        ) -> *mut _cef_shared_memory_region_t
+    >
+}
+pub type cef_process_message_t = _cef_process_message_t;
+extern "C" {
+    pub fn cef_process_message_create(name: *const cef_string_t) -> *mut cef_process_message_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_shared_process_message_builder_t {
+    pub base:     cef_base_ref_counted_t,
+    pub is_valid: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_shared_process_message_builder_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub size: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_shared_process_message_builder_t) -> usize
+    >,
+    pub memory: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_shared_process_message_builder_t
+        ) -> *mut ::std::os::raw::c_void
+    >,
+    pub build: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_shared_process_message_builder_t
+        ) -> *mut _cef_process_message_t
+    >
+}
+pub type cef_shared_process_message_builder_t = _cef_shared_process_message_builder_t;
+extern "C" {
+    pub fn cef_shared_process_message_builder_create(
+        name: *const cef_string_t,
+        byte_size: usize
+    ) -> *mut cef_shared_process_message_builder_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_task_manager_t {
+    pub base:                       cef_base_ref_counted_t,
+    pub get_tasks_count:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_task_manager_t) -> usize>,
+    pub get_task_ids_list: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_task_manager_t,
+            task_idsCount: *mut usize,
+            task_ids: *mut i64
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_task_info: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_task_manager_t,
+            task_id: i64,
+            info: *mut _cef_task_info_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub kill_task: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_task_manager_t,
+            task_id: i64
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_task_id_for_browser_id: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_task_manager_t,
+            browser_id: ::std::os::raw::c_int
+        ) -> i64
+    >
+}
+pub type cef_task_manager_t = _cef_task_manager_t;
+extern "C" {
+    pub fn cef_task_manager_get() -> *mut cef_task_manager_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_view_delegate_t {
+    pub base:                   cef_base_ref_counted_t,
+    pub get_preferred_size: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_delegate_t,
+            view: *mut _cef_view_t
+        ) -> cef_size_t
+    >,
+    pub get_minimum_size: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_delegate_t,
+            view: *mut _cef_view_t
+        ) -> cef_size_t
+    >,
+    pub get_maximum_size: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_delegate_t,
+            view: *mut _cef_view_t
+        ) -> cef_size_t
+    >,
+    pub get_height_for_width: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_delegate_t,
+            view: *mut _cef_view_t,
+            width: ::std::os::raw::c_int
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_parent_view_changed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_delegate_t,
+            view: *mut _cef_view_t,
+            added: ::std::os::raw::c_int,
+            parent: *mut _cef_view_t
+        )
+    >,
+    pub on_child_view_changed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_delegate_t,
+            view: *mut _cef_view_t,
+            added: ::std::os::raw::c_int,
+            child: *mut _cef_view_t
+        )
+    >,
+    pub on_window_changed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_delegate_t,
+            view: *mut _cef_view_t,
+            added: ::std::os::raw::c_int
+        )
+    >,
+    pub on_layout_changed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_delegate_t,
+            view: *mut _cef_view_t,
+            new_bounds: *const cef_rect_t
+        )
+    >,
+    pub on_focus: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_delegate_t, view: *mut _cef_view_t)
+    >,
+    pub on_blur: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_delegate_t, view: *mut _cef_view_t)
+    >,
+    pub on_theme_changed: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_delegate_t, view: *mut _cef_view_t)
+    >
+}
+pub type cef_view_delegate_t = _cef_view_delegate_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_textfield_delegate_t {
+    pub base:                 cef_view_delegate_t,
+    pub on_key_event: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_textfield_delegate_t,
+            textfield: *mut _cef_textfield_t,
+            event: *const cef_key_event_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_after_user_action: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_textfield_delegate_t,
+            textfield: *mut _cef_textfield_t
+        )
+    >
+}
+pub type cef_textfield_delegate_t = _cef_textfield_delegate_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_panel_delegate_t {
+    pub base: cef_view_delegate_t
+}
+pub type cef_panel_delegate_t = _cef_panel_delegate_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_view_t {
+    pub base:                       cef_base_ref_counted_t,
+    pub as_browser_view: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_browser_view_t
+    >,
+    pub as_button:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_button_t>,
+    pub as_panel:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_panel_t>,
+    pub as_scroll_view: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_scroll_view_t
+    >,
+    pub as_textfield: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_textfield_t
+    >,
+    pub get_type_string: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_string_userfree_t
+    >,
+    pub to_string: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            include_children: ::std::os::raw::c_int
+        ) -> cef_string_userfree_t
+    >,
+    pub is_valid: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub is_attached: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub is_same: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            that: *mut _cef_view_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_delegate: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_view_delegate_t
+    >,
+    pub get_window:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_window_t>,
+    pub get_id: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub set_id: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t, id: ::std::os::raw::c_int)
+    >,
+    pub get_group_id: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub set_group_id: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t, group_id: ::std::os::raw::c_int)
+    >,
+    pub get_parent_view:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_view_t>,
+    pub get_view_for_id: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            id: ::std::os::raw::c_int
+        ) -> *mut _cef_view_t
+    >,
+    pub set_bounds: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t, bounds: *const cef_rect_t)
+    >,
+    pub get_bounds:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_rect_t>,
+    pub get_bounds_in_screen:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_rect_t>,
+    pub set_size: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t, size: *const cef_size_t)
+    >,
+    pub get_size:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_size_t>,
+    pub set_position: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t, position: *const cef_point_t)
+    >,
+    pub get_position:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_point_t>,
+    pub set_insets: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t, insets: *const cef_insets_t)
+    >,
+    pub get_insets:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_insets_t>,
+    pub get_preferred_size:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_size_t>,
+    pub size_to_preferred_size:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t)>,
+    pub get_minimum_size:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_size_t>,
+    pub get_maximum_size:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_size_t>,
+    pub get_height_for_width: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            width: ::std::os::raw::c_int
+        ) -> ::std::os::raw::c_int
+    >,
+    pub invalidate_layout: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t)>,
+    pub set_visible: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t, visible: ::std::os::raw::c_int)
+    >,
+    pub is_visible: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub is_drawn: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub set_enabled: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t, enabled: ::std::os::raw::c_int)
+    >,
+    pub is_enabled: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub set_focusable: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t, focusable: ::std::os::raw::c_int)
+    >,
+    pub is_focusable: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub is_accessibility_focusable: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub has_focus: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
+    pub request_focus: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t)>,
+    pub set_background_color:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t, color: cef_color_t)>,
+    pub get_background_color:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_color_t>,
+    pub get_theme_color: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            color_id: ::std::os::raw::c_int
+        ) -> cef_color_t
+    >,
+    pub convert_point_to_screen: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            point: *mut cef_point_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub convert_point_from_screen: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            point: *mut cef_point_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub convert_point_to_window: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            point: *mut cef_point_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub convert_point_from_window: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            point: *mut cef_point_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub convert_point_to_view: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            view: *mut _cef_view_t,
+            point: *mut cef_point_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub convert_point_from_view: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            view: *mut _cef_view_t,
+            point: *mut cef_point_t
+        ) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_view_t = _cef_view_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_textfield_t {
+    pub base:                           cef_view_t,
+    pub set_password_input: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, password_input: ::std::os::raw::c_int)
+    >,
+    pub is_password_input: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> ::std::os::raw::c_int
+    >,
+    pub set_read_only: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, read_only: ::std::os::raw::c_int)
+    >,
+    pub is_read_only: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> ::std::os::raw::c_int
+    >,
+    pub get_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_string_userfree_t
+    >,
+    pub set_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, text: *const cef_string_t)
+    >,
+    pub append_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, text: *const cef_string_t)
+    >,
+    pub insert_or_replace_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, text: *const cef_string_t)
+    >,
+    pub has_selection: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> ::std::os::raw::c_int
+    >,
+    pub get_selected_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_string_userfree_t
+    >,
+    pub select_all: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, reversed: ::std::os::raw::c_int)
+    >,
+    pub clear_selection: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t)>,
+    pub get_selected_range:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_range_t>,
+    pub select_range: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, range: *const cef_range_t)
+    >,
+    pub get_cursor_position:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> usize>,
+    pub set_text_color: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, color: cef_color_t)
+    >,
+    pub get_text_color:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_color_t>,
+    pub set_selection_text_color: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, color: cef_color_t)
+    >,
+    pub get_selection_text_color:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_color_t>,
+    pub set_selection_background_color: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, color: cef_color_t)
+    >,
+    pub get_selection_background_color:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_color_t>,
+    pub set_font_list: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, font_list: *const cef_string_t)
+    >,
+    pub apply_text_color: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_textfield_t,
+            color: cef_color_t,
+            range: *const cef_range_t
+        )
+    >,
+    pub apply_text_style: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_textfield_t,
+            style: cef_text_style_t,
+            add: ::std::os::raw::c_int,
+            range: *const cef_range_t
+        )
+    >,
+    pub is_command_enabled: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_textfield_t,
+            command_id: cef_text_field_commands_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub execute_command: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, command_id: cef_text_field_commands_t)
+    >,
+    pub clear_edit_history:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t)>,
+    pub set_placeholder_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, text: *const cef_string_t)
+    >,
+    pub get_placeholder_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_string_userfree_t
+    >,
+    pub set_placeholder_text_color: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, color: cef_color_t)
+    >,
+    pub set_accessible_name: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_textfield_t, name: *const cef_string_t)
+    >
+}
+pub type cef_textfield_t = _cef_textfield_t;
+extern "C" {
+    pub fn cef_textfield_create(delegate: *mut _cef_textfield_delegate_t) -> *mut cef_textfield_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct _cef_image_t {
     pub base:                    cef_base_ref_counted_t,
     pub is_empty: ::std::option::Option<
@@ -4674,6 +5243,319 @@ pub type cef_image_t = _cef_image_t;
 extern "C" {
     pub fn cef_image_create() -> *mut cef_image_t;
 }
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_button_t {
+    pub base:                 cef_view_t,
+    pub as_label_button: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_button_t) -> *mut _cef_label_button_t
+    >,
+    pub set_state: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_button_t, state: cef_button_state_t)
+    >,
+    pub get_state: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_button_t) -> cef_button_state_t
+    >,
+    pub set_ink_drop_enabled: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_button_t, enabled: ::std::os::raw::c_int)
+    >,
+    pub set_tooltip_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_button_t, tooltip_text: *const cef_string_t)
+    >,
+    pub set_accessible_name: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_button_t, name: *const cef_string_t)
+    >
+}
+pub type cef_button_t = _cef_button_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_button_delegate_t {
+    pub base:                    cef_view_delegate_t,
+    pub on_button_pressed: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_button_delegate_t, button: *mut _cef_button_t)
+    >,
+    pub on_button_state_changed: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_button_delegate_t, button: *mut _cef_button_t)
+    >
+}
+pub type cef_button_delegate_t = _cef_button_delegate_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_label_button_t {
+    pub base:                     cef_button_t,
+    pub as_menu_button: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_label_button_t) -> *mut _cef_menu_button_t
+    >,
+    pub set_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_label_button_t, text: *const cef_string_t)
+    >,
+    pub get_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_label_button_t) -> cef_string_userfree_t
+    >,
+    pub set_image: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_label_button_t,
+            button_state: cef_button_state_t,
+            image: *mut _cef_image_t
+        )
+    >,
+    pub get_image: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_label_button_t,
+            button_state: cef_button_state_t
+        ) -> *mut _cef_image_t
+    >,
+    pub set_text_color: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_label_button_t,
+            for_state: cef_button_state_t,
+            color: cef_color_t
+        )
+    >,
+    pub set_enabled_text_colors: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_label_button_t, color: cef_color_t)
+    >,
+    pub set_font_list: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_label_button_t, font_list: *const cef_string_t)
+    >,
+    pub set_horizontal_alignment: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_label_button_t,
+            alignment: cef_horizontal_alignment_t
+        )
+    >,
+    pub set_minimum_size: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_label_button_t, size: *const cef_size_t)
+    >,
+    pub set_maximum_size: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_label_button_t, size: *const cef_size_t)
+    >
+}
+pub type cef_label_button_t = _cef_label_button_t;
+extern "C" {
+    pub fn cef_label_button_create(
+        delegate: *mut _cef_button_delegate_t,
+        text: *const cef_string_t
+    ) -> *mut cef_label_button_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_layout_t {
+    pub base:           cef_base_ref_counted_t,
+    pub as_box_layout: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_layout_t) -> *mut _cef_box_layout_t
+    >,
+    pub as_fill_layout: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_layout_t) -> *mut _cef_fill_layout_t
+    >,
+    pub is_valid: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_layout_t) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_layout_t = _cef_layout_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_box_layout_t {
+    pub base:                cef_layout_t,
+    pub set_flex_for_view: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_box_layout_t,
+            view: *mut _cef_view_t,
+            flex: ::std::os::raw::c_int
+        )
+    >,
+    pub clear_flex_for_view: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_box_layout_t, view: *mut _cef_view_t)
+    >
+}
+pub type cef_box_layout_t = _cef_box_layout_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_window_delegate_t {
+    pub base:                            cef_panel_delegate_t,
+    pub on_window_created: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_delegate_t, window: *mut _cef_window_t)
+    >,
+    pub on_window_closing: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_delegate_t, window: *mut _cef_window_t)
+    >,
+    pub on_window_destroyed: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_delegate_t, window: *mut _cef_window_t)
+    >,
+    pub on_window_activation_changed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            active: ::std::os::raw::c_int
+        )
+    >,
+    pub on_window_bounds_changed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            new_bounds: *const cef_rect_t
+        )
+    >,
+    pub on_window_fullscreen_transition: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            is_completed: ::std::os::raw::c_int
+        )
+    >,
+    pub get_parent_window: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            is_menu: *mut ::std::os::raw::c_int,
+            can_activate_menu: *mut ::std::os::raw::c_int
+        ) -> *mut _cef_window_t
+    >,
+    pub is_window_modal_dialog: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_initial_bounds: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> cef_rect_t
+    >,
+    pub get_initial_show_state: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> cef_show_state_t
+    >,
+    pub is_frameless: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub with_standard_window_buttons: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_titlebar_height: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            titlebar_height: *mut f32
+        ) -> ::std::os::raw::c_int
+    >,
+    pub accepts_first_mouse: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> cef_state_t
+    >,
+    pub can_resize: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub can_maximize: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub can_minimize: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub can_close: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_accelerator: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            command_id: ::std::os::raw::c_int
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_key_event: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            event: *const cef_key_event_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_theme_colors_changed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            chrome_theme: ::std::os::raw::c_int
+        )
+    >,
+    pub get_window_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_delegate_t) -> cef_runtime_style_t
+    >,
+    pub get_linux_window_properties: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            properties: *mut _cef_linux_window_properties_t
+        ) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_window_delegate_t = _cef_window_delegate_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_dev_tools_message_observer_t {
+    pub base:                        cef_base_ref_counted_t,
+    pub on_dev_tools_message: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_dev_tools_message_observer_t,
+            browser: *mut _cef_browser_t,
+            message: *const ::std::os::raw::c_void,
+            message_size: usize
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_dev_tools_method_result: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_dev_tools_message_observer_t,
+            browser: *mut _cef_browser_t,
+            message_id: ::std::os::raw::c_int,
+            success: ::std::os::raw::c_int,
+            result: *const ::std::os::raw::c_void,
+            result_size: usize
+        )
+    >,
+    pub on_dev_tools_event: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_dev_tools_message_observer_t,
+            browser: *mut _cef_browser_t,
+            method: *const cef_string_t,
+            params: *const ::std::os::raw::c_void,
+            params_size: usize
+        )
+    >,
+    pub on_dev_tools_agent_attached: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_dev_tools_message_observer_t,
+            browser: *mut _cef_browser_t
+        )
+    >,
+    pub on_dev_tools_agent_detached: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_dev_tools_message_observer_t,
+            browser: *mut _cef_browser_t
+        )
+    >
+}
+pub type cef_dev_tools_message_observer_t = _cef_dev_tools_message_observer_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_read_handler_t {
@@ -5075,52 +5957,6 @@ pub struct _cef_domnode_t {
 pub type cef_domnode_t = _cef_domnode_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _cef_shared_memory_region_t {
-    pub base:     cef_base_ref_counted_t,
-    pub is_valid: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_shared_memory_region_t) -> ::std::os::raw::c_int
-    >,
-    pub size: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_shared_memory_region_t) -> usize
-    >,
-    pub memory: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_shared_memory_region_t
-        ) -> *mut ::std::os::raw::c_void
-    >
-}
-pub type cef_shared_memory_region_t = _cef_shared_memory_region_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_process_message_t {
-    pub base:                     cef_base_ref_counted_t,
-    pub is_valid: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> ::std::os::raw::c_int
-    >,
-    pub is_read_only: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> ::std::os::raw::c_int
-    >,
-    pub copy: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> *mut _cef_process_message_t
-    >,
-    pub get_name: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> cef_string_userfree_t
-    >,
-    pub get_argument_list: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_process_message_t) -> *mut _cef_list_value_t
-    >,
-    pub get_shared_memory_region: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_process_message_t
-        ) -> *mut _cef_shared_memory_region_t
-    >
-}
-pub type cef_process_message_t = _cef_process_message_t;
-extern "C" {
-    pub fn cef_process_message_create(name: *const cef_string_t) -> *mut cef_process_message_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
 pub struct _cef_request_t {
     pub base:                        cef_base_ref_counted_t,
     pub is_read_only: ::std::option::Option<
@@ -5299,18 +6135,20 @@ pub type cef_string_visitor_t = _cef_string_visitor_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_frame_t {
-    pub base:                 cef_base_ref_counted_t,
+    pub base:                  cef_base_ref_counted_t,
     pub is_valid: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_frame_t) -> ::std::os::raw::c_int
     >,
-    pub undo:                 ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub redo:                 ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub cut:                  ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub copy:                 ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub paste:                ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub del:                  ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub select_all:           ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub view_source:          ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub undo: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub redo: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub cut: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub copy: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub paste: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub paste_and_match_style:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub del: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub select_all: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub view_source: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
     pub get_source: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_frame_t, visitor: *mut _cef_string_visitor_t)
     >,
@@ -5340,8 +6178,9 @@ pub struct _cef_frame_t {
     pub get_name: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_frame_t) -> cef_string_userfree_t
     >,
-    pub get_identifier:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t) -> i64>,
+    pub get_identifier: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_frame_t) -> cef_string_userfree_t
+    >,
     pub get_parent:
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t) -> *mut _cef_frame_t>,
     pub get_url: ::std::option::Option<
@@ -5607,122 +6446,6 @@ pub struct _cef_delete_cookies_callback_t {
     >
 }
 pub type cef_delete_cookies_callback_t = _cef_delete_cookies_callback_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_extension_t {
-    pub base:               cef_base_ref_counted_t,
-    pub get_identifier: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> cef_string_userfree_t
-    >,
-    pub get_path: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> cef_string_userfree_t
-    >,
-    pub get_manifest: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> *mut _cef_dictionary_value_t
-    >,
-    pub is_same: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_t,
-            that: *mut _cef_extension_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_handler: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> *mut _cef_extension_handler_t
-    >,
-    pub get_loader_context: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> *mut _cef_request_context_t
-    >,
-    pub is_loaded: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> ::std::os::raw::c_int
-    >,
-    pub unload: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_extension_t)>
-}
-pub type cef_extension_t = _cef_extension_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_get_extension_resource_callback_t {
-    pub base:   cef_base_ref_counted_t,
-    pub cont: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_get_extension_resource_callback_t,
-            stream: *mut _cef_stream_reader_t
-        )
-    >,
-    pub cancel: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_get_extension_resource_callback_t)
-    >
-}
-pub type cef_get_extension_resource_callback_t = _cef_get_extension_resource_callback_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_extension_handler_t {
-    pub base:                         cef_base_ref_counted_t,
-    pub on_extension_load_failed: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_handler_t, result: cef_errorcode_t)
-    >,
-    pub on_extension_loaded: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t
-        )
-    >,
-    pub on_extension_unloaded: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t
-        )
-    >,
-    pub on_before_background_browser: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            url: *const cef_string_t,
-            client: *mut *mut _cef_client_t,
-            settings: *mut _cef_browser_settings_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub on_before_browser: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            browser: *mut _cef_browser_t,
-            active_browser: *mut _cef_browser_t,
-            index: ::std::os::raw::c_int,
-            url: *const cef_string_t,
-            active: ::std::os::raw::c_int,
-            windowInfo: *mut _cef_window_info_t,
-            client: *mut *mut _cef_client_t,
-            settings: *mut _cef_browser_settings_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_active_browser: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            browser: *mut _cef_browser_t,
-            include_incognito: ::std::os::raw::c_int
-        ) -> *mut _cef_browser_t
-    >,
-    pub can_access_browser: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            browser: *mut _cef_browser_t,
-            include_incognito: ::std::os::raw::c_int,
-            target_browser: *mut _cef_browser_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_extension_resource: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            browser: *mut _cef_browser_t,
-            file: *const cef_string_t,
-            callback: *mut _cef_get_extension_resource_callback_t
-        ) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_extension_handler_t = _cef_extension_handler_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_media_router_t {
@@ -6026,38 +6749,6 @@ pub struct _cef_request_context_t {
             callback: *mut _cef_resolve_callback_t
         )
     >,
-    pub load_extension: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            root_directory: *const cef_string_t,
-            manifest: *mut _cef_dictionary_value_t,
-            handler: *mut _cef_extension_handler_t
-        )
-    >,
-    pub did_load_extension: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            extension_id: *const cef_string_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub has_extension: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            extension_id: *const cef_string_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_extensions: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            extension_ids: cef_string_list_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_extension: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            extension_id: *const cef_string_t
-        ) -> *mut _cef_extension_t
-    >,
     pub get_media_router: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_request_context_t,
@@ -6097,6 +6788,22 @@ pub struct _cef_request_context_t {
             content_type: cef_content_setting_types_t,
             value: cef_content_setting_values_t
         )
+    >,
+    pub set_chrome_color_scheme: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_context_t,
+            variant: cef_color_variant_t,
+            user_color: cef_color_t
+        )
+    >,
+    pub get_chrome_color_scheme_mode: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_request_context_t) -> cef_color_variant_t
+    >,
+    pub get_chrome_color_scheme_color: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_request_context_t) -> cef_color_t
+    >,
+    pub get_chrome_color_scheme_variant: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_request_context_t) -> cef_color_variant_t
     >
 }
 pub type cef_request_context_t = _cef_request_context_t;
@@ -6118,7 +6825,7 @@ extern "C" {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_browser_t {
-    pub base:                  cef_base_ref_counted_t,
+    pub base:                    cef_base_ref_counted_t,
     pub is_valid: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_t) -> ::std::os::raw::c_int
     >,
@@ -6161,10 +6868,13 @@ pub struct _cef_browser_t {
     pub get_focused_frame: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_t) -> *mut _cef_frame_t
     >,
-    pub get_frame_byident: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_browser_t, identifier: i64) -> *mut _cef_frame_t
+    pub get_frame_by_identifier: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_t,
+            identifier: *const cef_string_t
+        ) -> *mut _cef_frame_t
     >,
-    pub get_frame: ::std::option::Option<
+    pub get_frame_by_name: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_browser_t,
             name: *const cef_string_t
@@ -6173,11 +6883,7 @@ pub struct _cef_browser_t {
     pub get_frame_count:
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_browser_t) -> usize>,
     pub get_frame_identifiers: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_t,
-            identifiersCount: *mut usize,
-            identifiers: *mut i64
-        )
+        unsafe extern "C" fn(self_: *mut _cef_browser_t, identifiers: cef_string_list_t)
     >,
     pub get_frame_names: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_t, names: cef_string_list_t)
@@ -6251,6 +6957,9 @@ pub struct _cef_browser_host_t {
     pub try_close_browser: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
     >,
+    pub is_ready_to_be_closed: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
+    >,
     pub set_focus: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_host_t, focus: ::std::os::raw::c_int)
     >,
@@ -6259,6 +6968,9 @@ pub struct _cef_browser_host_t {
     >,
     pub get_opener_window_handle: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_ulong
+    >,
+    pub get_opener_identifier: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
     >,
     pub has_view: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
@@ -6504,12 +7216,6 @@ pub struct _cef_browser_host_t {
             max_size: *const cef_size_t
         )
     >,
-    pub get_extension: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> *mut _cef_extension_t
-    >,
-    pub is_background_host: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
-    >,
     pub set_audio_muted: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_host_t, mute: ::std::os::raw::c_int)
     >,
@@ -6537,6 +7243,12 @@ pub struct _cef_browser_host_t {
             command_id: ::std::os::raw::c_int,
             disposition: cef_window_open_disposition_t
         )
+    >,
+    pub is_render_process_unresponsive: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
+    >,
+    pub get_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> cef_runtime_style_t
     >
 }
 pub type cef_browser_host_t = _cef_browser_host_t;
@@ -6560,52 +7272,91 @@ extern "C" {
         request_context: *mut _cef_request_context_t
     ) -> *mut cef_browser_t;
 }
+extern "C" {
+    pub fn cef_browser_host_get_browser_by_identifier(
+        browser_id: ::std::os::raw::c_int
+    ) -> *mut cef_browser_t;
+}
 #[repr(C)]
-#[derive(Copy, Clone)]
-pub struct _cef_life_span_handler_t {
-    pub base:                      cef_base_ref_counted_t,
-    pub on_before_popup: ::std::option::Option<
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_audio_handler_t {
+    pub base:                    cef_base_ref_counted_t,
+    pub get_audio_parameters: ::std::option::Option<
         unsafe extern "C" fn(
-            self_: *mut _cef_life_span_handler_t,
+            self_: *mut _cef_audio_handler_t,
             browser: *mut _cef_browser_t,
-            frame: *mut _cef_frame_t,
-            target_url: *const cef_string_t,
-            target_frame_name: *const cef_string_t,
-            target_disposition: cef_window_open_disposition_t,
-            user_gesture: ::std::os::raw::c_int,
-            popupFeatures: *const cef_popup_features_t,
-            windowInfo: *mut _cef_window_info_t,
-            client: *mut *mut _cef_client_t,
-            settings: *mut _cef_browser_settings_t,
-            extra_info: *mut *mut _cef_dictionary_value_t,
-            no_javascript_access: *mut ::std::os::raw::c_int
+            params: *mut cef_audio_parameters_t
         ) -> ::std::os::raw::c_int
     >,
-    pub on_before_dev_tools_popup: ::std::option::Option<
+    pub on_audio_stream_started: ::std::option::Option<
         unsafe extern "C" fn(
-            self_: *mut _cef_life_span_handler_t,
+            self_: *mut _cef_audio_handler_t,
             browser: *mut _cef_browser_t,
-            windowInfo: *mut _cef_window_info_t,
-            client: *mut *mut _cef_client_t,
-            settings: *mut _cef_browser_settings_t,
-            extra_info: *mut *mut _cef_dictionary_value_t,
-            use_default_window: *mut ::std::os::raw::c_int
+            params: *const cef_audio_parameters_t,
+            channels: ::std::os::raw::c_int
         )
     >,
-    pub on_after_created: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_life_span_handler_t, browser: *mut _cef_browser_t)
-    >,
-    pub do_close: ::std::option::Option<
+    pub on_audio_stream_packet: ::std::option::Option<
         unsafe extern "C" fn(
-            self_: *mut _cef_life_span_handler_t,
-            browser: *mut _cef_browser_t
-        ) -> ::std::os::raw::c_int
+            self_: *mut _cef_audio_handler_t,
+            browser: *mut _cef_browser_t,
+            data: *mut *const f32,
+            frames: ::std::os::raw::c_int,
+            pts: i64
+        )
     >,
-    pub on_before_close: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_life_span_handler_t, browser: *mut _cef_browser_t)
+    pub on_audio_stream_stopped: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_audio_handler_t, browser: *mut _cef_browser_t)
+    >,
+    pub on_audio_stream_error: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_audio_handler_t,
+            browser: *mut _cef_browser_t,
+            message: *const cef_string_t
+        )
     >
 }
-pub type cef_life_span_handler_t = _cef_life_span_handler_t;
+pub type cef_audio_handler_t = _cef_audio_handler_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_command_handler_t {
+    pub base:                               cef_base_ref_counted_t,
+    pub on_chrome_command: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_command_handler_t,
+            browser: *mut _cef_browser_t,
+            command_id: ::std::os::raw::c_int,
+            disposition: cef_window_open_disposition_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub is_chrome_app_menu_item_visible: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_command_handler_t,
+            browser: *mut _cef_browser_t,
+            command_id: ::std::os::raw::c_int
+        ) -> ::std::os::raw::c_int
+    >,
+    pub is_chrome_app_menu_item_enabled: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_command_handler_t,
+            browser: *mut _cef_browser_t,
+            command_id: ::std::os::raw::c_int
+        ) -> ::std::os::raw::c_int
+    >,
+    pub is_chrome_page_action_icon_visible: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_command_handler_t,
+            icon_type: cef_chrome_page_action_icon_type_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub is_chrome_toolbar_button_visible: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_command_handler_t,
+            button_type: cef_chrome_toolbar_button_type_t
+        ) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_command_handler_t = _cef_command_handler_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_menu_model_delegate_t {
@@ -7011,181 +7762,6 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _cef_waitable_event_t {
-    pub base:        cef_base_ref_counted_t,
-    pub reset:       ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_waitable_event_t)>,
-    pub signal:      ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_waitable_event_t)>,
-    pub is_signaled: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_waitable_event_t) -> ::std::os::raw::c_int
-    >,
-    pub wait:        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_waitable_event_t)>,
-    pub timed_wait: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_waitable_event_t,
-            max_ms: i64
-        ) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_waitable_event_t = _cef_waitable_event_t;
-extern "C" {
-    pub fn cef_waitable_event_create(
-        automatic_reset: ::std::os::raw::c_int,
-        initially_signaled: ::std::os::raw::c_int
-    ) -> *mut cef_waitable_event_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_response_t {
-    pub base:               cef_base_ref_counted_t,
-    pub is_read_only: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t) -> ::std::os::raw::c_int
-    >,
-    pub get_error:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_errorcode_t>,
-    pub set_error: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t, error: cef_errorcode_t)
-    >,
-    pub get_status: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t) -> ::std::os::raw::c_int
-    >,
-    pub set_status: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t, status: ::std::os::raw::c_int)
-    >,
-    pub get_status_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_string_userfree_t
-    >,
-    pub set_status_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t, statusText: *const cef_string_t)
-    >,
-    pub get_mime_type: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_string_userfree_t
-    >,
-    pub set_mime_type: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t, mimeType: *const cef_string_t)
-    >,
-    pub get_charset: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_string_userfree_t
-    >,
-    pub set_charset: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t, charset: *const cef_string_t)
-    >,
-    pub get_header_by_name: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_response_t,
-            name: *const cef_string_t
-        ) -> cef_string_userfree_t
-    >,
-    pub set_header_by_name: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_response_t,
-            name: *const cef_string_t,
-            value: *const cef_string_t,
-            overwrite: ::std::os::raw::c_int
-        )
-    >,
-    pub get_header_map: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t, headerMap: cef_string_multimap_t)
-    >,
-    pub set_header_map: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t, headerMap: cef_string_multimap_t)
-    >,
-    pub get_url: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_string_userfree_t
-    >,
-    pub set_url: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_response_t, url: *const cef_string_t)
-    >
-}
-pub type cef_response_t = _cef_response_t;
-extern "C" {
-    pub fn cef_response_create() -> *mut cef_response_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_shared_process_message_builder_t {
-    pub base:     cef_base_ref_counted_t,
-    pub is_valid: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_shared_process_message_builder_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub size: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_shared_process_message_builder_t) -> usize
-    >,
-    pub memory: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_shared_process_message_builder_t
-        ) -> *mut ::std::os::raw::c_void
-    >,
-    pub build: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_shared_process_message_builder_t
-        ) -> *mut _cef_process_message_t
-    >
-}
-pub type cef_shared_process_message_builder_t = _cef_shared_process_message_builder_t;
-extern "C" {
-    pub fn cef_shared_process_message_builder_create(
-        name: *const cef_string_t,
-        byte_size: usize
-    ) -> *mut cef_shared_process_message_builder_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_accessibility_handler_t {
-    pub base:                             cef_base_ref_counted_t,
-    pub on_accessibility_tree_change: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_accessibility_handler_t, value: *mut _cef_value_t)
-    >,
-    pub on_accessibility_location_change: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_accessibility_handler_t, value: *mut _cef_value_t)
-    >
-}
-pub type cef_accessibility_handler_t = _cef_accessibility_handler_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_drag_handler_t {
-    pub base:                         cef_base_ref_counted_t,
-    pub on_drag_enter: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_drag_handler_t,
-            browser: *mut _cef_browser_t,
-            dragData: *mut _cef_drag_data_t,
-            mask: cef_drag_operations_mask_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub on_draggable_regions_changed: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_drag_handler_t,
-            browser: *mut _cef_browser_t,
-            frame: *mut _cef_frame_t,
-            regionsCount: usize,
-            regions: *const cef_draggable_region_t
-        )
-    >
-}
-pub type cef_drag_handler_t = _cef_drag_handler_t;
-extern "C" {
-    pub fn cef_add_cross_origin_whitelist_entry(
-        source_origin: *const cef_string_t,
-        target_protocol: *const cef_string_t,
-        target_domain: *const cef_string_t,
-        allow_target_subdomains: ::std::os::raw::c_int
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
-    pub fn cef_remove_cross_origin_whitelist_entry(
-        source_origin: *const cef_string_t,
-        target_protocol: *const cef_string_t,
-        target_domain: *const cef_string_t,
-        allow_target_subdomains: ::std::os::raw::c_int
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
-    pub fn cef_clear_cross_origin_whitelist() -> ::std::os::raw::c_int;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
 pub struct _cef_run_context_menu_callback_t {
     pub base:   cef_base_ref_counted_t,
     pub cont: ::std::option::Option<
@@ -7360,142 +7936,6 @@ pub struct _cef_context_menu_params_t {
     >
 }
 pub type cef_context_menu_params_t = _cef_context_menu_params_t;
-extern "C" {
-    pub fn cef_launch_process(command_line: *mut [u8; 0usize]) -> ::std::os::raw::c_int;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_zip_reader_t {
-    pub base:                   cef_base_ref_counted_t,
-    pub move_to_first_file: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
-    >,
-    pub move_to_next_file: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
-    >,
-    pub move_to_file: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_zip_reader_t,
-            fileName: *const cef_string_t,
-            caseSensitive: ::std::os::raw::c_int
-        ) -> ::std::os::raw::c_int
-    >,
-    pub close: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
-    >,
-    pub get_file_name: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> cef_string_userfree_t
-    >,
-    pub get_file_size:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> i64>,
-    pub get_file_last_modified: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> cef_basetime_t
-    >,
-    pub open_file: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_zip_reader_t,
-            password: *const cef_string_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub close_file: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
-    >,
-    pub read_file: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_zip_reader_t,
-            buffer: *mut ::std::os::raw::c_void,
-            bufferSize: usize
-        ) -> ::std::os::raw::c_int
-    >,
-    pub tell: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> i64>,
-    pub eof: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_zip_reader_t = _cef_zip_reader_t;
-extern "C" {
-    pub fn cef_zip_reader_create(stream: *mut _cef_stream_reader_t) -> *mut cef_zip_reader_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_audio_handler_t {
-    pub base:                    cef_base_ref_counted_t,
-    pub get_audio_parameters: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_audio_handler_t,
-            browser: *mut _cef_browser_t,
-            params: *mut cef_audio_parameters_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub on_audio_stream_started: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_audio_handler_t,
-            browser: *mut _cef_browser_t,
-            params: *const cef_audio_parameters_t,
-            channels: ::std::os::raw::c_int
-        )
-    >,
-    pub on_audio_stream_packet: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_audio_handler_t,
-            browser: *mut _cef_browser_t,
-            data: *mut *const f32,
-            frames: ::std::os::raw::c_int,
-            pts: i64
-        )
-    >,
-    pub on_audio_stream_stopped: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_audio_handler_t, browser: *mut _cef_browser_t)
-    >,
-    pub on_audio_stream_error: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_audio_handler_t,
-            browser: *mut _cef_browser_t,
-            message: *const cef_string_t
-        )
-    >
-}
-pub type cef_audio_handler_t = _cef_audio_handler_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_command_handler_t {
-    pub base:                               cef_base_ref_counted_t,
-    pub on_chrome_command: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_command_handler_t,
-            browser: *mut _cef_browser_t,
-            command_id: ::std::os::raw::c_int,
-            disposition: cef_window_open_disposition_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub is_chrome_app_menu_item_visible: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_command_handler_t,
-            browser: *mut _cef_browser_t,
-            command_id: ::std::os::raw::c_int
-        ) -> ::std::os::raw::c_int
-    >,
-    pub is_chrome_app_menu_item_enabled: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_command_handler_t,
-            browser: *mut _cef_browser_t,
-            command_id: ::std::os::raw::c_int
-        ) -> ::std::os::raw::c_int
-    >,
-    pub is_chrome_page_action_icon_visible: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_command_handler_t,
-            icon_type: cef_chrome_page_action_icon_type_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub is_chrome_toolbar_button_visible: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_command_handler_t,
-            button_type: cef_chrome_toolbar_button_type_t
-        ) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_command_handler_t = _cef_command_handler_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_file_dialog_callback_t {
@@ -7522,6 +7962,8 @@ pub struct _cef_dialog_handler_t {
             title: *const cef_string_t,
             default_file_path: *const cef_string_t,
             accept_filters: cef_string_list_t,
+            accept_extensions: cef_string_list_t,
+            accept_descriptions: cef_string_list_t,
             callback: *mut _cef_file_dialog_callback_t
         ) -> ::std::os::raw::c_int
     >
@@ -7720,7 +8162,7 @@ pub struct _cef_download_handler_t {
             download_item: *mut _cef_download_item_t,
             suggested_name: *const cef_string_t,
             callback: *mut _cef_before_download_callback_t
-        )
+        ) -> ::std::os::raw::c_int
     >,
     pub on_download_updated: ::std::option::Option<
         unsafe extern "C" fn(
@@ -7732,6 +8174,29 @@ pub struct _cef_download_handler_t {
     >
 }
 pub type cef_download_handler_t = _cef_download_handler_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_drag_handler_t {
+    pub base:                         cef_base_ref_counted_t,
+    pub on_drag_enter: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_drag_handler_t,
+            browser: *mut _cef_browser_t,
+            dragData: *mut _cef_drag_data_t,
+            mask: cef_drag_operations_mask_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_draggable_regions_changed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_drag_handler_t,
+            browser: *mut _cef_browser_t,
+            frame: *mut _cef_frame_t,
+            regionsCount: usize,
+            regions: *const cef_draggable_region_t
+        )
+    >
+}
+pub type cef_drag_handler_t = _cef_drag_handler_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_find_handler_t {
@@ -7777,6 +8242,13 @@ pub type cef_focus_handler_t = _cef_focus_handler_t;
 pub struct _cef_frame_handler_t {
     pub base:                  cef_base_ref_counted_t,
     pub on_frame_created: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_frame_handler_t,
+            browser: *mut _cef_browser_t,
+            frame: *mut _cef_frame_t
+        )
+    >,
+    pub on_frame_destroyed: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_frame_handler_t,
             browser: *mut _cef_browser_t,
@@ -7877,6 +8349,60 @@ pub struct _cef_keyboard_handler_t {
     >
 }
 pub type cef_keyboard_handler_t = _cef_keyboard_handler_t;
+#[repr(C)]
+#[derive(Copy, Clone)]
+pub struct _cef_life_span_handler_t {
+    pub base:                      cef_base_ref_counted_t,
+    pub on_before_popup: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_life_span_handler_t,
+            browser: *mut _cef_browser_t,
+            frame: *mut _cef_frame_t,
+            popup_id: ::std::os::raw::c_int,
+            target_url: *const cef_string_t,
+            target_frame_name: *const cef_string_t,
+            target_disposition: cef_window_open_disposition_t,
+            user_gesture: ::std::os::raw::c_int,
+            popupFeatures: *const cef_popup_features_t,
+            windowInfo: *mut _cef_window_info_t,
+            client: *mut *mut _cef_client_t,
+            settings: *mut _cef_browser_settings_t,
+            extra_info: *mut *mut _cef_dictionary_value_t,
+            no_javascript_access: *mut ::std::os::raw::c_int
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_before_popup_aborted: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_life_span_handler_t,
+            browser: *mut _cef_browser_t,
+            popup_id: ::std::os::raw::c_int
+        )
+    >,
+    pub on_before_dev_tools_popup: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_life_span_handler_t,
+            browser: *mut _cef_browser_t,
+            windowInfo: *mut _cef_window_info_t,
+            client: *mut *mut _cef_client_t,
+            settings: *mut _cef_browser_settings_t,
+            extra_info: *mut *mut _cef_dictionary_value_t,
+            use_default_window: *mut ::std::os::raw::c_int
+        )
+    >,
+    pub on_after_created: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_life_span_handler_t, browser: *mut _cef_browser_t)
+    >,
+    pub do_close: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_life_span_handler_t,
+            browser: *mut _cef_browser_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_before_close: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_life_span_handler_t, browser: *mut _cef_browser_t)
+    >
+}
+pub type cef_life_span_handler_t = _cef_life_span_handler_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_load_handler_t {
@@ -8132,6 +8658,18 @@ pub struct _cef_print_handler_t {
 pub type cef_print_handler_t = _cef_print_handler_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct _cef_accessibility_handler_t {
+    pub base:                             cef_base_ref_counted_t,
+    pub on_accessibility_tree_change: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_accessibility_handler_t, value: *mut _cef_value_t)
+    >,
+    pub on_accessibility_location_change: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_accessibility_handler_t, value: *mut _cef_value_t)
+    >
+}
+pub type cef_accessibility_handler_t = _cef_accessibility_handler_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct _cef_render_handler_t {
     pub base:                             cef_base_ref_counted_t,
     pub get_accessibility_handler: ::std::option::Option<
@@ -8203,7 +8741,7 @@ pub struct _cef_render_handler_t {
             type_: cef_paint_element_type_t,
             dirtyRectsCount: usize,
             dirtyRects: *const cef_rect_t,
-            shared_handle: *mut ::std::os::raw::c_void
+            info: *const cef_accelerated_paint_info_t
         )
     >,
     pub get_touch_handle_size: ::std::option::Option<
@@ -8286,6 +8824,73 @@ pub struct _cef_auth_callback_t {
     pub cancel: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_auth_callback_t)>
 }
 pub type cef_auth_callback_t = _cef_auth_callback_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_response_t {
+    pub base:               cef_base_ref_counted_t,
+    pub is_read_only: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t) -> ::std::os::raw::c_int
+    >,
+    pub get_error:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_errorcode_t>,
+    pub set_error: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t, error: cef_errorcode_t)
+    >,
+    pub get_status: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t) -> ::std::os::raw::c_int
+    >,
+    pub set_status: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t, status: ::std::os::raw::c_int)
+    >,
+    pub get_status_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_string_userfree_t
+    >,
+    pub set_status_text: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t, statusText: *const cef_string_t)
+    >,
+    pub get_mime_type: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_string_userfree_t
+    >,
+    pub set_mime_type: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t, mimeType: *const cef_string_t)
+    >,
+    pub get_charset: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_string_userfree_t
+    >,
+    pub set_charset: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t, charset: *const cef_string_t)
+    >,
+    pub get_header_by_name: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_response_t,
+            name: *const cef_string_t
+        ) -> cef_string_userfree_t
+    >,
+    pub set_header_by_name: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_response_t,
+            name: *const cef_string_t,
+            value: *const cef_string_t,
+            overwrite: ::std::os::raw::c_int
+        )
+    >,
+    pub get_header_map: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t, headerMap: cef_string_multimap_t)
+    >,
+    pub set_header_map: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t, headerMap: cef_string_multimap_t)
+    >,
+    pub get_url: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t) -> cef_string_userfree_t
+    >,
+    pub set_url: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_response_t, url: *const cef_string_t)
+    >
+}
+pub type cef_response_t = _cef_response_t;
+extern "C" {
+    pub fn cef_response_create() -> *mut cef_response_t;
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_resource_skip_callback_t {
@@ -8504,6 +9109,18 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct _cef_unresponsive_process_callback_t {
+    pub base:      cef_base_ref_counted_t,
+    pub wait: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_unresponsive_process_callback_t)
+    >,
+    pub terminate: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_unresponsive_process_callback_t)
+    >
+}
+pub type cef_unresponsive_process_callback_t = _cef_unresponsive_process_callback_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct _cef_select_client_certificate_callback_t {
     pub base:   cef_base_ref_counted_t,
     pub select: ::std::option::Option<
@@ -8588,11 +9205,23 @@ pub struct _cef_request_handler_t {
     pub on_render_view_ready: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_request_handler_t, browser: *mut _cef_browser_t)
     >,
+    pub on_render_process_unresponsive: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_handler_t,
+            browser: *mut _cef_browser_t,
+            callback: *mut _cef_unresponsive_process_callback_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_render_process_responsive: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_request_handler_t, browser: *mut _cef_browser_t)
+    >,
     pub on_render_process_terminated: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_request_handler_t,
             browser: *mut _cef_browser_t,
-            status: cef_termination_status_t
+            status: cef_termination_status_t,
+            error_code: ::std::os::raw::c_int,
+            error_string: *const cef_string_t
         )
     >,
     pub on_document_available_in_main_frame: ::std::option::Option<
@@ -8669,6 +9298,519 @@ pub struct _cef_client_t {
     >
 }
 pub type cef_client_t = _cef_client_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_browser_view_delegate_t {
+    pub base: cef_view_delegate_t,
+    pub on_browser_created: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_view_delegate_t,
+            browser_view: *mut _cef_browser_view_t,
+            browser: *mut _cef_browser_t
+        )
+    >,
+    pub on_browser_destroyed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_view_delegate_t,
+            browser_view: *mut _cef_browser_view_t,
+            browser: *mut _cef_browser_t
+        )
+    >,
+    pub get_delegate_for_popup_browser_view: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_view_delegate_t,
+            browser_view: *mut _cef_browser_view_t,
+            settings: *const _cef_browser_settings_t,
+            client: *mut _cef_client_t,
+            is_devtools: ::std::os::raw::c_int
+        ) -> *mut _cef_browser_view_delegate_t
+    >,
+    pub on_popup_browser_view_created: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_view_delegate_t,
+            browser_view: *mut _cef_browser_view_t,
+            popup_browser_view: *mut _cef_browser_view_t,
+            is_devtools: ::std::os::raw::c_int
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_chrome_toolbar_type: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_view_delegate_t,
+            browser_view: *mut _cef_browser_view_t
+        ) -> cef_chrome_toolbar_type_t
+    >,
+    pub use_frameless_window_for_picture_in_picture: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_view_delegate_t,
+            browser_view: *mut _cef_browser_view_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_gesture_command: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_view_delegate_t,
+            browser_view: *mut _cef_browser_view_t,
+            gesture_command: cef_gesture_command_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_browser_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_view_delegate_t) -> cef_runtime_style_t
+    >
+}
+pub type cef_browser_view_delegate_t = _cef_browser_view_delegate_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_browser_view_t {
+    pub base:                    cef_view_t,
+    pub get_browser: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_view_t) -> *mut _cef_browser_t
+    >,
+    pub get_chrome_toolbar: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_view_t) -> *mut _cef_view_t
+    >,
+    pub set_prefer_accelerators: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_view_t,
+            prefer_accelerators: ::std::os::raw::c_int
+        )
+    >,
+    pub get_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_view_t) -> cef_runtime_style_t
+    >
+}
+pub type cef_browser_view_t = _cef_browser_view_t;
+extern "C" {
+    pub fn cef_browser_view_create(
+        client: *mut _cef_client_t,
+        url: *const cef_string_t,
+        settings: *const _cef_browser_settings_t,
+        extra_info: *mut _cef_dictionary_value_t,
+        request_context: *mut _cef_request_context_t,
+        delegate: *mut _cef_browser_view_delegate_t
+    ) -> *mut cef_browser_view_t;
+}
+extern "C" {
+    pub fn cef_browser_view_get_for_browser(
+        browser: *mut _cef_browser_t
+    ) -> *mut cef_browser_view_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_overlay_controller_t {
+    pub base:                   cef_base_ref_counted_t,
+    pub is_valid: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> ::std::os::raw::c_int
+    >,
+    pub is_same: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_overlay_controller_t,
+            that: *mut _cef_overlay_controller_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_contents_view: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> *mut _cef_view_t
+    >,
+    pub get_window: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> *mut _cef_window_t
+    >,
+    pub get_docking_mode: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_docking_mode_t
+    >,
+    pub destroy: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t)>,
+    pub set_bounds: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, bounds: *const cef_rect_t)
+    >,
+    pub get_bounds: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_rect_t
+    >,
+    pub get_bounds_in_screen: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_rect_t
+    >,
+    pub set_size: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, size: *const cef_size_t)
+    >,
+    pub get_size: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_size_t
+    >,
+    pub set_position: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, position: *const cef_point_t)
+    >,
+    pub get_position: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_point_t
+    >,
+    pub set_insets: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, insets: *const cef_insets_t)
+    >,
+    pub get_insets: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_insets_t
+    >,
+    pub size_to_preferred_size:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t)>,
+    pub set_visible: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, visible: ::std::os::raw::c_int)
+    >,
+    pub is_visible: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> ::std::os::raw::c_int
+    >,
+    pub is_drawn: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_overlay_controller_t = _cef_overlay_controller_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_panel_t {
+    pub base:                   cef_view_t,
+    pub as_window:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t) -> *mut _cef_window_t>,
+    pub set_to_fill_layout: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_panel_t) -> *mut _cef_fill_layout_t
+    >,
+    pub set_to_box_layout: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_panel_t,
+            settings: *const cef_box_layout_settings_t
+        ) -> *mut _cef_box_layout_t
+    >,
+    pub get_layout:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t) -> *mut _cef_layout_t>,
+    pub layout: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t)>,
+    pub add_child_view: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_panel_t, view: *mut _cef_view_t)
+    >,
+    pub add_child_view_at: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_panel_t,
+            view: *mut _cef_view_t,
+            index: ::std::os::raw::c_int
+        )
+    >,
+    pub reorder_child_view: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_panel_t,
+            view: *mut _cef_view_t,
+            index: ::std::os::raw::c_int
+        )
+    >,
+    pub remove_child_view: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_panel_t, view: *mut _cef_view_t)
+    >,
+    pub remove_all_child_views:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t)>,
+    pub get_child_view_count:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t) -> usize>,
+    pub get_child_view_at: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_panel_t,
+            index: ::std::os::raw::c_int
+        ) -> *mut _cef_view_t
+    >
+}
+pub type cef_panel_t = _cef_panel_t;
+extern "C" {
+    pub fn cef_panel_create(delegate: *mut _cef_panel_delegate_t) -> *mut cef_panel_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_menu_button_pressed_lock_t {
+    pub base: cef_base_ref_counted_t
+}
+pub type cef_menu_button_pressed_lock_t = _cef_menu_button_pressed_lock_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_menu_button_delegate_t {
+    pub base:                   cef_button_delegate_t,
+    pub on_menu_button_pressed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_menu_button_delegate_t,
+            menu_button: *mut _cef_menu_button_t,
+            screen_point: *const cef_point_t,
+            button_pressed_lock: *mut _cef_menu_button_pressed_lock_t
+        )
+    >
+}
+pub type cef_menu_button_delegate_t = _cef_menu_button_delegate_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_display_t {
+    pub base:                      cef_base_ref_counted_t,
+    pub get_id: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_display_t) -> i64>,
+    pub get_device_scale_factor:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_display_t) -> f32>,
+    pub convert_point_to_pixels: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_display_t, point: *mut cef_point_t)
+    >,
+    pub convert_point_from_pixels: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_display_t, point: *mut cef_point_t)
+    >,
+    pub get_bounds:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_display_t) -> cef_rect_t>,
+    pub get_work_area:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_display_t) -> cef_rect_t>,
+    pub get_rotation: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_display_t) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_display_t = _cef_display_t;
+extern "C" {
+    pub fn cef_display_get_primary() -> *mut cef_display_t;
+}
+extern "C" {
+    pub fn cef_display_get_nearest_point(
+        point: *const cef_point_t,
+        input_pixel_coords: ::std::os::raw::c_int
+    ) -> *mut cef_display_t;
+}
+extern "C" {
+    pub fn cef_display_get_matching_bounds(
+        bounds: *const cef_rect_t,
+        input_pixel_coords: ::std::os::raw::c_int
+    ) -> *mut cef_display_t;
+}
+extern "C" {
+    pub fn cef_display_get_count() -> usize;
+}
+extern "C" {
+    pub fn cef_display_get_alls(displaysCount: *mut usize, displays: *mut *mut cef_display_t);
+}
+extern "C" {
+    pub fn cef_display_convert_screen_point_to_pixels(point: *const cef_point_t) -> cef_point_t;
+}
+extern "C" {
+    pub fn cef_display_convert_screen_point_from_pixels(point: *const cef_point_t) -> cef_point_t;
+}
+extern "C" {
+    pub fn cef_display_convert_screen_rect_to_pixels(rect: *const cef_rect_t) -> cef_rect_t;
+}
+extern "C" {
+    pub fn cef_display_convert_screen_rect_from_pixels(rect: *const cef_rect_t) -> cef_rect_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_scroll_view_t {
+    pub base:                            cef_view_t,
+    pub set_content_view: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t, view: *mut _cef_view_t)
+    >,
+    pub get_content_view: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> *mut _cef_view_t
+    >,
+    pub get_visible_content_rect:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> cef_rect_t>,
+    pub has_horizontal_scrollbar: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> ::std::os::raw::c_int
+    >,
+    pub get_horizontal_scrollbar_height: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> ::std::os::raw::c_int
+    >,
+    pub has_vertical_scrollbar: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> ::std::os::raw::c_int
+    >,
+    pub get_vertical_scrollbar_width: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_scroll_view_t = _cef_scroll_view_t;
+extern "C" {
+    pub fn cef_scroll_view_create(delegate: *mut _cef_view_delegate_t) -> *mut cef_scroll_view_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_menu_button_t {
+    pub base:         cef_label_button_t,
+    pub show_menu: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_menu_button_t,
+            menu_model: *mut _cef_menu_model_t,
+            screen_point: *const cef_point_t,
+            anchor_position: cef_menu_anchor_position_t
+        )
+    >,
+    pub trigger_menu: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_menu_button_t)>
+}
+pub type cef_menu_button_t = _cef_menu_button_t;
+extern "C" {
+    pub fn cef_menu_button_create(
+        delegate: *mut _cef_menu_button_delegate_t,
+        text: *const cef_string_t
+    ) -> *mut cef_menu_button_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_window_t {
+    pub base:                             cef_panel_t,
+    pub show: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub show_as_browser_modal_dialog: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t, browser_view: *mut _cef_browser_view_t)
+    >,
+    pub hide: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub center_window: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t, size: *const cef_size_t)
+    >,
+    pub close: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub is_closed: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
+    >,
+    pub activate: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub deactivate: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub is_active: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
+    >,
+    pub bring_to_top: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub set_always_on_top: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t, on_top: ::std::os::raw::c_int)
+    >,
+    pub is_always_on_top: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
+    >,
+    pub maximize: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub minimize: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub restore: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub set_fullscreen: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t, fullscreen: ::std::os::raw::c_int)
+    >,
+    pub is_maximized: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
+    >,
+    pub is_minimized: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
+    >,
+    pub is_fullscreen: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
+    >,
+    pub get_focused_view:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t) -> *mut _cef_view_t>,
+    pub set_title: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t, title: *const cef_string_t)
+    >,
+    pub get_title: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> cef_string_userfree_t
+    >,
+    pub set_window_icon: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t, image: *mut _cef_image_t)
+    >,
+    pub get_window_icon:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t) -> *mut _cef_image_t>,
+    pub set_window_app_icon: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t, image: *mut _cef_image_t)
+    >,
+    pub get_window_app_icon:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t) -> *mut _cef_image_t>,
+    pub add_overlay_view: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_t,
+            view: *mut _cef_view_t,
+            docking_mode: cef_docking_mode_t,
+            can_activate: ::std::os::raw::c_int
+        ) -> *mut _cef_overlay_controller_t
+    >,
+    pub show_menu: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_t,
+            menu_model: *mut _cef_menu_model_t,
+            screen_point: *const cef_point_t,
+            anchor_position: cef_menu_anchor_position_t
+        )
+    >,
+    pub cancel_menu: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub get_display: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> *mut _cef_display_t
+    >,
+    pub get_client_area_bounds_in_screen:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t) -> cef_rect_t>,
+    pub set_draggable_regions: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_t,
+            regionsCount: usize,
+            regions: *const cef_draggable_region_t
+        )
+    >,
+    pub get_window_handle: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_ulong
+    >,
+    pub send_key_press: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_t,
+            key_code: ::std::os::raw::c_int,
+            event_flags: u32
+        )
+    >,
+    pub send_mouse_move: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_t,
+            screen_x: ::std::os::raw::c_int,
+            screen_y: ::std::os::raw::c_int
+        )
+    >,
+    pub send_mouse_events: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_t,
+            button: cef_mouse_button_type_t,
+            mouse_down: ::std::os::raw::c_int,
+            mouse_up: ::std::os::raw::c_int
+        )
+    >,
+    pub set_accelerator: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_t,
+            command_id: ::std::os::raw::c_int,
+            key_code: ::std::os::raw::c_int,
+            shift_pressed: ::std::os::raw::c_int,
+            ctrl_pressed: ::std::os::raw::c_int,
+            alt_pressed: ::std::os::raw::c_int,
+            high_priority: ::std::os::raw::c_int
+        )
+    >,
+    pub remove_accelerator: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t, command_id: ::std::os::raw::c_int)
+    >,
+    pub remove_all_accelerators:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub set_theme_color: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_t,
+            color_id: ::std::os::raw::c_int,
+            color: cef_color_t
+        )
+    >,
+    pub theme_changed: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub get_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> cef_runtime_style_t
+    >
+}
+pub type cef_window_t = _cef_window_t;
+extern "C" {
+    pub fn cef_window_create_top_level(delegate: *mut _cef_window_delegate_t) -> *mut cef_window_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_fill_layout_t {
+    pub base: cef_layout_t
+}
+pub type cef_fill_layout_t = _cef_fill_layout_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_waitable_event_t {
+    pub base:        cef_base_ref_counted_t,
+    pub reset:       ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_waitable_event_t)>,
+    pub signal:      ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_waitable_event_t)>,
+    pub is_signaled: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_waitable_event_t) -> ::std::os::raw::c_int
+    >,
+    pub wait:        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_waitable_event_t)>,
+    pub timed_wait: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_waitable_event_t,
+            max_ms: i64
+        ) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_waitable_event_t = _cef_waitable_event_t;
+extern "C" {
+    pub fn cef_waitable_event_create(
+        automatic_reset: ::std::os::raw::c_int,
+        initially_signaled: ::std::os::raw::c_int
+    ) -> *mut cef_waitable_event_t;
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_command_line_t {
@@ -8755,8 +9897,32 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct _cef_request_context_handler_t {
+    pub base:                           cef_base_ref_counted_t,
+    pub on_request_context_initialized: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_context_handler_t,
+            request_context: *mut _cef_request_context_t
+        )
+    >,
+    pub get_resource_request_handler: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_context_handler_t,
+            browser: *mut _cef_browser_t,
+            frame: *mut _cef_frame_t,
+            request: *mut _cef_request_t,
+            is_navigation: ::std::os::raw::c_int,
+            is_download: ::std::os::raw::c_int,
+            request_initiator: *const cef_string_t,
+            disable_default_handling: *mut ::std::os::raw::c_int
+        ) -> *mut _cef_resource_request_handler_t
+    >
+}
+pub type cef_request_context_handler_t = _cef_request_context_handler_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct _cef_browser_process_handler_t {
-    pub base:                            cef_base_ref_counted_t,
+    pub base:                                cef_base_ref_counted_t,
     pub on_register_custom_preferences: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_browser_process_handler_t,
@@ -8784,14 +9950,94 @@ pub struct _cef_browser_process_handler_t {
     >,
     pub get_default_client: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_process_handler_t) -> *mut _cef_client_t
+    >,
+    pub get_default_request_context_handler: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_process_handler_t
+        ) -> *mut _cef_request_context_handler_t
     >
 }
 pub type cef_browser_process_handler_t = _cef_browser_process_handler_t;
 extern "C" {
-    pub fn cef_crash_reporting_enabled() -> ::std::os::raw::c_int;
+    pub fn cef_resolve_url(
+        base_url: *const cef_string_t,
+        relative_url: *const cef_string_t,
+        resolved_url: *mut cef_string_t
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn cef_set_crash_key_value(key: *const cef_string_t, value: *const cef_string_t);
+    pub fn cef_parse_url(
+        url: *const cef_string_t,
+        parts: *mut _cef_urlparts_t
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn cef_create_url(
+        parts: *const _cef_urlparts_t,
+        url: *mut cef_string_t
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn cef_format_url_for_security_display(
+        origin_url: *const cef_string_t
+    ) -> cef_string_userfree_t;
+}
+extern "C" {
+    pub fn cef_get_mime_type(extension: *const cef_string_t) -> cef_string_userfree_t;
+}
+extern "C" {
+    pub fn cef_get_extensions_for_mime_type(
+        mime_type: *const cef_string_t,
+        extensions: cef_string_list_t
+    );
+}
+extern "C" {
+    pub fn cef_base64encode(
+        data: *const ::std::os::raw::c_void,
+        data_size: usize
+    ) -> cef_string_userfree_t;
+}
+extern "C" {
+    pub fn cef_base64decode(data: *const cef_string_t) -> *mut _cef_binary_value_t;
+}
+extern "C" {
+    pub fn cef_uriencode(
+        text: *const cef_string_t,
+        use_plus: ::std::os::raw::c_int
+    ) -> cef_string_userfree_t;
+}
+extern "C" {
+    pub fn cef_uridecode(
+        text: *const cef_string_t,
+        convert_to_utf8: ::std::os::raw::c_int,
+        unescape_rule: cef_uri_unescape_rule_t
+    ) -> cef_string_userfree_t;
+}
+extern "C" {
+    pub fn cef_parse_json(
+        json_string: *const cef_string_t,
+        options: cef_json_parser_options_t
+    ) -> *mut _cef_value_t;
+}
+extern "C" {
+    pub fn cef_parse_json_buffer(
+        json: *const ::std::os::raw::c_void,
+        json_size: usize,
+        options: cef_json_parser_options_t
+    ) -> *mut _cef_value_t;
+}
+extern "C" {
+    pub fn cef_parse_jsonand_return_error(
+        json_string: *const cef_string_t,
+        options: cef_json_parser_options_t,
+        error_msg_out: *mut cef_string_t
+    ) -> *mut _cef_value_t;
+}
+extern "C" {
+    pub fn cef_write_json(
+        node: *mut _cef_value_t,
+        options: cef_json_writer_options_t
+    ) -> cef_string_userfree_t;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -9173,7 +10419,6 @@ pub struct _cef_v8value_t {
         unsafe extern "C" fn(
             self_: *mut _cef_v8value_t,
             key: *const cef_string_t,
-            settings: cef_v8_accesscontrol_t,
             attribute: cef_v8_propertyattribute_t
         ) -> ::std::os::raw::c_int
     >,
@@ -9292,6 +10537,12 @@ extern "C" {
         buffer: *mut ::std::os::raw::c_void,
         length: usize,
         release_callback: *mut cef_v8array_buffer_release_callback_t
+    ) -> *mut cef_v8value_t;
+}
+extern "C" {
+    pub fn cef_v8value_create_array_buffer_with_copy(
+        buffer: *mut ::std::os::raw::c_void,
+        length: usize
     ) -> *mut cef_v8value_t;
 }
 extern "C" {
@@ -9432,6 +10683,36 @@ pub struct _cef_render_process_handler_t {
 pub type cef_render_process_handler_t = _cef_render_process_handler_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct _cef_resource_bundle_handler_t {
+    pub base:                        cef_base_ref_counted_t,
+    pub get_localized_string: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_resource_bundle_handler_t,
+            string_id: ::std::os::raw::c_int,
+            string: *mut cef_string_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_data_resource: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_resource_bundle_handler_t,
+            resource_id: ::std::os::raw::c_int,
+            data: *mut *mut ::std::os::raw::c_void,
+            data_size: *mut usize
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_data_resource_for_scale: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_resource_bundle_handler_t,
+            resource_id: ::std::os::raw::c_int,
+            scale_factor: cef_scale_factor_t,
+            data: *mut *mut ::std::os::raw::c_void,
+            data_size: *mut usize
+        ) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_resource_bundle_handler_t = _cef_resource_bundle_handler_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct _cef_scheme_registrar_t {
     pub base:              cef_base_scoped_t,
     pub add_custom_scheme: ::std::option::Option<
@@ -9468,8 +10749,158 @@ extern "C" {
 extern "C" {
     pub fn cef_clear_scheme_handler_factories() -> ::std::os::raw::c_int;
 }
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_app_t {
+    pub base:                              cef_base_ref_counted_t,
+    pub on_before_command_line_processing: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_app_t,
+            process_type: *const cef_string_t,
+            command_line: *mut _cef_command_line_t
+        )
+    >,
+    pub on_register_custom_schemes: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_app_t, registrar: *mut _cef_scheme_registrar_t)
+    >,
+    pub get_resource_bundle_handler: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_app_t) -> *mut _cef_resource_bundle_handler_t
+    >,
+    pub get_browser_process_handler: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_app_t) -> *mut _cef_browser_process_handler_t
+    >,
+    pub get_render_process_handler: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_app_t) -> *mut _cef_render_process_handler_t
+    >
+}
+pub type cef_app_t = _cef_app_t;
 extern "C" {
-    pub fn cef_is_rtl() -> ::std::os::raw::c_int;
+    pub fn cef_execute_process(
+        args: *const cef_main_args_t,
+        application: *mut cef_app_t,
+        windows_sandbox_info: *mut ::std::os::raw::c_void
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn cef_initialize(
+        args: *const cef_main_args_t,
+        settings: *const _cef_settings_t,
+        application: *mut cef_app_t,
+        windows_sandbox_info: *mut ::std::os::raw::c_void
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn cef_get_exit_code() -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn cef_shutdown();
+}
+extern "C" {
+    pub fn cef_do_message_loop_work();
+}
+extern "C" {
+    pub fn cef_run_message_loop();
+}
+extern "C" {
+    pub fn cef_quit_message_loop();
+}
+extern "C" {
+    pub fn cef_get_path(key: cef_path_key_t, path: *mut cef_string_t) -> ::std::os::raw::c_int;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_urlrequest_t {
+    pub base:                cef_base_ref_counted_t,
+    pub get_request: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> *mut _cef_request_t
+    >,
+    pub get_client: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> *mut _cef_urlrequest_client_t
+    >,
+    pub get_request_status: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> cef_urlrequest_status_t
+    >,
+    pub get_request_error: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> cef_errorcode_t
+    >,
+    pub get_response: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> *mut _cef_response_t
+    >,
+    pub response_was_cached: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> ::std::os::raw::c_int
+    >,
+    pub cancel: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_urlrequest_t)>
+}
+pub type cef_urlrequest_t = _cef_urlrequest_t;
+extern "C" {
+    pub fn cef_urlrequest_create(
+        request: *mut _cef_request_t,
+        client: *mut _cef_urlrequest_client_t,
+        request_context: *mut _cef_request_context_t
+    ) -> *mut cef_urlrequest_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_urlrequest_client_t {
+    pub base:                 cef_base_ref_counted_t,
+    pub on_request_complete: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_urlrequest_client_t, request: *mut _cef_urlrequest_t)
+    >,
+    pub on_upload_progress: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_urlrequest_client_t,
+            request: *mut _cef_urlrequest_t,
+            current: i64,
+            total: i64
+        )
+    >,
+    pub on_download_progress: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_urlrequest_client_t,
+            request: *mut _cef_urlrequest_t,
+            current: i64,
+            total: i64
+        )
+    >,
+    pub on_download_data: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_urlrequest_client_t,
+            request: *mut _cef_urlrequest_t,
+            data: *const ::std::os::raw::c_void,
+            data_length: usize
+        )
+    >,
+    pub get_auth_credentials: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_urlrequest_client_t,
+            isProxy: ::std::os::raw::c_int,
+            host: *const cef_string_t,
+            port: ::std::os::raw::c_int,
+            realm: *const cef_string_t,
+            scheme: *const cef_string_t,
+            callback: *mut _cef_auth_callback_t
+        ) -> ::std::os::raw::c_int
+    >
+}
+pub type cef_urlrequest_client_t = _cef_urlrequest_client_t;
+extern "C" {
+    pub fn cef_add_cross_origin_whitelist_entry(
+        source_origin: *const cef_string_t,
+        target_protocol: *const cef_string_t,
+        target_domain: *const cef_string_t,
+        allow_target_subdomains: ::std::os::raw::c_int
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn cef_remove_cross_origin_whitelist_entry(
+        source_origin: *const cef_string_t,
+        target_protocol: *const cef_string_t,
+        target_domain: *const cef_string_t,
+        allow_target_subdomains: ::std::os::raw::c_int
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn cef_clear_cross_origin_whitelist() -> ::std::os::raw::c_int;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -10340,60 +11771,6 @@ extern "C" {
         com_init_mode: cef_com_init_mode_t
     ) -> *mut cef_thread_t;
 }
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_request_context_handler_t {
-    pub base:                           cef_base_ref_counted_t,
-    pub on_request_context_initialized: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_handler_t,
-            request_context: *mut _cef_request_context_t
-        )
-    >,
-    pub get_resource_request_handler: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_handler_t,
-            browser: *mut _cef_browser_t,
-            frame: *mut _cef_frame_t,
-            request: *mut _cef_request_t,
-            is_navigation: ::std::os::raw::c_int,
-            is_download: ::std::os::raw::c_int,
-            request_initiator: *const cef_string_t,
-            disable_default_handling: *mut ::std::os::raw::c_int
-        ) -> *mut _cef_resource_request_handler_t
-    >
-}
-pub type cef_request_context_handler_t = _cef_request_context_handler_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_resource_bundle_handler_t {
-    pub base:                        cef_base_ref_counted_t,
-    pub get_localized_string: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_resource_bundle_handler_t,
-            string_id: ::std::os::raw::c_int,
-            string: *mut cef_string_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_data_resource: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_resource_bundle_handler_t,
-            resource_id: ::std::os::raw::c_int,
-            data: *mut *mut ::std::os::raw::c_void,
-            data_size: *mut usize
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_data_resource_for_scale: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_resource_bundle_handler_t,
-            resource_id: ::std::os::raw::c_int,
-            scale_factor: cef_scale_factor_t,
-            data: *mut *mut ::std::os::raw::c_void,
-            data_size: *mut usize
-        ) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_resource_bundle_handler_t = _cef_resource_bundle_handler_t;
 extern "C" {
     pub fn cef_create_directory(full_path: *const cef_string_t) -> ::std::os::raw::c_int;
 }
@@ -10431,1115 +11808,6 @@ extern "C" {
 }
 extern "C" {
     pub fn cef_load_crlsets_file(path: *const cef_string_t);
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_overlay_controller_t {
-    pub base:                   cef_base_ref_counted_t,
-    pub is_valid: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> ::std::os::raw::c_int
-    >,
-    pub is_same: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_overlay_controller_t,
-            that: *mut _cef_overlay_controller_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_contents_view: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> *mut _cef_view_t
-    >,
-    pub get_window: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> *mut _cef_window_t
-    >,
-    pub get_docking_mode: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_docking_mode_t
-    >,
-    pub destroy: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t)>,
-    pub set_bounds: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, bounds: *const cef_rect_t)
-    >,
-    pub get_bounds: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_rect_t
-    >,
-    pub get_bounds_in_screen: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_rect_t
-    >,
-    pub set_size: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, size: *const cef_size_t)
-    >,
-    pub get_size: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_size_t
-    >,
-    pub set_position: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, position: *const cef_point_t)
-    >,
-    pub get_position: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_point_t
-    >,
-    pub set_insets: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, insets: *const cef_insets_t)
-    >,
-    pub get_insets: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> cef_insets_t
-    >,
-    pub size_to_preferred_size:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t)>,
-    pub set_visible: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t, visible: ::std::os::raw::c_int)
-    >,
-    pub is_visible: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> ::std::os::raw::c_int
-    >,
-    pub is_drawn: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_overlay_controller_t) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_overlay_controller_t = _cef_overlay_controller_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_layout_t {
-    pub base:           cef_base_ref_counted_t,
-    pub as_box_layout: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_layout_t) -> *mut _cef_box_layout_t
-    >,
-    pub as_fill_layout: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_layout_t) -> *mut _cef_fill_layout_t
-    >,
-    pub is_valid: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_layout_t) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_layout_t = _cef_layout_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_view_delegate_t {
-    pub base:                   cef_base_ref_counted_t,
-    pub get_preferred_size: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_delegate_t,
-            view: *mut _cef_view_t
-        ) -> cef_size_t
-    >,
-    pub get_minimum_size: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_delegate_t,
-            view: *mut _cef_view_t
-        ) -> cef_size_t
-    >,
-    pub get_maximum_size: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_delegate_t,
-            view: *mut _cef_view_t
-        ) -> cef_size_t
-    >,
-    pub get_height_for_width: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_delegate_t,
-            view: *mut _cef_view_t,
-            width: ::std::os::raw::c_int
-        ) -> ::std::os::raw::c_int
-    >,
-    pub on_parent_view_changed: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_delegate_t,
-            view: *mut _cef_view_t,
-            added: ::std::os::raw::c_int,
-            parent: *mut _cef_view_t
-        )
-    >,
-    pub on_child_view_changed: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_delegate_t,
-            view: *mut _cef_view_t,
-            added: ::std::os::raw::c_int,
-            child: *mut _cef_view_t
-        )
-    >,
-    pub on_window_changed: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_delegate_t,
-            view: *mut _cef_view_t,
-            added: ::std::os::raw::c_int
-        )
-    >,
-    pub on_layout_changed: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_delegate_t,
-            view: *mut _cef_view_t,
-            new_bounds: *const cef_rect_t
-        )
-    >,
-    pub on_focus: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_delegate_t, view: *mut _cef_view_t)
-    >,
-    pub on_blur: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_delegate_t, view: *mut _cef_view_t)
-    >
-}
-pub type cef_view_delegate_t = _cef_view_delegate_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_view_t {
-    pub base:                       cef_base_ref_counted_t,
-    pub as_browser_view: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_browser_view_t
-    >,
-    pub as_button:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_button_t>,
-    pub as_panel:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_panel_t>,
-    pub as_scroll_view: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_scroll_view_t
-    >,
-    pub as_textfield: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_textfield_t
-    >,
-    pub get_type_string: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_string_userfree_t
-    >,
-    pub to_string: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            include_children: ::std::os::raw::c_int
-        ) -> cef_string_userfree_t
-    >,
-    pub is_valid: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
-    >,
-    pub is_attached: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
-    >,
-    pub is_same: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            that: *mut _cef_view_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_delegate: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_view_delegate_t
-    >,
-    pub get_window:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_window_t>,
-    pub get_id: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
-    >,
-    pub set_id: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t, id: ::std::os::raw::c_int)
-    >,
-    pub get_group_id: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
-    >,
-    pub set_group_id: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t, group_id: ::std::os::raw::c_int)
-    >,
-    pub get_parent_view:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> *mut _cef_view_t>,
-    pub get_view_for_id: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            id: ::std::os::raw::c_int
-        ) -> *mut _cef_view_t
-    >,
-    pub set_bounds: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t, bounds: *const cef_rect_t)
-    >,
-    pub get_bounds:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_rect_t>,
-    pub get_bounds_in_screen:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_rect_t>,
-    pub set_size: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t, size: *const cef_size_t)
-    >,
-    pub get_size:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_size_t>,
-    pub set_position: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t, position: *const cef_point_t)
-    >,
-    pub get_position:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_point_t>,
-    pub set_insets: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t, insets: *const cef_insets_t)
-    >,
-    pub get_insets:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_insets_t>,
-    pub get_preferred_size:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_size_t>,
-    pub size_to_preferred_size:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t)>,
-    pub get_minimum_size:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_size_t>,
-    pub get_maximum_size:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_size_t>,
-    pub get_height_for_width: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            width: ::std::os::raw::c_int
-        ) -> ::std::os::raw::c_int
-    >,
-    pub invalidate_layout: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t)>,
-    pub set_visible: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t, visible: ::std::os::raw::c_int)
-    >,
-    pub is_visible: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
-    >,
-    pub is_drawn: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
-    >,
-    pub set_enabled: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t, enabled: ::std::os::raw::c_int)
-    >,
-    pub is_enabled: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
-    >,
-    pub set_focusable: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t, focusable: ::std::os::raw::c_int)
-    >,
-    pub is_focusable: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
-    >,
-    pub is_accessibility_focusable: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
-    >,
-    pub request_focus: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t)>,
-    pub set_background_color:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t, color: cef_color_t)>,
-    pub get_background_color:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_color_t>,
-    pub convert_point_to_screen: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            point: *mut cef_point_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub convert_point_from_screen: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            point: *mut cef_point_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub convert_point_to_window: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            point: *mut cef_point_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub convert_point_from_window: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            point: *mut cef_point_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub convert_point_to_view: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            view: *mut _cef_view_t,
-            point: *mut cef_point_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub convert_point_from_view: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_view_t,
-            view: *mut _cef_view_t,
-            point: *mut cef_point_t
-        ) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_view_t = _cef_view_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_display_t {
-    pub base:                      cef_base_ref_counted_t,
-    pub get_id: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_display_t) -> i64>,
-    pub get_device_scale_factor:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_display_t) -> f32>,
-    pub convert_point_to_pixels: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_display_t, point: *mut cef_point_t)
-    >,
-    pub convert_point_from_pixels: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_display_t, point: *mut cef_point_t)
-    >,
-    pub get_bounds:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_display_t) -> cef_rect_t>,
-    pub get_work_area:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_display_t) -> cef_rect_t>,
-    pub get_rotation: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_display_t) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_display_t = _cef_display_t;
-extern "C" {
-    pub fn cef_display_get_primary() -> *mut cef_display_t;
-}
-extern "C" {
-    pub fn cef_display_get_nearest_point(
-        point: *const cef_point_t,
-        input_pixel_coords: ::std::os::raw::c_int
-    ) -> *mut cef_display_t;
-}
-extern "C" {
-    pub fn cef_display_get_matching_bounds(
-        bounds: *const cef_rect_t,
-        input_pixel_coords: ::std::os::raw::c_int
-    ) -> *mut cef_display_t;
-}
-extern "C" {
-    pub fn cef_display_get_count() -> usize;
-}
-extern "C" {
-    pub fn cef_display_get_alls(displaysCount: *mut usize, displays: *mut *mut cef_display_t);
-}
-extern "C" {
-    pub fn cef_display_convert_screen_point_to_pixels(point: *const cef_point_t) -> cef_point_t;
-}
-extern "C" {
-    pub fn cef_display_convert_screen_point_from_pixels(point: *const cef_point_t) -> cef_point_t;
-}
-extern "C" {
-    pub fn cef_display_convert_screen_rect_to_pixels(rect: *const cef_rect_t) -> cef_rect_t;
-}
-extern "C" {
-    pub fn cef_display_convert_screen_rect_from_pixels(rect: *const cef_rect_t) -> cef_rect_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_fill_layout_t {
-    pub base: cef_layout_t
-}
-pub type cef_fill_layout_t = _cef_fill_layout_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_button_t {
-    pub base:                 cef_view_t,
-    pub as_label_button: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_button_t) -> *mut _cef_label_button_t
-    >,
-    pub set_state: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_button_t, state: cef_button_state_t)
-    >,
-    pub get_state: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_button_t) -> cef_button_state_t
-    >,
-    pub set_ink_drop_enabled: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_button_t, enabled: ::std::os::raw::c_int)
-    >,
-    pub set_tooltip_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_button_t, tooltip_text: *const cef_string_t)
-    >,
-    pub set_accessible_name: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_button_t, name: *const cef_string_t)
-    >
-}
-pub type cef_button_t = _cef_button_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_button_delegate_t {
-    pub base:                    cef_view_delegate_t,
-    pub on_button_pressed: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_button_delegate_t, button: *mut _cef_button_t)
-    >,
-    pub on_button_state_changed: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_button_delegate_t, button: *mut _cef_button_t)
-    >
-}
-pub type cef_button_delegate_t = _cef_button_delegate_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_label_button_t {
-    pub base:                     cef_button_t,
-    pub as_menu_button: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_label_button_t) -> *mut _cef_menu_button_t
-    >,
-    pub set_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_label_button_t, text: *const cef_string_t)
-    >,
-    pub get_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_label_button_t) -> cef_string_userfree_t
-    >,
-    pub set_image: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_label_button_t,
-            button_state: cef_button_state_t,
-            image: *mut _cef_image_t
-        )
-    >,
-    pub get_image: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_label_button_t,
-            button_state: cef_button_state_t
-        ) -> *mut _cef_image_t
-    >,
-    pub set_text_color: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_label_button_t,
-            for_state: cef_button_state_t,
-            color: cef_color_t
-        )
-    >,
-    pub set_enabled_text_colors: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_label_button_t, color: cef_color_t)
-    >,
-    pub set_font_list: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_label_button_t, font_list: *const cef_string_t)
-    >,
-    pub set_horizontal_alignment: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_label_button_t,
-            alignment: cef_horizontal_alignment_t
-        )
-    >,
-    pub set_minimum_size: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_label_button_t, size: *const cef_size_t)
-    >,
-    pub set_maximum_size: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_label_button_t, size: *const cef_size_t)
-    >
-}
-pub type cef_label_button_t = _cef_label_button_t;
-extern "C" {
-    pub fn cef_label_button_create(
-        delegate: *mut _cef_button_delegate_t,
-        text: *const cef_string_t
-    ) -> *mut cef_label_button_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_menu_button_pressed_lock_t {
-    pub base: cef_base_ref_counted_t
-}
-pub type cef_menu_button_pressed_lock_t = _cef_menu_button_pressed_lock_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_menu_button_delegate_t {
-    pub base:                   cef_button_delegate_t,
-    pub on_menu_button_pressed: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_menu_button_delegate_t,
-            menu_button: *mut _cef_menu_button_t,
-            screen_point: *const cef_point_t,
-            button_pressed_lock: *mut _cef_menu_button_pressed_lock_t
-        )
-    >
-}
-pub type cef_menu_button_delegate_t = _cef_menu_button_delegate_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_menu_button_t {
-    pub base:         cef_label_button_t,
-    pub show_menu: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_menu_button_t,
-            menu_model: *mut _cef_menu_model_t,
-            screen_point: *const cef_point_t,
-            anchor_position: cef_menu_anchor_position_t
-        )
-    >,
-    pub trigger_menu: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_menu_button_t)>
-}
-pub type cef_menu_button_t = _cef_menu_button_t;
-extern "C" {
-    pub fn cef_menu_button_create(
-        delegate: *mut _cef_menu_button_delegate_t,
-        text: *const cef_string_t
-    ) -> *mut cef_menu_button_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_scroll_view_t {
-    pub base:                            cef_view_t,
-    pub set_content_view: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t, view: *mut _cef_view_t)
-    >,
-    pub get_content_view: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> *mut _cef_view_t
-    >,
-    pub get_visible_content_rect:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> cef_rect_t>,
-    pub has_horizontal_scrollbar: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> ::std::os::raw::c_int
-    >,
-    pub get_horizontal_scrollbar_height: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> ::std::os::raw::c_int
-    >,
-    pub has_vertical_scrollbar: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> ::std::os::raw::c_int
-    >,
-    pub get_vertical_scrollbar_width: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_scroll_view_t) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_scroll_view_t = _cef_scroll_view_t;
-extern "C" {
-    pub fn cef_scroll_view_create(delegate: *mut _cef_view_delegate_t) -> *mut cef_scroll_view_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_panel_delegate_t {
-    pub base: cef_view_delegate_t
-}
-pub type cef_panel_delegate_t = _cef_panel_delegate_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_panel_t {
-    pub base:                   cef_view_t,
-    pub as_window:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t) -> *mut _cef_window_t>,
-    pub set_to_fill_layout: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_panel_t) -> *mut _cef_fill_layout_t
-    >,
-    pub set_to_box_layout: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_panel_t,
-            settings: *const cef_box_layout_settings_t
-        ) -> *mut _cef_box_layout_t
-    >,
-    pub get_layout:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t) -> *mut _cef_layout_t>,
-    pub layout: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t)>,
-    pub add_child_view: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_panel_t, view: *mut _cef_view_t)
-    >,
-    pub add_child_view_at: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_panel_t,
-            view: *mut _cef_view_t,
-            index: ::std::os::raw::c_int
-        )
-    >,
-    pub reorder_child_view: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_panel_t,
-            view: *mut _cef_view_t,
-            index: ::std::os::raw::c_int
-        )
-    >,
-    pub remove_child_view: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_panel_t, view: *mut _cef_view_t)
-    >,
-    pub remove_all_child_views:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t)>,
-    pub get_child_view_count:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_panel_t) -> usize>,
-    pub get_child_view_at: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_panel_t,
-            index: ::std::os::raw::c_int
-        ) -> *mut _cef_view_t
-    >
-}
-pub type cef_panel_t = _cef_panel_t;
-extern "C" {
-    pub fn cef_panel_create(delegate: *mut _cef_panel_delegate_t) -> *mut cef_panel_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_window_delegate_t {
-    pub base:                            cef_panel_delegate_t,
-    pub on_window_created: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_delegate_t, window: *mut _cef_window_t)
-    >,
-    pub on_window_closing: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_delegate_t, window: *mut _cef_window_t)
-    >,
-    pub on_window_destroyed: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_delegate_t, window: *mut _cef_window_t)
-    >,
-    pub on_window_activation_changed: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t,
-            active: ::std::os::raw::c_int
-        )
-    >,
-    pub on_window_bounds_changed: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t,
-            new_bounds: *const cef_rect_t
-        )
-    >,
-    pub on_window_fullscreen_transition: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t,
-            is_completed: ::std::os::raw::c_int
-        )
-    >,
-    pub get_parent_window: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t,
-            is_menu: *mut ::std::os::raw::c_int,
-            can_activate_menu: *mut ::std::os::raw::c_int
-        ) -> *mut _cef_window_t
-    >,
-    pub is_window_modal_dialog: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_initial_bounds: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t
-        ) -> cef_rect_t
-    >,
-    pub get_initial_show_state: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t
-        ) -> cef_show_state_t
-    >,
-    pub is_frameless: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub with_standard_window_buttons: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_titlebar_height: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t,
-            titlebar_height: *mut f32
-        ) -> ::std::os::raw::c_int
-    >,
-    pub can_resize: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub can_maximize: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub can_minimize: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub can_close: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub on_accelerator: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t,
-            command_id: ::std::os::raw::c_int
-        ) -> ::std::os::raw::c_int
-    >,
-    pub on_key_event: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_delegate_t,
-            window: *mut _cef_window_t,
-            event: *const cef_key_event_t
-        ) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_window_delegate_t = _cef_window_delegate_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_browser_view_delegate_t {
-    pub base: cef_view_delegate_t,
-    pub on_browser_created: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_view_delegate_t,
-            browser_view: *mut _cef_browser_view_t,
-            browser: *mut _cef_browser_t
-        )
-    >,
-    pub on_browser_destroyed: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_view_delegate_t,
-            browser_view: *mut _cef_browser_view_t,
-            browser: *mut _cef_browser_t
-        )
-    >,
-    pub get_delegate_for_popup_browser_view: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_view_delegate_t,
-            browser_view: *mut _cef_browser_view_t,
-            settings: *const _cef_browser_settings_t,
-            client: *mut _cef_client_t,
-            is_devtools: ::std::os::raw::c_int
-        ) -> *mut _cef_browser_view_delegate_t
-    >,
-    pub on_popup_browser_view_created: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_view_delegate_t,
-            browser_view: *mut _cef_browser_view_t,
-            popup_browser_view: *mut _cef_browser_view_t,
-            is_devtools: ::std::os::raw::c_int
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_chrome_toolbar_type: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_view_delegate_t,
-            browser_view: *mut _cef_browser_view_t
-        ) -> cef_chrome_toolbar_type_t
-    >,
-    pub use_frameless_window_for_picture_in_picture: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_view_delegate_t,
-            browser_view: *mut _cef_browser_view_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub on_gesture_command: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_view_delegate_t,
-            browser_view: *mut _cef_browser_view_t,
-            gesture_command: cef_gesture_command_t
-        ) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_browser_view_delegate_t = _cef_browser_view_delegate_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_textfield_delegate_t {
-    pub base:                 cef_view_delegate_t,
-    pub on_key_event: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_textfield_delegate_t,
-            textfield: *mut _cef_textfield_t,
-            event: *const cef_key_event_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub on_after_user_action: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_textfield_delegate_t,
-            textfield: *mut _cef_textfield_t
-        )
-    >
-}
-pub type cef_textfield_delegate_t = _cef_textfield_delegate_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_box_layout_t {
-    pub base:                cef_layout_t,
-    pub set_flex_for_view: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_box_layout_t,
-            view: *mut _cef_view_t,
-            flex: ::std::os::raw::c_int
-        )
-    >,
-    pub clear_flex_for_view: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_box_layout_t, view: *mut _cef_view_t)
-    >
-}
-pub type cef_box_layout_t = _cef_box_layout_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_textfield_t {
-    pub base:                           cef_view_t,
-    pub set_password_input: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, password_input: ::std::os::raw::c_int)
-    >,
-    pub is_password_input: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> ::std::os::raw::c_int
-    >,
-    pub set_read_only: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, read_only: ::std::os::raw::c_int)
-    >,
-    pub is_read_only: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> ::std::os::raw::c_int
-    >,
-    pub get_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_string_userfree_t
-    >,
-    pub set_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, text: *const cef_string_t)
-    >,
-    pub append_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, text: *const cef_string_t)
-    >,
-    pub insert_or_replace_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, text: *const cef_string_t)
-    >,
-    pub has_selection: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> ::std::os::raw::c_int
-    >,
-    pub get_selected_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_string_userfree_t
-    >,
-    pub select_all: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, reversed: ::std::os::raw::c_int)
-    >,
-    pub clear_selection: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t)>,
-    pub get_selected_range:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_range_t>,
-    pub select_range: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, range: *const cef_range_t)
-    >,
-    pub get_cursor_position:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> usize>,
-    pub set_text_color: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, color: cef_color_t)
-    >,
-    pub get_text_color:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_color_t>,
-    pub set_selection_text_color: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, color: cef_color_t)
-    >,
-    pub get_selection_text_color:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_color_t>,
-    pub set_selection_background_color: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, color: cef_color_t)
-    >,
-    pub get_selection_background_color:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_color_t>,
-    pub set_font_list: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, font_list: *const cef_string_t)
-    >,
-    pub apply_text_color: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_textfield_t,
-            color: cef_color_t,
-            range: *const cef_range_t
-        )
-    >,
-    pub apply_text_style: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_textfield_t,
-            style: cef_text_style_t,
-            add: ::std::os::raw::c_int,
-            range: *const cef_range_t
-        )
-    >,
-    pub is_command_enabled: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_textfield_t,
-            command_id: cef_text_field_commands_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub execute_command: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, command_id: cef_text_field_commands_t)
-    >,
-    pub clear_edit_history:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_textfield_t)>,
-    pub set_placeholder_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, text: *const cef_string_t)
-    >,
-    pub get_placeholder_text: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t) -> cef_string_userfree_t
-    >,
-    pub set_placeholder_text_color: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, color: cef_color_t)
-    >,
-    pub set_accessible_name: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_textfield_t, name: *const cef_string_t)
-    >
-}
-pub type cef_textfield_t = _cef_textfield_t;
-extern "C" {
-    pub fn cef_textfield_create(delegate: *mut _cef_textfield_delegate_t) -> *mut cef_textfield_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_window_t {
-    pub base:                             cef_panel_t,
-    pub show: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub show_as_browser_modal_dialog: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t, browser_view: *mut _cef_browser_view_t)
-    >,
-    pub hide: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub center_window: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t, size: *const cef_size_t)
-    >,
-    pub close: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub is_closed: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
-    >,
-    pub activate: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub deactivate: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub is_active: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
-    >,
-    pub bring_to_top: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub set_always_on_top: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t, on_top: ::std::os::raw::c_int)
-    >,
-    pub is_always_on_top: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
-    >,
-    pub maximize: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub minimize: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub restore: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub set_fullscreen: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t, fullscreen: ::std::os::raw::c_int)
-    >,
-    pub is_maximized: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
-    >,
-    pub is_minimized: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
-    >,
-    pub is_fullscreen: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
-    >,
-    pub set_title: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t, title: *const cef_string_t)
-    >,
-    pub get_title: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t) -> cef_string_userfree_t
-    >,
-    pub set_window_icon: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t, image: *mut _cef_image_t)
-    >,
-    pub get_window_icon:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t) -> *mut _cef_image_t>,
-    pub set_window_app_icon: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t, image: *mut _cef_image_t)
-    >,
-    pub get_window_app_icon:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t) -> *mut _cef_image_t>,
-    pub add_overlay_view: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_t,
-            view: *mut _cef_view_t,
-            docking_mode: cef_docking_mode_t,
-            can_activate: ::std::os::raw::c_int
-        ) -> *mut _cef_overlay_controller_t
-    >,
-    pub show_menu: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_t,
-            menu_model: *mut _cef_menu_model_t,
-            screen_point: *const cef_point_t,
-            anchor_position: cef_menu_anchor_position_t
-        )
-    >,
-    pub cancel_menu: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
-    pub get_display: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t) -> *mut _cef_display_t
-    >,
-    pub get_client_area_bounds_in_screen:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t) -> cef_rect_t>,
-    pub set_draggable_regions: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_t,
-            regionsCount: usize,
-            regions: *const cef_draggable_region_t
-        )
-    >,
-    pub get_window_handle: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_ulong
-    >,
-    pub send_key_press: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_t,
-            key_code: ::std::os::raw::c_int,
-            event_flags: u32
-        )
-    >,
-    pub send_mouse_move: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_t,
-            screen_x: ::std::os::raw::c_int,
-            screen_y: ::std::os::raw::c_int
-        )
-    >,
-    pub send_mouse_events: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_t,
-            button: cef_mouse_button_type_t,
-            mouse_down: ::std::os::raw::c_int,
-            mouse_up: ::std::os::raw::c_int
-        )
-    >,
-    pub set_accelerator: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_window_t,
-            command_id: ::std::os::raw::c_int,
-            key_code: ::std::os::raw::c_int,
-            shift_pressed: ::std::os::raw::c_int,
-            ctrl_pressed: ::std::os::raw::c_int,
-            alt_pressed: ::std::os::raw::c_int,
-            high_priority: ::std::os::raw::c_int
-        )
-    >,
-    pub remove_accelerator: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_window_t, command_id: ::std::os::raw::c_int)
-    >,
-    pub remove_all_accelerators:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>
-}
-pub type cef_window_t = _cef_window_t;
-extern "C" {
-    pub fn cef_window_create_top_level(delegate: *mut _cef_window_delegate_t) -> *mut cef_window_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_browser_view_t {
-    pub base:                    cef_view_t,
-    pub get_browser: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_browser_view_t) -> *mut _cef_browser_t
-    >,
-    pub get_chrome_toolbar: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_browser_view_t) -> *mut _cef_view_t
-    >,
-    pub set_prefer_accelerators: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_view_t,
-            prefer_accelerators: ::std::os::raw::c_int
-        )
-    >
-}
-pub type cef_browser_view_t = _cef_browser_view_t;
-extern "C" {
-    pub fn cef_browser_view_create(
-        client: *mut _cef_client_t,
-        url: *const cef_string_t,
-        settings: *const _cef_browser_settings_t,
-        extra_info: *mut _cef_dictionary_value_t,
-        request_context: *mut _cef_request_context_t,
-        delegate: *mut _cef_browser_view_delegate_t
-    ) -> *mut cef_browser_view_t;
-}
-extern "C" {
-    pub fn cef_browser_view_get_for_browser(
-        browser: *mut _cef_browser_t
-    ) -> *mut cef_browser_view_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_end_tracing_callback_t {
-    pub base:                    cef_base_ref_counted_t,
-    pub on_end_tracing_complete: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_end_tracing_callback_t,
-            tracing_file: *const cef_string_t
-        )
-    >
-}
-pub type cef_end_tracing_callback_t = _cef_end_tracing_callback_t;
-extern "C" {
-    pub fn cef_begin_tracing(
-        categories: *const cef_string_t,
-        callback: *mut _cef_completion_callback_t
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
-    pub fn cef_end_tracing(
-        tracing_file: *const cef_string_t,
-        callback: *mut cef_end_tracing_callback_t
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
-    pub fn cef_now_from_system_trace_time() -> i64;
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -11660,85 +11928,114 @@ extern "C" {
         URI: *const cef_string_t
     ) -> *mut cef_xml_reader_t;
 }
-extern "C" {
-    pub fn cef_get_path(key: cef_path_key_t, path: *mut cef_string_t) -> ::std::os::raw::c_int;
-}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct _cef_urlrequest_t {
-    pub base:                cef_base_ref_counted_t,
-    pub get_request: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> *mut _cef_request_t
+pub struct _cef_zip_reader_t {
+    pub base:                   cef_base_ref_counted_t,
+    pub move_to_first_file: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
     >,
-    pub get_client: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> *mut _cef_urlrequest_client_t
+    pub move_to_next_file: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
     >,
-    pub get_request_status: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> cef_urlrequest_status_t
-    >,
-    pub get_request_error: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> cef_errorcode_t
-    >,
-    pub get_response: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> *mut _cef_response_t
-    >,
-    pub response_was_cached: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_urlrequest_t) -> ::std::os::raw::c_int
-    >,
-    pub cancel: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_urlrequest_t)>
-}
-pub type cef_urlrequest_t = _cef_urlrequest_t;
-extern "C" {
-    pub fn cef_urlrequest_create(
-        request: *mut _cef_request_t,
-        client: *mut _cef_urlrequest_client_t,
-        request_context: *mut _cef_request_context_t
-    ) -> *mut cef_urlrequest_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_urlrequest_client_t {
-    pub base:                 cef_base_ref_counted_t,
-    pub on_request_complete: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_urlrequest_client_t, request: *mut _cef_urlrequest_t)
-    >,
-    pub on_upload_progress: ::std::option::Option<
+    pub move_to_file: ::std::option::Option<
         unsafe extern "C" fn(
-            self_: *mut _cef_urlrequest_client_t,
-            request: *mut _cef_urlrequest_t,
-            current: i64,
-            total: i64
-        )
-    >,
-    pub on_download_progress: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_urlrequest_client_t,
-            request: *mut _cef_urlrequest_t,
-            current: i64,
-            total: i64
-        )
-    >,
-    pub on_download_data: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_urlrequest_client_t,
-            request: *mut _cef_urlrequest_t,
-            data: *const ::std::os::raw::c_void,
-            data_length: usize
-        )
-    >,
-    pub get_auth_credentials: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_urlrequest_client_t,
-            isProxy: ::std::os::raw::c_int,
-            host: *const cef_string_t,
-            port: ::std::os::raw::c_int,
-            realm: *const cef_string_t,
-            scheme: *const cef_string_t,
-            callback: *mut _cef_auth_callback_t
+            self_: *mut _cef_zip_reader_t,
+            fileName: *const cef_string_t,
+            caseSensitive: ::std::os::raw::c_int
         ) -> ::std::os::raw::c_int
+    >,
+    pub close: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
+    >,
+    pub get_file_name: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> cef_string_userfree_t
+    >,
+    pub get_file_size:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> i64>,
+    pub get_file_last_modified: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> cef_basetime_t
+    >,
+    pub open_file: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_zip_reader_t,
+            password: *const cef_string_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub close_file: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
+    >,
+    pub read_file: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_zip_reader_t,
+            buffer: *mut ::std::os::raw::c_void,
+            bufferSize: usize
+        ) -> ::std::os::raw::c_int
+    >,
+    pub tell: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> i64>,
+    pub eof: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_zip_reader_t) -> ::std::os::raw::c_int
     >
 }
-pub type cef_urlrequest_client_t = _cef_urlrequest_client_t;
+pub type cef_zip_reader_t = _cef_zip_reader_t;
+extern "C" {
+    pub fn cef_zip_reader_create(stream: *mut _cef_stream_reader_t) -> *mut cef_zip_reader_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_resource_bundle_t {
+    pub base:                        cef_base_ref_counted_t,
+    pub get_localized_string: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_resource_bundle_t,
+            string_id: ::std::os::raw::c_int
+        ) -> cef_string_userfree_t
+    >,
+    pub get_data_resource: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_resource_bundle_t,
+            resource_id: ::std::os::raw::c_int
+        ) -> *mut _cef_binary_value_t
+    >,
+    pub get_data_resource_for_scale: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_resource_bundle_t,
+            resource_id: ::std::os::raw::c_int,
+            scale_factor: cef_scale_factor_t
+        ) -> *mut _cef_binary_value_t
+    >
+}
+pub type cef_resource_bundle_t = _cef_resource_bundle_t;
+extern "C" {
+    pub fn cef_resource_bundle_get_global() -> *mut cef_resource_bundle_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_end_tracing_callback_t {
+    pub base:                    cef_base_ref_counted_t,
+    pub on_end_tracing_complete: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_end_tracing_callback_t,
+            tracing_file: *const cef_string_t
+        )
+    >
+}
+pub type cef_end_tracing_callback_t = _cef_end_tracing_callback_t;
+extern "C" {
+    pub fn cef_begin_tracing(
+        categories: *const cef_string_t,
+        callback: *mut _cef_completion_callback_t
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn cef_end_tracing(
+        tracing_file: *const cef_string_t,
+        callback: *mut cef_end_tracing_callback_t
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn cef_now_from_system_trace_time() -> i64;
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_server_t {
@@ -11881,166 +12178,17 @@ pub struct _cef_server_handler_t {
     >
 }
 pub type cef_server_handler_t = _cef_server_handler_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_resource_bundle_t {
-    pub base:                        cef_base_ref_counted_t,
-    pub get_localized_string: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_resource_bundle_t,
-            string_id: ::std::os::raw::c_int
-        ) -> cef_string_userfree_t
-    >,
-    pub get_data_resource: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_resource_bundle_t,
-            resource_id: ::std::os::raw::c_int
-        ) -> *mut _cef_binary_value_t
-    >,
-    pub get_data_resource_for_scale: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_resource_bundle_t,
-            resource_id: ::std::os::raw::c_int,
-            scale_factor: cef_scale_factor_t
-        ) -> *mut _cef_binary_value_t
-    >
-}
-pub type cef_resource_bundle_t = _cef_resource_bundle_t;
 extern "C" {
-    pub fn cef_resource_bundle_get_global() -> *mut cef_resource_bundle_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_app_t {
-    pub base:                              cef_base_ref_counted_t,
-    pub on_before_command_line_processing: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_app_t,
-            process_type: *const cef_string_t,
-            command_line: *mut _cef_command_line_t
-        )
-    >,
-    pub on_register_custom_schemes: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_app_t, registrar: *mut _cef_scheme_registrar_t)
-    >,
-    pub get_resource_bundle_handler: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_app_t) -> *mut _cef_resource_bundle_handler_t
-    >,
-    pub get_browser_process_handler: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_app_t) -> *mut _cef_browser_process_handler_t
-    >,
-    pub get_render_process_handler: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_app_t) -> *mut _cef_render_process_handler_t
-    >
-}
-pub type cef_app_t = _cef_app_t;
-extern "C" {
-    pub fn cef_execute_process(
-        args: *const cef_main_args_t,
-        application: *mut cef_app_t,
-        windows_sandbox_info: *mut ::std::os::raw::c_void
-    ) -> ::std::os::raw::c_int;
+    pub fn cef_launch_process(command_line: *mut _cef_command_line_t) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn cef_initialize(
-        args: *const cef_main_args_t,
-        settings: *const _cef_settings_t,
-        application: *mut cef_app_t,
-        windows_sandbox_info: *mut ::std::os::raw::c_void
-    ) -> ::std::os::raw::c_int;
+    pub fn cef_crash_reporting_enabled() -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn cef_shutdown();
+    pub fn cef_set_crash_key_value(key: *const cef_string_t, value: *const cef_string_t);
 }
 extern "C" {
-    pub fn cef_do_message_loop_work();
-}
-extern "C" {
-    pub fn cef_run_message_loop();
-}
-extern "C" {
-    pub fn cef_quit_message_loop();
-}
-extern "C" {
-    pub fn cef_resolve_url(
-        base_url: *const cef_string_t,
-        relative_url: *const cef_string_t,
-        resolved_url: *mut cef_string_t
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
-    pub fn cef_parse_url(
-        url: *const cef_string_t,
-        parts: *mut _cef_urlparts_t
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
-    pub fn cef_create_url(
-        parts: *const _cef_urlparts_t,
-        url: *mut cef_string_t
-    ) -> ::std::os::raw::c_int;
-}
-extern "C" {
-    pub fn cef_format_url_for_security_display(
-        origin_url: *const cef_string_t
-    ) -> cef_string_userfree_t;
-}
-extern "C" {
-    pub fn cef_get_mime_type(extension: *const cef_string_t) -> cef_string_userfree_t;
-}
-extern "C" {
-    pub fn cef_get_extensions_for_mime_type(
-        mime_type: *const cef_string_t,
-        extensions: cef_string_list_t
-    );
-}
-extern "C" {
-    pub fn cef_base64encode(
-        data: *const ::std::os::raw::c_void,
-        data_size: usize
-    ) -> cef_string_userfree_t;
-}
-extern "C" {
-    pub fn cef_base64decode(data: *const cef_string_t) -> *mut _cef_binary_value_t;
-}
-extern "C" {
-    pub fn cef_uriencode(
-        text: *const cef_string_t,
-        use_plus: ::std::os::raw::c_int
-    ) -> cef_string_userfree_t;
-}
-extern "C" {
-    pub fn cef_uridecode(
-        text: *const cef_string_t,
-        convert_to_utf8: ::std::os::raw::c_int,
-        unescape_rule: cef_uri_unescape_rule_t
-    ) -> cef_string_userfree_t;
-}
-extern "C" {
-    pub fn cef_parse_json(
-        json_string: *const cef_string_t,
-        options: cef_json_parser_options_t
-    ) -> *mut _cef_value_t;
-}
-extern "C" {
-    pub fn cef_parse_json_buffer(
-        json: *const ::std::os::raw::c_void,
-        json_size: usize,
-        options: cef_json_parser_options_t
-    ) -> *mut _cef_value_t;
-}
-extern "C" {
-    pub fn cef_parse_jsonand_return_error(
-        json_string: *const cef_string_t,
-        options: cef_json_parser_options_t,
-        error_msg_out: *mut cef_string_t
-    ) -> *mut _cef_value_t;
-}
-extern "C" {
-    pub fn cef_write_json(
-        node: *mut _cef_value_t,
-        options: cef_json_writer_options_t
-    ) -> cef_string_userfree_t;
+    pub fn cef_is_rtl() -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn cef_version_info(entry: ::std::os::raw::c_int) -> ::std::os::raw::c_int;

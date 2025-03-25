@@ -9,7 +9,7 @@ use cef_ui::{
 };
 use cef_ui_sys::cef_quit_message_loop;
 use std::{fs::create_dir_all, path::PathBuf, process::exit};
-use tracing::{error, info, level_filters::LevelFilter, subscriber::set_global_default, Level};
+use tracing::{Level, error, info, level_filters::LevelFilter, subscriber::set_global_default};
 use tracing_log::LogTracer;
 use tracing_subscriber::FmtSubscriber;
 
@@ -89,6 +89,7 @@ impl LifeSpanHandlerCallbacks for MyLifeSpanHandlerCallbacks {
         &mut self,
         browser: Browser,
         frame: Frame,
+        popup_id: i32,
         target_url: Option<String>,
         target_frame_name: Option<String>,
         target_disposition: WindowOpenDisposition,
@@ -148,6 +149,24 @@ impl ClientCallbacks for MyClientCallbacks {
     fn get_render_handler(&mut self) -> Option<RenderHandler> {
         None
     }
+
+    fn get_display_handler(&mut self) -> Option<cef_ui::DisplayHandler> {
+        None
+    }
+
+    fn get_load_handler(&mut self) -> Option<cef_ui::LoadHandler> {
+        None
+    }
+
+    fn on_process_message_received(
+        &mut self,
+        _browser: Browser,
+        _frame: Frame,
+        _source_process: cef_ui::ProcessId,
+        _message: cef_ui::ProcessMessage
+    ) -> bool {
+        true
+    }
 }
 
 /// Application callbacks.
@@ -174,6 +193,10 @@ impl AppCallbacks for MyAppCallbacks {
     }
 
     fn get_browser_process_handler(&mut self) -> Option<BrowserProcessHandler> {
+        None
+    }
+
+    fn get_render_process_handler(&mut self) -> Option<cef_ui::RenderProcessHandler> {
         None
     }
 }

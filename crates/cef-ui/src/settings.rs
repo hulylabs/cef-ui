@@ -1,5 +1,5 @@
-use crate::{free_cef_string, types::LogItems, CefString, Color, LogSeverity};
-use anyhow::{anyhow, Result};
+use crate::{CefString, Color, LogSeverity, free_cef_string, types::LogItems};
+use anyhow::{Result, anyhow};
 use cef_ui_sys::{cef_settings_t, cef_string_t};
 use dunce::canonicalize;
 use std::{
@@ -69,14 +69,6 @@ impl Settings {
         Self::set_path(path, &mut self.0.main_bundle_path)?;
 
         Ok(self)
-    }
-
-    /// Set to true (1) to enable use of the Chrome runtime in CEF. This feature
-    /// is considered experimental and is not recommended for most users at this
-    /// time. See issue #2969 for details.
-    pub fn chrome_runtime(mut self, value: bool) -> Self {
-        self.0.chrome_runtime = value as c_int;
-        self
     }
 
     /// Set to true (1) to have the browser process message loop run in a separate
@@ -180,17 +172,6 @@ impl Settings {
         self
     }
 
-    /// To persist user preferences as a JSON file in the cache path directory set
-    /// this value to true (1). A |cache_path| value must also be specified
-    /// to enable this feature. Also configurable using the
-    /// "persist-user-preferences" command-line switch. Can be overridden for
-    /// individual CefRequestContext instances via the
-    /// CefRequestContextSettings.persist_user_preferences value.
-    pub fn persist_user_preferences(mut self, value: bool) -> Self {
-        self.0.persist_user_preferences = value as c_int;
-        self
-    }
-
     /// Value that will be returned as the User-Agent HTTP header. If empty the
     /// default User-Agent string will be used. Also configurable using the
     /// "user-agent" command-line switch.
@@ -282,16 +263,6 @@ impl Settings {
         Self::set_path(value, &mut self.0.locales_dir_path)?;
 
         Ok(self)
-    }
-
-    /// Set to true (1) to disable loading of pack files for resources and
-    /// locales. A resource bundle handler must be provided for the browser and
-    /// render processes via CefApp::GetResourceBundleHandler() if loading of pack
-    /// files is disabled. Also configurable using the "disable-pack-loading"
-    /// command- line switch.
-    pub fn pack_loading_disabled(mut self, value: bool) -> Self {
-        self.0.pack_loading_disabled = value as c_int;
-        self
     }
 
     /// Set to a value between 1024 and 65535 to enable remote debugging on the

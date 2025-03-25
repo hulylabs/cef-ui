@@ -1,27 +1,14 @@
-use crate::{
-    copy_files, create_tar_gz, download_file, extract_bz2, get_cef_artifacts_dir,
-    get_cef_workspace_dir, get_url_filename
-};
+use crate::{copy_files, create_tar_gz, get_cef_artifacts_dir, get_cef_workspace_dir};
 use anyhow::Result;
-use bindgen::{builder, EnumVariation};
+use bindgen::{EnumVariation, builder};
 use std::{
     env::consts::{ARCH, OS},
-    fs::{self, canonicalize, create_dir_all, remove_dir_all, rename},
+    fs::{self, canonicalize, rename},
     path::Path,
     process::{Command, Stdio}
 };
 use tracing::info;
 use walkdir::WalkDir;
-
-#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
-const CEF_URL: &str = "https://cef-builds.spotifycdn.com/cef_binary_121.3.15%2Bg4d3b0b4%2Bchromium-121.0.6167.184_linux64_minimal.tar.bz2";
-
-#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-const CEF_URL: &str = "https://cef-builds.spotifycdn.com/cef_binary_121.3.15%2Bg4d3b0b4%2Bchromium-121.0.6167.184_macosarm64_minimal.tar.bz2";
-
-#[cfg(all(target_os = "windows", target_arch = "x86_64"))]
-const CEF_URL: &str = "https://cef-builds.spotifycdn.com/cef_binary_121.3.15%2Bg4d3b0b4%2Bchromium-121.0.6167.184_windows64_minimal.tar.bz2";
-
 /// Try and generate CEF artifacts.
 pub struct ArtifactsCommand;
 
@@ -30,34 +17,10 @@ impl ArtifactsCommand {
         let workspace_dir = get_cef_workspace_dir()?;
         let artifacts_dir = get_cef_artifacts_dir()?;
 
-        // Create the artifacts/ directory.
-        info!("Creating artifacts dir ..");
-
-        if artifacts_dir.exists() {
-            remove_dir_all(&artifacts_dir)?;
-        }
-
-        create_dir_all(&artifacts_dir)?;
-
-        // Download CEF.
-        info!("Downloading CEF ..");
-
-        let filename = get_url_filename(CEF_URL)?;
-
-        download_file(CEF_URL, &artifacts_dir.join(&filename))?;
-
-        // Extract CEF.
-        info!("Extracting CEF ..");
-
-        extract_bz2(&artifacts_dir.join(&filename), &artifacts_dir)?;
-
         // Generate bindings.
         info!("Generating bindings ..");
 
-        let extracted_dir = filename
-            .strip_suffix(".tar.bz2")
-            .unwrap();
-        let extracted_dir = Path::new(&artifacts_dir).join(extracted_dir);
+        let extracted_dir = Path::new(&artifacts_dir);
         let extracted_dir = canonicalize(&extracted_dir)?;
         let bindings_file = extracted_dir.join("bindings.rs");
 

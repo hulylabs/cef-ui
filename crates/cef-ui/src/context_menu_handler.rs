@@ -1,6 +1,6 @@
 use crate::{
-    ref_counted_ptr, try_c, Browser, CefString, CefStringList, Color, EventFlags, Frame, Point,
-    RefCountedPtr, Size, Wrappable, Wrapped
+    Browser, CefString, CefStringList, Color, EventFlags, Frame, Point, RefCountedPtr, Size,
+    Wrappable, Wrapped, ref_counted_ptr, try_c
 };
 use anyhow::Result;
 use bitflags::bitflags;
@@ -628,7 +628,8 @@ pub enum MenuId {
     /// MENU_ID_USER_LAST to avoid overlapping the Chromium and CEF ID ranges
     /// defined in the tools/gritsettings/resource_ids file.
     UserFirst,
-    UserLast
+    UserLast,
+    PasteMatchStyle
 }
 
 impl From<cef_menu_id_t> for MenuId {
@@ -665,7 +666,8 @@ impl From<&cef_menu_id_t> for MenuId {
             cef_menu_id_t::MENU_ID_CUSTOM_FIRST => Self::CustomFirst,
             cef_menu_id_t::MENU_ID_CUSTOM_LAST => Self::CustomLast,
             cef_menu_id_t::MENU_ID_USER_FIRST => Self::UserFirst,
-            cef_menu_id_t::MENU_ID_USER_LAST => Self::UserLast
+            cef_menu_id_t::MENU_ID_USER_LAST => Self::UserLast,
+            cef_menu_id_t::MENU_ID_PASTE_MATCH_STYLE => Self::PasteMatchStyle
         }
     }
 }
@@ -704,7 +706,8 @@ impl From<&MenuId> for cef_menu_id_t {
             MenuId::CustomFirst => cef_menu_id_t::MENU_ID_CUSTOM_FIRST,
             MenuId::CustomLast => cef_menu_id_t::MENU_ID_CUSTOM_LAST,
             MenuId::UserFirst => cef_menu_id_t::MENU_ID_USER_FIRST,
-            MenuId::UserLast => cef_menu_id_t::MENU_ID_USER_LAST
+            MenuId::UserLast => cef_menu_id_t::MENU_ID_USER_LAST,
+            MenuId::PasteMatchStyle => cef_menu_id_t::MENU_ID_PASTE_MATCH_STYLE
         }
     }
 }

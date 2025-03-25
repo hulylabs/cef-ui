@@ -1,5 +1,5 @@
 use crate::{
-    ref_counted_ptr, CefString, Client, CommandLine, RefCountedPtr, Value, Wrappable, Wrapped
+    CefString, Client, CommandLine, RefCountedPtr, Value, Wrappable, Wrapped, ref_counted_ptr
 };
 use cef_ui_sys::{
     cef_browser_process_handler_t, cef_client_t, cef_command_line_t, cef_preference_registrar_t,
@@ -321,13 +321,14 @@ impl Wrappable for BrowserProcessHandlerWrapper {
     fn wrap(self) -> RefCountedPtr<cef_browser_process_handler_t> {
         RefCountedPtr::wrap(
             cef_browser_process_handler_t {
-                base:                            unsafe { zeroed() },
-                on_register_custom_preferences:  Some(Self::c_on_register_custom_preferences),
-                on_context_initialized:          Some(Self::c_on_context_initialized),
-                on_before_child_process_launch:  Some(Self::c_on_before_child_process_launch),
-                on_already_running_app_relaunch: Some(Self::c_on_already_running_app_relaunch),
-                on_schedule_message_pump_work:   Some(Self::c_on_schedule_message_pump_work),
-                get_default_client:              Some(Self::c_get_default_client)
+                base:                                unsafe { zeroed() },
+                on_register_custom_preferences:      Some(Self::c_on_register_custom_preferences),
+                on_context_initialized:              Some(Self::c_on_context_initialized),
+                on_before_child_process_launch:      Some(Self::c_on_before_child_process_launch),
+                on_already_running_app_relaunch:     Some(Self::c_on_already_running_app_relaunch),
+                on_schedule_message_pump_work:       Some(Self::c_on_schedule_message_pump_work),
+                get_default_client:                  Some(Self::c_get_default_client),
+                get_default_request_context_handler: None
             },
             self
         )

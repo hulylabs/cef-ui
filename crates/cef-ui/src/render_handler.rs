@@ -1,13 +1,13 @@
 use crate::{
-    ref_counted_ptr, AccessibilityHandler, Browser, CefString, DragData, DragOperations,
-    HorizontalAlignment, PaintElementType, Point, Range, Rect, RefCountedPtr, ScreenInfo, Size,
-    TextInputMode, TouchHandleState, Wrappable, Wrapped
+    AccessibilityHandler, Browser, CefString, DragData, DragOperations, HorizontalAlignment,
+    PaintElementType, Point, Range, Rect, RefCountedPtr, ScreenInfo, Size, TextInputMode,
+    TouchHandleState, Wrappable, Wrapped, ref_counted_ptr
 };
 use cef_ui_sys::{
-    cef_accessibility_handler_t, cef_browser_t, cef_drag_data_t, cef_drag_operations_mask_t,
-    cef_horizontal_alignment_t, cef_paint_element_type_t, cef_range_t, cef_rect_t,
-    cef_render_handler_t, cef_screen_info_t, cef_size_t, cef_string_t, cef_text_input_mode_t,
-    cef_touch_handle_state_t
+    cef_accelerated_paint_info_t, cef_accessibility_handler_t, cef_browser_t, cef_drag_data_t,
+    cef_drag_operations_mask_t, cef_horizontal_alignment_t, cef_paint_element_type_t, cef_range_t,
+    cef_rect_t, cef_render_handler_t, cef_screen_info_t, cef_size_t, cef_string_t,
+    cef_text_input_mode_t, cef_touch_handle_state_t
 };
 use std::{
     ffi::{c_int, c_void},
@@ -85,8 +85,7 @@ pub trait RenderHandlerCallbacks: Send + Sync + 'static {
         &mut self,
         browser: Browser,
         paint_element_type: PaintElementType,
-        dirty_rects: &[Rect],
-        shared_handle: *mut c_void
+        dirty_rects: &[Rect]
     );
 
     /// Called to retrieve the size of the touch handle for the specified
@@ -340,14 +339,14 @@ impl RenderHandlerWrapper {
         type_: cef_paint_element_type_t,
         dirty_rects_count: usize,
         dirty_rects: *const cef_rect_t,
-        shared_handle: *mut c_void
+        _shared_handle: *const cef_accelerated_paint_info_t
     ) {
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
         let dirty_rects = from_raw_parts(dirty_rects as *const Rect, dirty_rects_count);
 
         this.0
-            .on_accelerated_paint(browser, type_.into(), dirty_rects, shared_handle);
+            .on_accelerated_paint(browser, type_.into(), dirty_rects);
     }
 
     /// Called to retrieve the size of the touch handle for the specified

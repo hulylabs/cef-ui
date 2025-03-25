@@ -1,9 +1,9 @@
 use crate::{
-    free_cef_string, ref_counted_ptr, try_c, CefString, CefStringList, Client, Color, CommandId,
-    CompositionUnderline, DictionaryValue, DragData, DragOperations, Extension, Frame, KeyEvent,
-    MouseButtonType, MouseEvent, NativeWindowHandle, NavigationEntry, NavigationEntryVisitor,
-    PaintElementType, Point, Range, RequestContext, Size, State, TouchEvent, WindowInfo,
-    WindowOpenDisposition, ZoomCommand
+    CefString, CefStringList, Client, Color, CommandId, CompositionUnderline, DictionaryValue,
+    DragData, DragOperations, Frame, KeyEvent, MouseButtonType, MouseEvent, NativeWindowHandle,
+    NavigationEntry, NavigationEntryVisitor, PaintElementType, Point, Range, RequestContext, Size,
+    State, TouchEvent, WindowInfo, WindowOpenDisposition, ZoomCommand, free_cef_string,
+    ref_counted_ptr, try_c
 };
 use anyhow::Result;
 use cef_ui_sys::{
@@ -390,14 +390,14 @@ impl Browser {
     }
 
     /// Returns the frame with the specified identifier, or NULL if not found.
-    pub fn get_frame_by_identifier(&self, identifier: i64) -> Result<Option<Frame>> {
-        try_c!(self, get_frame_byident, {
-            Ok(Frame::from_ptr(get_frame_byident(
-                self.as_ptr(),
-                identifier
-            )))
-        })
-    }
+    // pub fn get_frame_by_identifier(&self, identifier: i64) -> Result<Option<Frame>> {
+    //     try_c!(self, get_frame_by_identifier, {
+    //         Ok(Frame::from_ptr(get_frame_by_identifier(
+    //             self.as_ptr(),
+    //             identifier
+    //         )))
+    //     })
+    // }
 
     /// Returns the number of frames that currently exist.
     pub fn get_frame_count(&self) -> Result<usize> {
@@ -407,16 +407,15 @@ impl Browser {
     }
 
     /// Returns the identifiers of all existing frames.
-    pub fn get_frame_identifiers(&self) -> Result<Vec<i64>> {
-        try_c!(self, get_frame_identifiers, {
-            let mut count = self.get_frame_count()?;
-            let mut identifiers = vec![0; count];
+    // pub fn get_frame_identifiers(&self) -> Result<Vec<i64>> {
+    //     try_c!(self, get_frame_identifiers, {
+    //         let mut identifiers = vec![0; count];
 
-            get_frame_identifiers(self.as_ptr(), &mut count, identifiers.as_mut_ptr());
+    //         get_frame_identifiers(self.as_ptr(), identifiers.as_mut_ptr());
 
-            Ok(identifiers)
-        })
-    }
+    //         Ok(identifiers)
+    //     })
+    // }
 
     /// Returns the names of all existing frames.
     pub fn get_frame_names(&self) -> Result<Vec<String>> {
@@ -1272,23 +1271,6 @@ impl BrowserHost {
                 &min_size.into(),
                 &max_size.into()
             ))
-        })
-    }
-
-    /// Returns the extension hosted in this browser or NULL if no extension is
-    /// hosted. See cef_request_context_t::LoadExtension for details.
-    pub fn get_extension(&self) -> Result<Option<Extension>> {
-        try_c!(self, get_extension, {
-            Ok(Extension::from_ptr(get_extension(self.as_ptr())))
-        })
-    }
-
-    /// Returns true (1) if this browser is hosting an extension background
-    /// script. Background hosts do not have a window and are not displayable. See
-    /// cef_request_context_t::LoadExtension for details.
-    pub fn is_background_host(&self) -> Result<bool> {
-        try_c!(self, is_background_host, {
-            Ok(is_background_host(self.as_ptr()) != 0)
         })
     }
 

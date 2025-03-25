@@ -1,6 +1,6 @@
 use crate::{
-    ref_counted_ptr, try_c, Browser, CefString, ProcessId, ProcessMessage, Request, StringVisitor,
-    UrlRequest, UrlRequestClient
+    Browser, CefString, ProcessId, ProcessMessage, Request, StringVisitor, UrlRequest,
+    UrlRequestClient, ref_counted_ptr, try_c
 };
 use anyhow::Result;
 use cef_ui_sys::cef_frame_t;
@@ -140,8 +140,12 @@ impl Frame {
 
     /// Returns the globally unique identifier for this frame or < 0 if the
     /// underlying frame does not yet exist.
-    pub fn get_identifier(&self) -> Result<i64> {
-        try_c!(self, get_identifier, { Ok(get_identifier(self.as_ptr())) })
+    pub fn get_identifier(&self) -> Result<Option<String>> {
+        try_c!(self, get_identifier, {
+            let s = get_identifier(self.as_ptr());
+
+            Ok(CefString::from_ptr(s).map(|s| s.into()))
+        })
     }
 
     /// Returns the parent of this frame or NULL if this is the main (top-level)

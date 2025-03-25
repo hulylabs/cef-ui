@@ -5,4 +5,7 @@ cef-clean = "run --bin cef-clean --release"
 cef-artifacts = "run --bin cef-artifacts --release"
 
 [env]
+
+
 CEF_WORKSPACE_DIR = { relative = true, force = true, value = "" }
+CEF_ARTIFACTS_DIR = { relative = true, force = true, value = "/home/nikita/repos/cef131/cef" }

@@ -1,6 +1,6 @@
 use crate::{
-    ref_counted_ptr, Browser, BrowserSettings, CefString, Client, DictionaryValue, Frame,
-    RefCountedPtr, WindowInfo, WindowOpenDisposition, Wrappable, Wrapped
+    Browser, BrowserSettings, CefString, Client, DictionaryValue, Frame, RefCountedPtr, WindowInfo,
+    WindowOpenDisposition, Wrappable, Wrapped, ref_counted_ptr
 };
 use cef_ui_sys::{
     cef_browser_settings_t, cef_browser_t, cef_client_t, cef_dictionary_value_t, cef_frame_t,
@@ -113,6 +113,7 @@ pub trait LifeSpanHandlerCallbacks: Send + Sync + 'static {
         &mut self,
         browser: Browser,
         frame: Frame,
+        popup_id: i32,
         target_url: Option<String>,
         target_frame_name: Option<String>,
         target_disposition: WindowOpenDisposition,
@@ -306,6 +307,7 @@ impl LifeSpanHandlerWrapper {
         this: *mut cef_life_span_handler_t,
         browser: *mut cef_browser_t,
         frame: *mut cef_frame_t,
+        popup_id: i32,
         target_url: *const cef_string_t,
         target_frame_name: *const cef_string_t,
         target_disposition: cef_window_open_disposition_t,
@@ -337,6 +339,7 @@ impl LifeSpanHandlerWrapper {
         let ret = this.0.on_before_popup(
             browser,
             frame,
+            popup_id,
             target_url,
             target_frame_name,
             target_disposition,
@@ -586,7 +589,8 @@ impl Wrappable for LifeSpanHandlerWrapper {
                 on_before_dev_tools_popup: Some(Self::c_on_before_dev_tools_popup),
                 on_after_created:          Some(Self::c_on_after_created),
                 do_close:                  Some(Self::c_do_close),
-                on_before_close:           Some(Self::c_on_before_close)
+                on_before_close:           Some(Self::c_on_before_close),
+                on_before_popup_aborted:   None
             },
             self
         )

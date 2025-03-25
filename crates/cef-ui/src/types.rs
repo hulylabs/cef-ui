@@ -439,6 +439,9 @@ pub enum ErrorCode {
     /// finally completed.
     IoPending,
 
+    /// Network access has been revoked for the process. A new request should be attempted
+    NetworkAccessRevoked,
+
     /// A generic failure occurred.
     Failed,
 
@@ -1305,39 +1308,6 @@ pub enum ErrorCode {
     /// to a local provider (for "platform-provided" issuance).
     TrustTokenOperationSuccessWithoutSendingRequest,
 
-    /// *** Code -600 is reserved (was FTP_PASV_COMMAND_FAILED). ***
-
-    /// A generic error for failed FTP control connection command.
-    /// If possible, please use or add a more specific error code.
-    FtpFailed,
-
-    /// The server cannot fulfill the request at this point. This is a temporary
-    /// error.
-    /// FTP response code 421.
-    FtpServiceUnavailable,
-
-    /// The server has aborted the transfer.
-    /// FTP response code 426.
-    FtpTransferAborted,
-
-    /// The file is busy, or some other temporary error condition on opening
-    /// the file.
-    /// FTP response code 450.
-    FtpFileBusy,
-
-    /// Server rejected our command because of syntax errors.
-    /// FTP response codes 500, 501.
-    FtpSyntaxError,
-
-    /// Server does not support the command we issued.
-    /// FTP response codes 502, 504.
-    FtpCommandNotSupported,
-
-    /// Server rejected our command because we didn't issue the commands in right
-    /// order.
-    /// FTP response code 503.
-    FtpBadCommandSequence,
-
     /// PKCS #12 import failed due to incorrect password.
     Pkcs12ImportBadPassword,
 
@@ -1438,7 +1408,16 @@ pub enum ErrorCode {
     DnsNoMatchingSupportedAlpn,
 
     /// The compression dictionary cannot be loaded.
-    DictionaryLoadFailed // Error -813 was removed (DICTIONARY_ORIGIN_CHECK_FAILED)
+    DictionaryLoadFailed,
+
+    /// ZSTD compressed response window size is too large.
+    ZstdWindowSizeTooBig,
+
+    /// The server sent an incorrect content dictionary header.
+    UnxpectedContentDictionaryHeader,
+
+    /// DNS received an invalid probe record.
+    DnsSecureProbeRecordInvalid
 }
 
 impl From<cef_errorcode_t> for ErrorCode {
@@ -1654,13 +1633,6 @@ impl From<&cef_errorcode_t> for ErrorCode {
             cef_errorcode_t::ERR_INVALID_WEB_BUNDLE => ErrorCode::InvalidWebBundle,
             cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_FAILED => ErrorCode::TrustTokenOperationFailed,
             cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_SUCCESS_WITHOUT_SENDING_REQUEST => ErrorCode::TrustTokenOperationSuccessWithoutSendingRequest,
-            cef_errorcode_t::ERR_FTP_FAILED => ErrorCode::FtpFailed,
-            cef_errorcode_t::ERR_FTP_SERVICE_UNAVAILABLE => ErrorCode::FtpServiceUnavailable,
-            cef_errorcode_t::ERR_FTP_TRANSFER_ABORTED => ErrorCode::FtpTransferAborted,
-            cef_errorcode_t::ERR_FTP_FILE_BUSY => ErrorCode::FtpFileBusy,
-            cef_errorcode_t::ERR_FTP_SYNTAX_ERROR => ErrorCode::FtpSyntaxError,
-            cef_errorcode_t::ERR_FTP_COMMAND_NOT_SUPPORTED => ErrorCode::FtpCommandNotSupported,
-            cef_errorcode_t::ERR_FTP_BAD_COMMAND_SEQUENCE => ErrorCode::FtpBadCommandSequence,
             cef_errorcode_t::ERR_PKCS12_IMPORT_BAD_PASSWORD => ErrorCode::Pkcs12ImportBadPassword,
             cef_errorcode_t::ERR_PKCS12_IMPORT_FAILED => ErrorCode::Pkcs12ImportFailed,
             cef_errorcode_t::ERR_IMPORT_CA_CERT_NOT_CA => ErrorCode::ImportCaCertNotCa,
@@ -1686,7 +1658,11 @@ impl From<&cef_errorcode_t> for ErrorCode {
             cef_errorcode_t::ERR_DNS_NAME_HTTPS_ONLY => ErrorCode::DnsNameHttpsOnly,
             cef_errorcode_t::ERR_DNS_REQUEST_CANCELLED => ErrorCode::DnsRequestCancelled,
             cef_errorcode_t::ERR_DNS_NO_MATCHING_SUPPORTED_ALPN => ErrorCode::DnsNoMatchingSupportedAlpn,
-            cef_errorcode_t::ERR_DICTIONARY_LOAD_FAILED => ErrorCode::DictionaryLoadFailed
+            cef_errorcode_t::ERR_DICTIONARY_LOAD_FAILED => ErrorCode::DictionaryLoadFailed,
+            cef_errorcode_t::ERR_NETWORK_ACCESS_REVOKED => ErrorCode::NetworkAccessRevoked,
+            cef_errorcode_t::ERR_ZSTD_WINDOW_SIZE_TOO_BIG => ErrorCode::ZstdWindowSizeTooBig,
+            cef_errorcode_t::ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER => ErrorCode::UnxpectedContentDictionaryHeader,
+            cef_errorcode_t::ERR_DNS_SECURE_PROBE_RECORD_INVALID => ErrorCode::DnsSecureProbeRecordInvalid,
         }
     }
 }
@@ -1904,13 +1880,6 @@ impl From<&ErrorCode> for cef_errorcode_t {
             ErrorCode::InvalidWebBundle => cef_errorcode_t::ERR_INVALID_WEB_BUNDLE,
             ErrorCode::TrustTokenOperationFailed => cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_FAILED,
             ErrorCode::TrustTokenOperationSuccessWithoutSendingRequest => cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_SUCCESS_WITHOUT_SENDING_REQUEST,
-            ErrorCode::FtpFailed => cef_errorcode_t::ERR_FTP_FAILED,
-            ErrorCode::FtpServiceUnavailable => cef_errorcode_t::ERR_FTP_SERVICE_UNAVAILABLE,
-            ErrorCode::FtpTransferAborted => cef_errorcode_t::ERR_FTP_TRANSFER_ABORTED,
-            ErrorCode::FtpFileBusy => cef_errorcode_t::ERR_FTP_FILE_BUSY,
-            ErrorCode::FtpSyntaxError => cef_errorcode_t::ERR_FTP_SYNTAX_ERROR,
-            ErrorCode::FtpCommandNotSupported => cef_errorcode_t::ERR_FTP_COMMAND_NOT_SUPPORTED,
-            ErrorCode::FtpBadCommandSequence => cef_errorcode_t::ERR_FTP_BAD_COMMAND_SEQUENCE,
             ErrorCode::Pkcs12ImportBadPassword => cef_errorcode_t::ERR_PKCS12_IMPORT_BAD_PASSWORD,
             ErrorCode::Pkcs12ImportFailed => cef_errorcode_t::ERR_PKCS12_IMPORT_FAILED,
             ErrorCode::ImportCaCertNotCa => cef_errorcode_t::ERR_IMPORT_CA_CERT_NOT_CA,
@@ -1936,7 +1905,11 @@ impl From<&ErrorCode> for cef_errorcode_t {
             ErrorCode::DnsNameHttpsOnly => cef_errorcode_t::ERR_DNS_NAME_HTTPS_ONLY,
             ErrorCode::DnsRequestCancelled => cef_errorcode_t::ERR_DNS_REQUEST_CANCELLED,
             ErrorCode::DnsNoMatchingSupportedAlpn => cef_errorcode_t::ERR_DNS_NO_MATCHING_SUPPORTED_ALPN,
-            ErrorCode::DictionaryLoadFailed => cef_errorcode_t::ERR_DICTIONARY_LOAD_FAILED
+            ErrorCode::DictionaryLoadFailed => cef_errorcode_t::ERR_DICTIONARY_LOAD_FAILED,
+            ErrorCode::NetworkAccessRevoked => cef_errorcode_t::ERR_NETWORK_ACCESS_REVOKED,
+            ErrorCode::ZstdWindowSizeTooBig => cef_errorcode_t::ERR_ZSTD_WINDOW_SIZE_TOO_BIG,
+            ErrorCode::UnxpectedContentDictionaryHeader => cef_errorcode_t::ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER,
+            ErrorCode::DnsSecureProbeRecordInvalid => cef_errorcode_t::ERR_DNS_SECURE_PROBE_RECORD_INVALID,
         }
     }
 }
@@ -2438,7 +2411,13 @@ pub enum TerminationStatus {
     ProcessCrashed,
 
     /// Out of memory. Some platforms may use TS_PROCESS_CRASHED instead.
-    ProcessOom
+    ProcessOom,
+
+    /// Process launch failed.
+    LauchFailed,
+
+    /// Integrity check on the executable failed.
+    IntegrityFailure
 }
 
 impl From<cef_termination_status_t> for TerminationStatus {
@@ -2455,7 +2434,9 @@ impl From<&cef_termination_status_t> for TerminationStatus {
             },
             cef_termination_status_t::TS_PROCESS_WAS_KILLED => TerminationStatus::ProcessWasKilled,
             cef_termination_status_t::TS_PROCESS_CRASHED => TerminationStatus::ProcessCrashed,
-            cef_termination_status_t::TS_PROCESS_OOM => TerminationStatus::ProcessOom
+            cef_termination_status_t::TS_PROCESS_OOM => TerminationStatus::ProcessOom,
+            cef_termination_status_t::TS_LAUNCH_FAILED => TerminationStatus::LauchFailed,
+            cef_termination_status_t::TS_INTEGRITY_FAILURE => TerminationStatus::IntegrityFailure
         }
     }
 }
@@ -2474,7 +2455,9 @@ impl From<&TerminationStatus> for cef_termination_status_t {
             },
             TerminationStatus::ProcessWasKilled => cef_termination_status_t::TS_PROCESS_WAS_KILLED,
             TerminationStatus::ProcessCrashed => cef_termination_status_t::TS_PROCESS_CRASHED,
-            TerminationStatus::ProcessOom => cef_termination_status_t::TS_PROCESS_OOM
+            TerminationStatus::ProcessOom => cef_termination_status_t::TS_PROCESS_OOM,
+            TerminationStatus::LauchFailed => cef_termination_status_t::TS_LAUNCH_FAILED,
+            TerminationStatus::IntegrityFailure => cef_termination_status_t::TS_INTEGRITY_FAILURE
         }
     }
 }
