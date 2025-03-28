@@ -14,7 +14,7 @@ pub trait DisplayHandlerCallbacks: Send + Sync + 'static {
     fn on_address_change(&mut self, browser: Browser, frame: Frame, url: &str);
 
     /// Called when the page title changes.
-    fn on_title_change(&mut self, browser: Browser, title: &str);
+    fn on_title_change(&mut self, browser: Browser, title: Option<String>);
 
     /// Called when the page icon changes.
     fn on_favicon_urlchange(&mut self, browser: Browser, icon_urls: Vec<String>);
@@ -119,10 +119,9 @@ impl DisplayHandlerWrapper {
     ) {
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
-        let title: String = CefString::from_ptr_unchecked(title).into();
-
+        let title: Option<String> = CefString::from_ptr(title).map(|s| s.into());
         this.0
-            .on_title_change(browser, &title);
+            .on_title_change(browser, title);
     }
 
     /// Called when the page icon changes.
