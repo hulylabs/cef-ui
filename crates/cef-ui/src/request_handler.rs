@@ -481,8 +481,8 @@ impl Wrappable for RequestHandlerWrapper {
                 on_document_available_in_main_frame: Some(
                     Self::c_on_document_available_in_main_frame
                 ),
-                on_render_process_responsive:        None,
-                on_render_process_unresponsive:      None
+                on_render_process_unresponsive:      None,
+                on_render_process_responsive:        None
             },
             self
         )

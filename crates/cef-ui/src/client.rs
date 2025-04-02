@@ -1,6 +1,6 @@
 use crate::{
     Browser, ContextMenuHandler, DisplayHandler, Frame, LifeSpanHandler, LoadHandler, ProcessId,
-    ProcessMessage, RefCountedPtr, RenderHandler, Wrappable, Wrapped,
+    ProcessMessage, RefCountedPtr, RenderHandler, RequestHandler, Wrappable, Wrapped,
     keyboard_handler::KeyboardHandler, ref_counted_ptr
 };
 use cef_ui_sys::{
@@ -87,9 +87,8 @@ pub trait ClientCallbacks: Send + Sync + 'static {
     /// Return the handler for off-screen rendering events.
     fn get_render_handler(&mut self) -> Option<RenderHandler>;
 
-    // /// Return the handler for browser request events.
-    // struct _cef_request_handler_t*(CEF_CALLBACK* get_request_handler)(
-    // struct _cef_client_t* self);
+    /// Return the handler for browser request events.
+    fn get_request_handler(&mut self) -> Option<RequestHandler>;
 
     /// Called when a new message is received from a different process. Return
     /// true (1) if the message was handled or false (0) otherwise.  It is safe to
@@ -271,7 +270,12 @@ impl ClientWrapper {
     unsafe extern "C" fn c_get_request_handler(
         this: *mut cef_client_t
     ) -> *mut cef_request_handler_t {
-        todo!()
+        let this: &mut Self = Wrapped::wrappable(this);
+
+        this.0
+            .get_request_handler()
+            .map(|handler| handler.into_raw())
+            .unwrap_or(null_mut())
     }
 
     /// Called when a new message is received from a different process. Return
@@ -325,7 +329,7 @@ impl Wrappable for ClientWrapper {
                 get_load_handler:            Some(Self::c_get_load_handler),
                 get_print_handler:           None,
                 get_render_handler:          Some(Self::c_get_render_handler),
-                get_request_handler:         None,
+                get_request_handler:         Some(Self::c_get_request_handler),
                 on_process_message_received: Some(Self::c_on_process_message_received)
             },
             self

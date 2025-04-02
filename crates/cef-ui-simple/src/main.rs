@@ -167,6 +167,10 @@ impl ClientCallbacks for MyClientCallbacks {
     ) -> bool {
         true
     }
+
+    fn get_request_handler(&mut self) -> Option<cef_ui::RequestHandler> {
+        None
+    }
 }
 
 /// Application callbacks.
