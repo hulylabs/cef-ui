@@ -174,6 +174,7 @@ pub const WCHAR_MIN: u32 = 0;
 pub const WCHAR_MAX: u32 = 65535;
 pub const WINT_MIN: u32 = 0;
 pub const WINT_MAX: u32 = 65535;
+pub const CEF_V8_ENABLE_SANDBOX: u32 = 1;
 pub const OS_WIN: u32 = 1;
 pub const COMPILER_MSVC: u32 = 1;
 pub const ARCH_CPU_X86_FAMILY: u32 = 1;
@@ -20590,17 +20591,17 @@ pub const SOFTKEYBOARD_TYPE_T1: u32 = 1;
 pub const SOFTKEYBOARD_TYPE_C1: u32 = 2;
 pub const kInvalidPlatformThreadId: u32 = 0;
 pub const kInvalidPlatformThreadHandle: u32 = 0;
-pub const CEF_VERSION: &[u8; 42] = b"121.3.15+g4d3b0b4+chromium-121.0.6167.184\0";
-pub const CEF_VERSION_MAJOR: u32 = 121;
-pub const CEF_VERSION_MINOR: u32 = 3;
-pub const CEF_VERSION_PATCH: u32 = 15;
-pub const CEF_COMMIT_NUMBER: u32 = 2912;
-pub const CEF_COMMIT_HASH: &[u8; 41] = b"4d3b0b471a5e15a0de692cdfe8a65f0cefcb4228\0";
-pub const COPYRIGHT_YEAR: u32 = 2024;
-pub const CHROME_VERSION_MAJOR: u32 = 121;
+pub const CEF_VERSION: &[u8; 41] = b"131.4.1+g437feba+chromium-131.0.6778.265\0";
+pub const CEF_VERSION_MAJOR: u32 = 131;
+pub const CEF_VERSION_MINOR: u32 = 4;
+pub const CEF_VERSION_PATCH: u32 = 1;
+pub const CEF_COMMIT_NUMBER: u32 = 3111;
+pub const CEF_COMMIT_HASH: &[u8; 41] = b"437feba0099fe581b25c41ad49e1f1ed935a38bd\0";
+pub const COPYRIGHT_YEAR: u32 = 2025;
+pub const CHROME_VERSION_MAJOR: u32 = 131;
 pub const CHROME_VERSION_MINOR: u32 = 0;
-pub const CHROME_VERSION_BUILD: u32 = 6167;
-pub const CHROME_VERSION_PATCH: u32 = 184;
+pub const CHROME_VERSION_BUILD: u32 = 6778;
+pub const CHROME_VERSION_PATCH: u32 = 265;
 pub type va_list = *mut ::std::os::raw::c_char;
 extern "C" {
     pub fn __va_start(arg1: *mut *mut ::std::os::raw::c_char, ...);
@@ -21373,7 +21374,7 @@ pub enum cef_content_setting_types_t {
     CEF_CONTENT_SETTING_TYPE_SOUND = 30,
     CEF_CONTENT_SETTING_TYPE_CLIENT_HINTS = 31,
     CEF_CONTENT_SETTING_TYPE_SENSORS = 32,
-    CEF_CONTENT_SETTING_TYPE_ACCESSIBILITY_EVENTS = 33,
+    CEF_CONTENT_SETTING_TYPE_DEPRECATED_ACCESSIBILITY_EVENTS = 33,
     CEF_CONTENT_SETTING_TYPE_PAYMENT_HANDLER = 34,
     CEF_CONTENT_SETTING_TYPE_USB_GUARD = 35,
     CEF_CONTENT_SETTING_TYPE_BACKGROUND_FETCH = 36,
@@ -21429,13 +21430,32 @@ pub enum cef_content_setting_types_t {
     CEF_CONTENT_SETTING_TYPE_HTTPS_ENFORCED = 86,
     CEF_CONTENT_SETTING_TYPE_ALL_SCREEN_CAPTURE = 87,
     CEF_CONTENT_SETTING_TYPE_COOKIE_CONTROLS_METADATA = 88,
-    CEF_CONTENT_SETTING_TYPE_TPCD_SUPPORT = 89,
-    CEF_CONTENT_SETTING_TYPE_AUTO_PICTURE_IN_PICTURE = 90,
-    CEF_CONTENT_SETTING_TYPE_TPCD_METADATA_GRANTS = 91,
-    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_EXTENDED_PERMISSION = 92,
-    CEF_CONTENT_SETTING_TYPE_TPCD_HEURISTICS_GRANTS = 93,
-    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_RESTORE_PERMISSION = 94,
-    CEF_CONTENT_SETTING_TYPE_NUM_TYPES = 95
+    CEF_CONTENT_SETTING_TYPE_TPCD_HEURISTICS_GRANTS = 89,
+    CEF_CONTENT_SETTING_TYPE_TPCD_METADATA_GRANTS = 90,
+    CEF_CONTENT_SETTING_TYPE_TPCD_TRIAL = 91,
+    CEF_CONTENT_SETTING_TYPE_TOP_LEVEL_TPCD_TRIAL = 92,
+    CEF_CONTENT_SETTING_TOP_LEVEL_TPCD_ORIGIN_TRIAL = 93,
+    CEF_CONTENT_SETTING_TYPE_AUTO_PICTURE_IN_PICTURE = 94,
+    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_EXTENDED_PERMISSION = 95,
+    CEF_CONTENT_SETTING_TYPE_FILE_SYSTEM_ACCESS_RESTORE_PERMISSION = 96,
+    CEF_CONTENT_SETTING_TYPE_CAPTURED_SURFACE_CONTROL = 97,
+    CEF_CONTENT_SETTING_TYPE_SMART_CARD_GUARD = 98,
+    CEF_CONTENT_SETTING_TYPE_SMART_CARD_DATA = 99,
+    CEF_CONTENT_SETTING_TYPE_WEB_PRINTING = 100,
+    CEF_CONTENT_SETTING_TYPE_AUTOMATIC_FULLSCREEN = 101,
+    CEF_CONTENT_SETTING_TYPE_SUB_APP_INSTALLATION_PROMPTS = 102,
+    CEF_CONTENT_SETTING_TYPE_SPEAKER_SELECTION = 103,
+    CEF_CONTENT_SETTING_TYPE_DIRECT_SOCKETS = 104,
+    CEF_CONTENT_SETTING_TYPE_KEYBOARD_LOCK = 105,
+    CEF_CONTENT_SETTING_TYPE_POINTER_LOCK = 106,
+    CEF_CONTENT_SETTING_TYPE_REVOKED_ABUSIVE_NOTIFICATION_PERMISSIONS = 107,
+    CEF_CONTENT_SETTING_TYPE_TRACKING_PROTECTION = 108,
+    CEF_CONTENT_SETTING_TYPE_DISPLAY_MEDIA_SYSTEM_AUDIO = 109,
+    CEF_CONTENT_SETTING_TYPE_JAVASCRIPT_OPTIMIZER = 110,
+    CEF_CONTENT_SETTING_TYPE_STORAGE_ACCESS_HEADER_ORIGIN_TRIAL = 111,
+    CEF_CONTENT_SETTING_TYPE_HAND_TRACKING = 112,
+    CEF_CONTENT_SETTING_TYPE_WEB_APP_INSTALLATION = 113,
+    CEF_CONTENT_SETTING_TYPE_DIRECT_SOCKETS_PRIVATE_NETWORK_ACCESS = 114
 }
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -117846,6 +117866,19 @@ extern "C" {
 extern "C" {
     pub fn ImmDisableLegacyIME() -> BOOL;
 }
+#[repr(i32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_color_type_t {
+    CEF_COLOR_TYPE_RGBA_8888 = 0,
+    CEF_COLOR_TYPE_BGRA_8888 = 1
+}
+#[repr(i32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_runtime_style_t {
+    CEF_RUNTIME_STYLE_DEFAULT = 0,
+    CEF_RUNTIME_STYLE_CHROME = 1,
+    CEF_RUNTIME_STYLE_ALLOY = 2
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_main_args_t {
@@ -117864,9 +117897,17 @@ pub struct _cef_window_info_t {
     pub windowless_rendering_enabled: ::std::os::raw::c_int,
     pub shared_texture_enabled:       ::std::os::raw::c_int,
     pub external_begin_frame_enabled: ::std::os::raw::c_int,
-    pub window:                       HWND
+    pub window:                       HWND,
+    pub runtime_style:                cef_runtime_style_t
 }
 pub type cef_window_info_t = _cef_window_info_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_accelerated_paint_info_t {
+    pub shared_texture_handle: HANDLE,
+    pub format:                cef_color_type_t
+}
+pub type cef_accelerated_paint_info_t = _cef_accelerated_paint_info_t;
 pub type cef_color_t = u32;
 impl cef_log_severity_t {
     pub const LOGSEVERITY_DEBUG: cef_log_severity_t = cef_log_severity_t::LOGSEVERITY_VERBOSE;
@@ -117907,7 +117948,6 @@ pub struct _cef_settings_t {
     pub browser_subprocess_path:             cef_string_t,
     pub framework_dir_path:                  cef_string_t,
     pub main_bundle_path:                    cef_string_t,
-    pub chrome_runtime:                      ::std::os::raw::c_int,
     pub multi_threaded_message_loop:         ::std::os::raw::c_int,
     pub external_message_pump:               ::std::os::raw::c_int,
     pub windowless_rendering_enabled:        ::std::os::raw::c_int,
@@ -117915,7 +117955,6 @@ pub struct _cef_settings_t {
     pub cache_path:                          cef_string_t,
     pub root_cache_path:                     cef_string_t,
     pub persist_session_cookies:             ::std::os::raw::c_int,
-    pub persist_user_preferences:            ::std::os::raw::c_int,
     pub user_agent:                          cef_string_t,
     pub user_agent_product:                  cef_string_t,
     pub locale:                              cef_string_t,
@@ -117925,7 +117964,6 @@ pub struct _cef_settings_t {
     pub javascript_flags:                    cef_string_t,
     pub resources_dir_path:                  cef_string_t,
     pub locales_dir_path:                    cef_string_t,
-    pub pack_loading_disabled:               ::std::os::raw::c_int,
     pub remote_debugging_port:               ::std::os::raw::c_int,
     pub uncaught_exception_stack_size:       ::std::os::raw::c_int,
     pub background_color:                    cef_color_t,
@@ -117942,7 +117980,6 @@ pub struct _cef_request_context_settings_t {
     pub size:                                usize,
     pub cache_path:                          cef_string_t,
     pub persist_session_cookies:             ::std::os::raw::c_int,
-    pub persist_user_preferences:            ::std::os::raw::c_int,
     pub accept_language_list:                cef_string_t,
     pub cookieable_schemes_list:             cef_string_t,
     pub cookieable_schemes_exclude_defaults: ::std::os::raw::c_int
@@ -118041,7 +118078,9 @@ pub enum cef_termination_status_t {
     TS_ABNORMAL_TERMINATION = 0,
     TS_PROCESS_WAS_KILLED = 1,
     TS_PROCESS_CRASHED = 2,
-    TS_PROCESS_OOM = 3
+    TS_PROCESS_OOM = 3,
+    TS_LAUNCH_FAILED = 4,
+    TS_INTEGRITY_FAILURE = 5
 }
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -118096,6 +118135,7 @@ pub enum cef_errorcode_t {
     ERR_BLOCKED_BY_CSP = -30,
     ERR_H2_OR_QUIC_REQUIRED = -31,
     ERR_BLOCKED_BY_ORB = -32,
+    ERR_NETWORK_ACCESS_REVOKED = -33,
     ERR_CONNECTION_CLOSED = -100,
     ERR_CONNECTION_RESET = -101,
     ERR_CONNECTION_REFUSED = -102,
@@ -118248,6 +118288,9 @@ pub enum cef_errorcode_t {
     ERR_INCONSISTENT_IP_ADDRESS_SPACE = -383,
     ERR_CACHED_IP_ADDRESS_SPACE_BLOCKED_BY_PRIVATE_NETWORK_ACCESS_POLICY = -384,
     ERR_BLOCKED_BY_PRIVATE_NETWORK_ACCESS_CHECKS = -385,
+    ERR_ZSTD_WINDOW_SIZE_TOO_BIG = -386,
+    ERR_DICTIONARY_LOAD_FAILED = -387,
+    ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER = -388,
     ERR_CACHE_MISS = -400,
     ERR_CACHE_READ_FAILURE = -401,
     ERR_CACHE_WRITE_FAILURE = -402,
@@ -118269,13 +118312,6 @@ pub enum cef_errorcode_t {
     ERR_INVALID_WEB_BUNDLE = -505,
     ERR_TRUST_TOKEN_OPERATION_FAILED = -506,
     ERR_TRUST_TOKEN_OPERATION_SUCCESS_WITHOUT_SENDING_REQUEST = -507,
-    ERR_FTP_FAILED = -601,
-    ERR_FTP_SERVICE_UNAVAILABLE = -602,
-    ERR_FTP_TRANSFER_ABORTED = -603,
-    ERR_FTP_FILE_BUSY = -604,
-    ERR_FTP_SYNTAX_ERROR = -605,
-    ERR_FTP_COMMAND_NOT_SUPPORTED = -606,
-    ERR_FTP_BAD_COMMAND_SEQUENCE = -607,
     ERR_PKCS12_IMPORT_BAD_PASSWORD = -701,
     ERR_PKCS12_IMPORT_FAILED = -702,
     ERR_IMPORT_CA_CERT_NOT_CA = -703,
@@ -118301,7 +118337,7 @@ pub enum cef_errorcode_t {
     ERR_DNS_NAME_HTTPS_ONLY = -809,
     ERR_DNS_REQUEST_CANCELLED = -810,
     ERR_DNS_NO_MATCHING_SUPPORTED_ALPN = -811,
-    ERR_DICTIONARY_LOAD_FAILED = -812
+    ERR_DNS_SECURE_PROBE_RECORD_INVALID = -814
 }
 pub const cef_cert_status_t_CERT_STATUS_NONE: cef_cert_status_t = 0;
 pub const cef_cert_status_t_CERT_STATUS_COMMON_NAME_INVALID: cef_cert_status_t = 1;
@@ -118322,6 +118358,41 @@ pub const cef_cert_status_t_CERT_STATUS_REV_CHECKING_ENABLED: cef_cert_status_t 
 pub const cef_cert_status_t_CERT_STATUS_SHA1_SIGNATURE_PRESENT: cef_cert_status_t = 524288;
 pub const cef_cert_status_t_CERT_STATUS_CT_COMPLIANCE_FAILED: cef_cert_status_t = 1048576;
 pub type cef_cert_status_t = ::std::os::raw::c_int;
+impl cef_resultcode_t {
+    pub const CEF_RESULT_CODE_SANDBOX_FATAL_INTEGRITY: cef_resultcode_t =
+        cef_resultcode_t::CEF_RESULT_CODE_SANDBOX_FATAL_FIRST;
+}
+#[repr(i32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_resultcode_t {
+    CEF_RESULT_CODE_NORMAL_EXIT = 0,
+    CEF_RESULT_CODE_KILLED = 1,
+    CEF_RESULT_CODE_HUNG = 2,
+    CEF_RESULT_CODE_KILLED_BAD_MESSAGE = 3,
+    CEF_RESULT_CODE_GPU_DEAD_ON_ARRIVAL = 4,
+    CEF_RESULT_CODE_CHROME_FIRST = 5,
+    CEF_RESULT_CODE_MISSING_DATA = 7,
+    CEF_RESULT_CODE_UNSUPPORTED_PARAM = 13,
+    CEF_RESULT_CODE_PROFILE_IN_USE = 21,
+    CEF_RESULT_CODE_PACK_EXTENSION_ERROR = 22,
+    CEF_RESULT_CODE_NORMAL_EXIT_PROCESS_NOTIFIED = 24,
+    CEF_RESULT_CODE_INVALID_SANDBOX_STATE = 31,
+    CEF_RESULT_CODE_CLOUD_POLICY_ENROLLMENT_FAILED = 32,
+    CEF_RESULT_CODE_GPU_EXIT_ON_CONTEXT_LOST = 34,
+    CEF_RESULT_CODE_NORMAL_EXIT_PACK_EXTENSION_SUCCESS = 36,
+    CEF_RESULT_CODE_SYSTEM_RESOURCE_EXHAUSTED = 37,
+    CEF_RESULT_CODE_CHROME_LAST = 38,
+    CEF_RESULT_CODE_SANDBOX_FATAL_FIRST = 7006,
+    CEF_RESULT_CODE_SANDBOX_FATAL_DROPTOKEN = 7007,
+    CEF_RESULT_CODE_SANDBOX_FATAL_FLUSHANDLES = 7008,
+    CEF_RESULT_CODE_SANDBOX_FATAL_CACHEDISABLE = 7009,
+    CEF_RESULT_CODE_SANDBOX_FATAL_CLOSEHANDLES = 7010,
+    CEF_RESULT_CODE_SANDBOX_FATAL_MITIGATION = 7011,
+    CEF_RESULT_CODE_SANDBOX_FATAL_MEMORY_EXCEEDED = 7012,
+    CEF_RESULT_CODE_SANDBOX_FATAL_WARMUP = 7013,
+    CEF_RESULT_CODE_SANDBOX_FATAL_BROKER_SHUTDOWN_HUNG = 7014,
+    CEF_RESULT_CODE_SANDBOX_FATAL_LAST = 7015
+}
 impl cef_window_open_disposition_t {
     pub const CEF_WOD_MAX_VALUE: cef_window_open_disposition_t =
         cef_window_open_disposition_t::CEF_WOD_NEW_PICTURE_IN_PICTURE;
@@ -118367,14 +118438,6 @@ pub enum cef_text_input_mode_t {
     CEF_TEXT_INPUT_MODE_NUMERIC = 6,
     CEF_TEXT_INPUT_MODE_DECIMAL = 7,
     CEF_TEXT_INPUT_MODE_SEARCH = 8
-}
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum cef_v8_accesscontrol_t {
-    V8_ACCESS_CONTROL_DEFAULT = 0,
-    V8_ACCESS_CONTROL_ALL_CAN_READ = 1,
-    V8_ACCESS_CONTROL_ALL_CAN_WRITE = 2,
-    V8_ACCESS_CONTROL_PROHIBITS_OVERWRITING = 4
 }
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -118538,6 +118601,15 @@ pub struct _cef_screen_info_t {
     pub available_rect:      cef_rect_t
 }
 pub type cef_screen_info_t = _cef_screen_info_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_linux_window_properties_t {
+    pub wayland_app_id: cef_string_t,
+    pub wm_class_class: cef_string_t,
+    pub wm_class_name:  cef_string_t,
+    pub wm_role_name:   cef_string_t
+}
+pub type cef_linux_window_properties_t = _cef_linux_window_properties_t;
 impl cef_menu_id_t {
     pub const MENU_ID_SPELLCHECK_SUGGESTION_LAST: cef_menu_id_t =
         cef_menu_id_t::MENU_ID_SPELLCHECK_SUGGESTION_4;
@@ -118555,8 +118627,9 @@ pub enum cef_menu_id_t {
     MENU_ID_CUT = 112,
     MENU_ID_COPY = 113,
     MENU_ID_PASTE = 114,
-    MENU_ID_DELETE = 115,
-    MENU_ID_SELECT_ALL = 116,
+    MENU_ID_PASTE_MATCH_STYLE = 115,
+    MENU_ID_DELETE = 116,
+    MENU_ID_SELECT_ALL = 117,
     MENU_ID_FIND = 130,
     MENU_ID_PRINT = 131,
     MENU_ID_VIEW_SOURCE = 132,
@@ -118863,7 +118936,7 @@ pub enum cef_dom_form_control_type_t {
     DOM_FORM_CONTROL_TYPE_BUTTON_BUTTON = 1,
     DOM_FORM_CONTROL_TYPE_BUTTON_SUBMIT = 2,
     DOM_FORM_CONTROL_TYPE_BUTTON_RESET = 3,
-    DOM_FORM_CONTROL_TYPE_BUTTON_SELECT_LIST = 4,
+    DOM_FORM_CONTROL_TYPE_BUTTON_POPOVER = 4,
     DOM_FORM_CONTROL_TYPE_FIELDSET = 5,
     DOM_FORM_CONTROL_TYPE_INPUT_BUTTON = 6,
     DOM_FORM_CONTROL_TYPE_INPUT_CHECKBOX = 7,
@@ -118890,8 +118963,7 @@ pub enum cef_dom_form_control_type_t {
     DOM_FORM_CONTROL_TYPE_OUTPUT = 28,
     DOM_FORM_CONTROL_TYPE_SELECT_ONE = 29,
     DOM_FORM_CONTROL_TYPE_SELECT_MULTIPLE = 30,
-    DOM_FORM_CONTROL_TYPE_SELECT_LIST = 31,
-    DOM_FORM_CONTROL_TYPE_TEXT_AREA = 32
+    DOM_FORM_CONTROL_TYPE_TEXT_AREA = 31
 }
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -119093,12 +119165,6 @@ pub enum cef_response_filter_status_t {
 }
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum cef_color_type_t {
-    CEF_COLOR_TYPE_RGBA_8888 = 0,
-    CEF_COLOR_TYPE_BGRA_8888 = 1
-}
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum cef_alpha_type_t {
     CEF_ALPHA_TYPE_OPAQUE = 0,
     CEF_ALPHA_TYPE_PREMULTIPLIED = 1,
@@ -119115,18 +119181,11 @@ pub enum cef_text_style_t {
 }
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum cef_main_axis_alignment_t {
-    CEF_MAIN_AXIS_ALIGNMENT_START = 0,
-    CEF_MAIN_AXIS_ALIGNMENT_CENTER = 1,
-    CEF_MAIN_AXIS_ALIGNMENT_END = 2
-}
-#[repr(i32)]
-#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
-pub enum cef_cross_axis_alignment_t {
-    CEF_CROSS_AXIS_ALIGNMENT_STRETCH = 0,
-    CEF_CROSS_AXIS_ALIGNMENT_START = 1,
-    CEF_CROSS_AXIS_ALIGNMENT_CENTER = 2,
-    CEF_CROSS_AXIS_ALIGNMENT_END = 3
+pub enum cef_axis_alignment_t {
+    CEF_AXIS_ALIGNMENT_START = 0,
+    CEF_AXIS_ALIGNMENT_CENTER = 1,
+    CEF_AXIS_ALIGNMENT_END = 2,
+    CEF_AXIS_ALIGNMENT_STRETCH = 3
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -119136,8 +119195,8 @@ pub struct _cef_box_layout_settings_t {
     pub inside_border_vertical_spacing:   ::std::os::raw::c_int,
     pub inside_border_insets:             cef_insets_t,
     pub between_child_spacing:            ::std::os::raw::c_int,
-    pub main_axis_alignment:              cef_main_axis_alignment_t,
-    pub cross_axis_alignment:             cef_cross_axis_alignment_t,
+    pub main_axis_alignment:              cef_axis_alignment_t,
+    pub cross_axis_alignment:             cef_axis_alignment_t,
     pub minimum_cross_axis_size:          ::std::os::raw::c_int,
     pub default_flex:                     ::std::os::raw::c_int
 }
@@ -119233,7 +119292,7 @@ pub struct _cef_composition_underline_t {
 pub type cef_composition_underline_t = _cef_composition_underline_t;
 impl cef_channel_layout_t {
     pub const CEF_CHANNEL_LAYOUT_MAX: cef_channel_layout_t =
-        cef_channel_layout_t::CEF_CHANNEL_LAYOUT_5_1_4_DOWNMIX;
+        cef_channel_layout_t::CEF_CHANNEL_LAYOUT_3_1_BACK;
 }
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -119271,7 +119330,9 @@ pub enum cef_channel_layout_t {
     CEF_CHANNEL_LAYOUT_STEREO_AND_KEYBOARD_MIC = 30,
     CEF_CHANNEL_LAYOUT_4_1_QUAD_SIDE = 31,
     CEF_CHANNEL_LAYOUT_BITSTREAM = 32,
-    CEF_CHANNEL_LAYOUT_5_1_4_DOWNMIX = 33
+    CEF_CHANNEL_LAYOUT_5_1_4_DOWNMIX = 33,
+    CEF_CHANNEL_LAYOUT_1_1 = 34,
+    CEF_CHANNEL_LAYOUT_3_1_BACK = 35
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -119344,7 +119405,7 @@ pub enum cef_chrome_toolbar_type_t {
 }
 impl cef_chrome_page_action_icon_type_t {
     pub const CEF_CPAIT_MAX_VALUE: cef_chrome_page_action_icon_type_t =
-        cef_chrome_page_action_icon_type_t::CEF_CPAIT_PRICE_READ_ANYTHING;
+        cef_chrome_page_action_icon_type_t::CEF_CPAIT_DISCOUNTS;
 }
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -119354,18 +119415,18 @@ pub enum cef_chrome_page_action_icon_type_t {
     CEF_CPAIT_COOKIE_CONTROLS = 2,
     CEF_CPAIT_FILE_SYSTEM_ACCESS = 3,
     CEF_CPAIT_FIND = 4,
-    CEF_CPAIT_HIGH_EFFICIENCY = 5,
+    CEF_CPAIT_MEMORY_SAVER = 5,
     CEF_CPAIT_INTENT_PICKER = 6,
     CEF_CPAIT_LOCAL_CARD_MIGRATION = 7,
     CEF_CPAIT_MANAGE_PASSWORDS = 8,
     CEF_CPAIT_PAYMENTS_OFFER_NOTIFICATION = 9,
     CEF_CPAIT_PRICE_TRACKING = 10,
     CEF_CPAIT_PWA_INSTALL = 11,
-    CEF_CPAIT_QR_CODE_GENERATOR = 12,
-    CEF_CPAIT_READER_MODE = 13,
+    CEF_CPAIT_QR_CODE_GENERATOR_DEPRECATED = 12,
+    CEF_CPAIT_READER_MODE_DEPRECATED = 13,
     CEF_CPAIT_SAVE_AUTOFILL_ADDRESS = 14,
     CEF_CPAIT_SAVE_CARD = 15,
-    CEF_CPAIT_SEND_TAB_TO_SELF = 16,
+    CEF_CPAIT_SEND_TAB_TO_SELF_DEPRECATED = 16,
     CEF_CPAIT_SHARING_HUB = 17,
     CEF_CPAIT_SIDE_SEARCH = 18,
     CEF_CPAIT_SMS_REMOTE_FETCHER = 19,
@@ -119376,7 +119437,10 @@ pub enum cef_chrome_page_action_icon_type_t {
     CEF_CPAIT_SAVE_IBAN = 24,
     CEF_CPAIT_MANDATORY_REAUTH = 25,
     CEF_CPAIT_PRICE_INSIGHTS = 26,
-    CEF_CPAIT_PRICE_READ_ANYTHING = 27
+    CEF_CPAIT_PRICE_READ_ANYTHING = 27,
+    CEF_CPAIT_PRODUCT_SPECIFICATIONS = 28,
+    CEF_CPAIT_LENS_OVERLAY = 29,
+    CEF_CPAIT_DISCOUNTS = 30
 }
 impl cef_chrome_toolbar_button_type_t {
     pub const CEF_CTBT_MAX_VALUE: cef_chrome_toolbar_button_type_t =
@@ -119441,27 +119505,31 @@ pub enum cef_media_access_permission_types_t {
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum cef_permission_request_types_t {
     CEF_PERMISSION_TYPE_NONE = 0,
-    CEF_PERMISSION_TYPE_ACCESSIBILITY_EVENTS = 1,
-    CEF_PERMISSION_TYPE_AR_SESSION = 2,
-    CEF_PERMISSION_TYPE_CAMERA_PAN_TILT_ZOOM = 4,
-    CEF_PERMISSION_TYPE_CAMERA_STREAM = 8,
+    CEF_PERMISSION_TYPE_AR_SESSION = 1,
+    CEF_PERMISSION_TYPE_CAMERA_PAN_TILT_ZOOM = 2,
+    CEF_PERMISSION_TYPE_CAMERA_STREAM = 4,
+    CEF_PERMISSION_TYPE_CAPTURED_SURFACE_CONTROL = 8,
     CEF_PERMISSION_TYPE_CLIPBOARD = 16,
     CEF_PERMISSION_TYPE_TOP_LEVEL_STORAGE_ACCESS = 32,
     CEF_PERMISSION_TYPE_DISK_QUOTA = 64,
     CEF_PERMISSION_TYPE_LOCAL_FONTS = 128,
     CEF_PERMISSION_TYPE_GEOLOCATION = 256,
-    CEF_PERMISSION_TYPE_IDLE_DETECTION = 512,
-    CEF_PERMISSION_TYPE_MIC_STREAM = 1024,
-    CEF_PERMISSION_TYPE_MIDI = 2048,
-    CEF_PERMISSION_TYPE_MIDI_SYSEX = 4096,
-    CEF_PERMISSION_TYPE_MULTIPLE_DOWNLOADS = 8192,
-    CEF_PERMISSION_TYPE_NOTIFICATIONS = 16384,
-    CEF_PERMISSION_TYPE_PROTECTED_MEDIA_IDENTIFIER = 32768,
-    CEF_PERMISSION_TYPE_REGISTER_PROTOCOL_HANDLER = 65536,
-    CEF_PERMISSION_TYPE_STORAGE_ACCESS = 131072,
-    CEF_PERMISSION_TYPE_VR_SESSION = 262144,
-    CEF_PERMISSION_TYPE_WINDOW_MANAGEMENT = 524288,
-    CEF_PERMISSION_TYPE_FILE_SYSTEM_ACCESS = 1048576
+    CEF_PERMISSION_TYPE_HAND_TRACKING = 512,
+    CEF_PERMISSION_TYPE_IDENTITY_PROVIDER = 1024,
+    CEF_PERMISSION_TYPE_IDLE_DETECTION = 2048,
+    CEF_PERMISSION_TYPE_MIC_STREAM = 4096,
+    CEF_PERMISSION_TYPE_MIDI_SYSEX = 8192,
+    CEF_PERMISSION_TYPE_MULTIPLE_DOWNLOADS = 16384,
+    CEF_PERMISSION_TYPE_NOTIFICATIONS = 32768,
+    CEF_PERMISSION_TYPE_KEYBOARD_LOCK = 65536,
+    CEF_PERMISSION_TYPE_POINTER_LOCK = 131072,
+    CEF_PERMISSION_TYPE_PROTECTED_MEDIA_IDENTIFIER = 262144,
+    CEF_PERMISSION_TYPE_REGISTER_PROTOCOL_HANDLER = 524288,
+    CEF_PERMISSION_TYPE_STORAGE_ACCESS = 1048576,
+    CEF_PERMISSION_TYPE_VR_SESSION = 2097152,
+    CEF_PERMISSION_TYPE_WEB_APP_INSTALLATION = 4194304,
+    CEF_PERMISSION_TYPE_WINDOW_MANAGEMENT = 8388608,
+    CEF_PERMISSION_TYPE_FILE_SYSTEM_ACCESS = 16777216
 }
 #[repr(i32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -119531,6 +119599,48 @@ pub enum cef_zoom_command_t {
     CEF_ZOOM_COMMAND_RESET = 1,
     CEF_ZOOM_COMMAND_IN = 2
 }
+#[repr(i32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_color_variant_t {
+    CEF_COLOR_VARIANT_SYSTEM = 0,
+    CEF_COLOR_VARIANT_LIGHT = 1,
+    CEF_COLOR_VARIANT_DARK = 2,
+    CEF_COLOR_VARIANT_TONAL_SPOT = 3,
+    CEF_COLOR_VARIANT_NEUTRAL = 4,
+    CEF_COLOR_VARIANT_VIBRANT = 5,
+    CEF_COLOR_VARIANT_EXPRESSIVE = 6
+}
+#[repr(i32)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub enum cef_task_type_t {
+    CEF_TASK_TYPE_UNKNOWN = 0,
+    CEF_TASK_TYPE_BROWSER = 1,
+    CEF_TASK_TYPE_GPU = 2,
+    CEF_TASK_TYPE_ZYGOTE = 3,
+    CEF_TASK_TYPE_UTILITY = 4,
+    CEF_TASK_TYPE_RENDERER = 5,
+    CEF_TASK_TYPE_EXTENSION = 6,
+    CEF_TASK_TYPE_GUEST = 7,
+    CEF_TASK_TYPE_PLUGIN = 8,
+    CEF_TASK_TYPE_SANDBOX_HELPER = 9,
+    CEF_TASK_TYPE_DEDICATED_WORKER = 10,
+    CEF_TASK_TYPE_SHARED_WORKER = 11,
+    CEF_TASK_TYPE_SERVICE_WORKER = 12
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_task_info_t {
+    pub id:                     i64,
+    pub type_:                  cef_task_type_t,
+    pub is_killable:            ::std::os::raw::c_int,
+    pub title:                  cef_string_t,
+    pub cpu_usage:              f64,
+    pub number_of_processors:   ::std::os::raw::c_int,
+    pub memory:                 i64,
+    pub gpu_memory:             i64,
+    pub is_gpu_memory_inflated: ::std::os::raw::c_int
+}
+pub type cef_task_info_t = _cef_task_info_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_base_ref_counted_t {
@@ -120776,18 +120886,20 @@ pub type cef_string_visitor_t = _cef_string_visitor_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_frame_t {
-    pub base:                 cef_base_ref_counted_t,
+    pub base:                  cef_base_ref_counted_t,
     pub is_valid: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_frame_t) -> ::std::os::raw::c_int
     >,
-    pub undo:                 ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub redo:                 ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub cut:                  ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub copy:                 ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub paste:                ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub del:                  ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub select_all:           ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
-    pub view_source:          ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub undo: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub redo: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub cut: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub copy: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub paste: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub paste_and_match_style:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub del: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub select_all: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
+    pub view_source: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t)>,
     pub get_source: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_frame_t, visitor: *mut _cef_string_visitor_t)
     >,
@@ -120817,8 +120929,9 @@ pub struct _cef_frame_t {
     pub get_name: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_frame_t) -> cef_string_userfree_t
     >,
-    pub get_identifier:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t) -> i64>,
+    pub get_identifier: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_frame_t) -> cef_string_userfree_t
+    >,
     pub get_parent:
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_frame_t) -> *mut _cef_frame_t>,
     pub get_url: ::std::option::Option<
@@ -121084,122 +121197,6 @@ pub struct _cef_delete_cookies_callback_t {
     >
 }
 pub type cef_delete_cookies_callback_t = _cef_delete_cookies_callback_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_extension_t {
-    pub base:               cef_base_ref_counted_t,
-    pub get_identifier: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> cef_string_userfree_t
-    >,
-    pub get_path: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> cef_string_userfree_t
-    >,
-    pub get_manifest: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> *mut _cef_dictionary_value_t
-    >,
-    pub is_same: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_t,
-            that: *mut _cef_extension_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_handler: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> *mut _cef_extension_handler_t
-    >,
-    pub get_loader_context: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> *mut _cef_request_context_t
-    >,
-    pub is_loaded: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_t) -> ::std::os::raw::c_int
-    >,
-    pub unload: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_extension_t)>
-}
-pub type cef_extension_t = _cef_extension_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_get_extension_resource_callback_t {
-    pub base:   cef_base_ref_counted_t,
-    pub cont: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_get_extension_resource_callback_t,
-            stream: *mut _cef_stream_reader_t
-        )
-    >,
-    pub cancel: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_get_extension_resource_callback_t)
-    >
-}
-pub type cef_get_extension_resource_callback_t = _cef_get_extension_resource_callback_t;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_extension_handler_t {
-    pub base:                         cef_base_ref_counted_t,
-    pub on_extension_load_failed: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_extension_handler_t, result: cef_errorcode_t)
-    >,
-    pub on_extension_loaded: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t
-        )
-    >,
-    pub on_extension_unloaded: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t
-        )
-    >,
-    pub on_before_background_browser: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            url: *const cef_string_t,
-            client: *mut *mut _cef_client_t,
-            settings: *mut _cef_browser_settings_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub on_before_browser: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            browser: *mut _cef_browser_t,
-            active_browser: *mut _cef_browser_t,
-            index: ::std::os::raw::c_int,
-            url: *const cef_string_t,
-            active: ::std::os::raw::c_int,
-            windowInfo: *mut _cef_window_info_t,
-            client: *mut *mut _cef_client_t,
-            settings: *mut _cef_browser_settings_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_active_browser: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            browser: *mut _cef_browser_t,
-            include_incognito: ::std::os::raw::c_int
-        ) -> *mut _cef_browser_t
-    >,
-    pub can_access_browser: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            browser: *mut _cef_browser_t,
-            include_incognito: ::std::os::raw::c_int,
-            target_browser: *mut _cef_browser_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_extension_resource: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_extension_handler_t,
-            extension: *mut _cef_extension_t,
-            browser: *mut _cef_browser_t,
-            file: *const cef_string_t,
-            callback: *mut _cef_get_extension_resource_callback_t
-        ) -> ::std::os::raw::c_int
-    >
-}
-pub type cef_extension_handler_t = _cef_extension_handler_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_media_router_t {
@@ -121503,38 +121500,6 @@ pub struct _cef_request_context_t {
             callback: *mut _cef_resolve_callback_t
         )
     >,
-    pub load_extension: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            root_directory: *const cef_string_t,
-            manifest: *mut _cef_dictionary_value_t,
-            handler: *mut _cef_extension_handler_t
-        )
-    >,
-    pub did_load_extension: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            extension_id: *const cef_string_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub has_extension: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            extension_id: *const cef_string_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_extensions: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            extension_ids: cef_string_list_t
-        ) -> ::std::os::raw::c_int
-    >,
-    pub get_extension: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_t,
-            extension_id: *const cef_string_t
-        ) -> *mut _cef_extension_t
-    >,
     pub get_media_router: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_request_context_t,
@@ -121574,6 +121539,22 @@ pub struct _cef_request_context_t {
             content_type: cef_content_setting_types_t,
             value: cef_content_setting_values_t
         )
+    >,
+    pub set_chrome_color_scheme: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_context_t,
+            variant: cef_color_variant_t,
+            user_color: cef_color_t
+        )
+    >,
+    pub get_chrome_color_scheme_mode: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_request_context_t) -> cef_color_variant_t
+    >,
+    pub get_chrome_color_scheme_color: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_request_context_t) -> cef_color_t
+    >,
+    pub get_chrome_color_scheme_variant: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_request_context_t) -> cef_color_variant_t
     >
 }
 pub type cef_request_context_t = _cef_request_context_t;
@@ -121595,7 +121576,7 @@ extern "C" {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_browser_t {
-    pub base:                  cef_base_ref_counted_t,
+    pub base:                    cef_base_ref_counted_t,
     pub is_valid: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_t) -> ::std::os::raw::c_int
     >,
@@ -121638,10 +121619,13 @@ pub struct _cef_browser_t {
     pub get_focused_frame: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_t) -> *mut _cef_frame_t
     >,
-    pub get_frame_byident: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_browser_t, identifier: i64) -> *mut _cef_frame_t
+    pub get_frame_by_identifier: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_t,
+            identifier: *const cef_string_t
+        ) -> *mut _cef_frame_t
     >,
-    pub get_frame: ::std::option::Option<
+    pub get_frame_by_name: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_browser_t,
             name: *const cef_string_t
@@ -121650,11 +121634,7 @@ pub struct _cef_browser_t {
     pub get_frame_count:
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_browser_t) -> usize>,
     pub get_frame_identifiers: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_browser_t,
-            identifiersCount: *mut usize,
-            identifiers: *mut i64
-        )
+        unsafe extern "C" fn(self_: *mut _cef_browser_t, identifiers: cef_string_list_t)
     >,
     pub get_frame_names: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_t, names: cef_string_list_t)
@@ -121728,6 +121708,9 @@ pub struct _cef_browser_host_t {
     pub try_close_browser: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
     >,
+    pub is_ready_to_be_closed: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
+    >,
     pub set_focus: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_host_t, focus: ::std::os::raw::c_int)
     >,
@@ -121735,6 +121718,9 @@ pub struct _cef_browser_host_t {
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> HWND>,
     pub get_opener_window_handle:
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> HWND>,
+    pub get_opener_identifier: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
+    >,
     pub has_view: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
     >,
@@ -121979,12 +121965,6 @@ pub struct _cef_browser_host_t {
             max_size: *const cef_size_t
         )
     >,
-    pub get_extension: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> *mut _cef_extension_t
-    >,
-    pub is_background_host: ::std::option::Option<
-        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
-    >,
     pub set_audio_muted: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_host_t, mute: ::std::os::raw::c_int)
     >,
@@ -122012,6 +121992,12 @@ pub struct _cef_browser_host_t {
             command_id: ::std::os::raw::c_int,
             disposition: cef_window_open_disposition_t
         )
+    >,
+    pub is_render_process_unresponsive: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> ::std::os::raw::c_int
+    >,
+    pub get_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_host_t) -> cef_runtime_style_t
     >
 }
 pub type cef_browser_host_t = _cef_browser_host_t;
@@ -122033,6 +122019,11 @@ extern "C" {
         settings: *const _cef_browser_settings_t,
         extra_info: *mut _cef_dictionary_value_t,
         request_context: *mut _cef_request_context_t
+    ) -> *mut cef_browser_t;
+}
+extern "C" {
+    pub fn cef_browser_host_get_browser_by_identifier(
+        browser_id: ::std::os::raw::c_int
     ) -> *mut cef_browser_t;
 }
 #[repr(C)]
@@ -122720,6 +122711,8 @@ pub struct _cef_dialog_handler_t {
             title: *const cef_string_t,
             default_file_path: *const cef_string_t,
             accept_filters: cef_string_list_t,
+            accept_extensions: cef_string_list_t,
+            accept_descriptions: cef_string_list_t,
             callback: *mut _cef_file_dialog_callback_t
         ) -> ::std::os::raw::c_int
     >
@@ -122918,7 +122911,7 @@ pub struct _cef_download_handler_t {
             download_item: *mut _cef_download_item_t,
             suggested_name: *const cef_string_t,
             callback: *mut _cef_before_download_callback_t
-        )
+        ) -> ::std::os::raw::c_int
     >,
     pub on_download_updated: ::std::option::Option<
         unsafe extern "C" fn(
@@ -122998,6 +122991,13 @@ pub type cef_focus_handler_t = _cef_focus_handler_t;
 pub struct _cef_frame_handler_t {
     pub base:                  cef_base_ref_counted_t,
     pub on_frame_created: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_frame_handler_t,
+            browser: *mut _cef_browser_t,
+            frame: *mut _cef_frame_t
+        )
+    >,
+    pub on_frame_destroyed: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_frame_handler_t,
             browser: *mut _cef_browser_t,
@@ -123107,6 +123107,7 @@ pub struct _cef_life_span_handler_t {
             self_: *mut _cef_life_span_handler_t,
             browser: *mut _cef_browser_t,
             frame: *mut _cef_frame_t,
+            popup_id: ::std::os::raw::c_int,
             target_url: *const cef_string_t,
             target_frame_name: *const cef_string_t,
             target_disposition: cef_window_open_disposition_t,
@@ -123118,6 +123119,13 @@ pub struct _cef_life_span_handler_t {
             extra_info: *mut *mut _cef_dictionary_value_t,
             no_javascript_access: *mut ::std::os::raw::c_int
         ) -> ::std::os::raw::c_int
+    >,
+    pub on_before_popup_aborted: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_life_span_handler_t,
+            browser: *mut _cef_browser_t,
+            popup_id: ::std::os::raw::c_int
+        )
     >,
     pub on_before_dev_tools_popup: ::std::option::Option<
         unsafe extern "C" fn(
@@ -123470,7 +123478,7 @@ pub struct _cef_render_handler_t {
             type_: cef_paint_element_type_t,
             dirtyRectsCount: usize,
             dirtyRects: *const cef_rect_t,
-            shared_handle: *mut ::std::os::raw::c_void
+            info: *const cef_accelerated_paint_info_t
         )
     >,
     pub get_touch_handle_size: ::std::option::Option<
@@ -123838,6 +123846,18 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct _cef_unresponsive_process_callback_t {
+    pub base:      cef_base_ref_counted_t,
+    pub wait: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_unresponsive_process_callback_t)
+    >,
+    pub terminate: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_unresponsive_process_callback_t)
+    >
+}
+pub type cef_unresponsive_process_callback_t = _cef_unresponsive_process_callback_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct _cef_select_client_certificate_callback_t {
     pub base:   cef_base_ref_counted_t,
     pub select: ::std::option::Option<
@@ -123922,11 +123942,23 @@ pub struct _cef_request_handler_t {
     pub on_render_view_ready: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_request_handler_t, browser: *mut _cef_browser_t)
     >,
+    pub on_render_process_unresponsive: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_handler_t,
+            browser: *mut _cef_browser_t,
+            callback: *mut _cef_unresponsive_process_callback_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_render_process_responsive: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_request_handler_t, browser: *mut _cef_browser_t)
+    >,
     pub on_render_process_terminated: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_request_handler_t,
             browser: *mut _cef_browser_t,
-            status: cef_termination_status_t
+            status: cef_termination_status_t,
+            error_code: ::std::os::raw::c_int,
+            error_string: *const cef_string_t
         )
     >,
     pub on_document_available_in_main_frame: ::std::option::Option<
@@ -124089,8 +124121,32 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct _cef_request_context_handler_t {
+    pub base:                           cef_base_ref_counted_t,
+    pub on_request_context_initialized: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_context_handler_t,
+            request_context: *mut _cef_request_context_t
+        )
+    >,
+    pub get_resource_request_handler: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_request_context_handler_t,
+            browser: *mut _cef_browser_t,
+            frame: *mut _cef_frame_t,
+            request: *mut _cef_request_t,
+            is_navigation: ::std::os::raw::c_int,
+            is_download: ::std::os::raw::c_int,
+            request_initiator: *const cef_string_t,
+            disable_default_handling: *mut ::std::os::raw::c_int
+        ) -> *mut _cef_resource_request_handler_t
+    >
+}
+pub type cef_request_context_handler_t = _cef_request_context_handler_t;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct _cef_browser_process_handler_t {
-    pub base:                            cef_base_ref_counted_t,
+    pub base:                                cef_base_ref_counted_t,
     pub on_register_custom_preferences: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_browser_process_handler_t,
@@ -124118,6 +124174,11 @@ pub struct _cef_browser_process_handler_t {
     >,
     pub get_default_client: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_browser_process_handler_t) -> *mut _cef_client_t
+    >,
+    pub get_default_request_context_handler: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_browser_process_handler_t
+        ) -> *mut _cef_request_context_handler_t
     >
 }
 pub type cef_browser_process_handler_t = _cef_browser_process_handler_t;
@@ -124501,7 +124562,6 @@ pub struct _cef_v8value_t {
         unsafe extern "C" fn(
             self_: *mut _cef_v8value_t,
             key: *const cef_string_t,
-            settings: cef_v8_accesscontrol_t,
             attribute: cef_v8_propertyattribute_t
         ) -> ::std::os::raw::c_int
     >,
@@ -124620,6 +124680,12 @@ extern "C" {
         buffer: *mut ::std::os::raw::c_void,
         length: usize,
         release_callback: *mut cef_v8array_buffer_release_callback_t
+    ) -> *mut cef_v8value_t;
+}
+extern "C" {
+    pub fn cef_v8value_create_array_buffer_with_copy(
+        buffer: *mut ::std::os::raw::c_void,
+        length: usize
     ) -> *mut cef_v8value_t;
 }
 extern "C" {
@@ -124867,6 +124933,9 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
+    pub fn cef_get_exit_code() -> ::std::os::raw::c_int;
+}
+extern "C" {
     pub fn cef_shutdown();
 }
 extern "C" {
@@ -125031,30 +125100,6 @@ extern "C" {
 extern "C" {
     pub fn cef_launch_process(command_line: *mut _cef_command_line_t) -> ::std::os::raw::c_int;
 }
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct _cef_request_context_handler_t {
-    pub base:                           cef_base_ref_counted_t,
-    pub on_request_context_initialized: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_handler_t,
-            request_context: *mut _cef_request_context_t
-        )
-    >,
-    pub get_resource_request_handler: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut _cef_request_context_handler_t,
-            browser: *mut _cef_browser_t,
-            frame: *mut _cef_frame_t,
-            request: *mut _cef_request_t,
-            is_navigation: ::std::os::raw::c_int,
-            is_download: ::std::os::raw::c_int,
-            request_initiator: *const cef_string_t,
-            disable_default_handling: *mut ::std::os::raw::c_int
-        ) -> *mut _cef_resource_request_handler_t
-    >
-}
-pub type cef_request_context_handler_t = _cef_request_context_handler_t;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_resource_bundle_t {
@@ -125254,6 +125299,43 @@ extern "C" {
         name: *const cef_string_t,
         byte_size: usize
     ) -> *mut cef_shared_process_message_builder_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_task_manager_t {
+    pub base:                       cef_base_ref_counted_t,
+    pub get_tasks_count:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_task_manager_t) -> usize>,
+    pub get_task_ids_list: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_task_manager_t,
+            task_idsCount: *mut usize,
+            task_ids: *mut i64
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_task_info: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_task_manager_t,
+            task_id: i64,
+            info: *mut _cef_task_info_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub kill_task: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_task_manager_t,
+            task_id: i64
+        ) -> ::std::os::raw::c_int
+    >,
+    pub get_task_id_for_browser_id: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_task_manager_t,
+            browser_id: ::std::os::raw::c_int
+        ) -> i64
+    >
+}
+pub type cef_task_manager_t = _cef_task_manager_t;
+extern "C" {
+    pub fn cef_task_manager_get() -> *mut cef_task_manager_t;
 }
 pub type cef_platform_thread_id_t = DWORD;
 extern "C" {
@@ -125682,6 +125764,9 @@ pub struct _cef_view_delegate_t {
     >,
     pub on_blur: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_view_delegate_t, view: *mut _cef_view_t)
+    >,
+    pub on_theme_changed: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_delegate_t, view: *mut _cef_view_t)
     >
 }
 pub type cef_view_delegate_t = _cef_view_delegate_t;
@@ -125738,6 +125823,9 @@ pub struct _cef_browser_view_delegate_t {
             browser_view: *mut _cef_browser_view_t,
             gesture_command: cef_gesture_command_t
         ) -> ::std::os::raw::c_int
+    >,
+    pub get_browser_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_view_delegate_t) -> cef_runtime_style_t
     >
 }
 pub type cef_browser_view_delegate_t = _cef_browser_view_delegate_t;
@@ -125865,11 +125953,20 @@ pub struct _cef_view_t {
     pub is_accessibility_focusable: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
     >,
+    pub has_focus: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_view_t) -> ::std::os::raw::c_int
+    >,
     pub request_focus: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t)>,
     pub set_background_color:
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t, color: cef_color_t)>,
     pub get_background_color:
         ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_view_t) -> cef_color_t>,
+    pub get_theme_color: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_view_t,
+            color_id: ::std::os::raw::c_int
+        ) -> cef_color_t
+    >,
     pub convert_point_to_screen: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_view_t,
@@ -125925,6 +126022,9 @@ pub struct _cef_browser_view_t {
             self_: *mut _cef_browser_view_t,
             prefer_accelerators: ::std::os::raw::c_int
         )
+    >,
+    pub get_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_browser_view_t) -> cef_runtime_style_t
     >
 }
 pub type cef_browser_view_t = _cef_browser_view_t;
@@ -126495,6 +126595,12 @@ pub struct _cef_window_delegate_t {
             titlebar_height: *mut f32
         ) -> ::std::os::raw::c_int
     >,
+    pub accepts_first_mouse: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t
+        ) -> cef_state_t
+    >,
     pub can_resize: ::std::option::Option<
         unsafe extern "C" fn(
             self_: *mut _cef_window_delegate_t,
@@ -126531,6 +126637,23 @@ pub struct _cef_window_delegate_t {
             self_: *mut _cef_window_delegate_t,
             window: *mut _cef_window_t,
             event: *const cef_key_event_t
+        ) -> ::std::os::raw::c_int
+    >,
+    pub on_theme_colors_changed: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            chrome_theme: ::std::os::raw::c_int
+        )
+    >,
+    pub get_window_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_delegate_t) -> cef_runtime_style_t
+    >,
+    pub get_linux_window_properties: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_delegate_t,
+            window: *mut _cef_window_t,
+            properties: *mut _cef_linux_window_properties_t
         ) -> ::std::os::raw::c_int
     >
 }
@@ -126578,6 +126701,8 @@ pub struct _cef_window_t {
     pub is_fullscreen: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_window_t) -> ::std::os::raw::c_int
     >,
+    pub get_focused_view:
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t) -> *mut _cef_view_t>,
     pub set_title: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_window_t, title: *const cef_string_t)
     >,
@@ -126662,7 +126787,18 @@ pub struct _cef_window_t {
         unsafe extern "C" fn(self_: *mut _cef_window_t, command_id: ::std::os::raw::c_int)
     >,
     pub remove_all_accelerators:
-        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>
+        ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub set_theme_color: ::std::option::Option<
+        unsafe extern "C" fn(
+            self_: *mut _cef_window_t,
+            color_id: ::std::os::raw::c_int,
+            color: cef_color_t
+        )
+    >,
+    pub theme_changed: ::std::option::Option<unsafe extern "C" fn(self_: *mut _cef_window_t)>,
+    pub get_runtime_style: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_window_t) -> cef_runtime_style_t
+    >
 }
 pub type cef_window_t = _cef_window_t;
 extern "C" {
