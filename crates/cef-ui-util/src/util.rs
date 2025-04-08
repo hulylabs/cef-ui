@@ -1,11 +1,11 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use bzip2::read::BzDecoder;
-use flate2::{read::GzDecoder, write::GzEncoder, Compression};
+use flate2::{Compression, read::GzDecoder, write::GzEncoder};
 use percent_encoding::percent_decode_str;
 use reqwest::blocking::get;
 use std::{
     env::current_exe,
-    fs::{self, create_dir, create_dir_all, read_dir, remove_dir_all, remove_file, File},
+    fs::{self, File, create_dir, create_dir_all, read_dir, remove_dir_all, remove_file},
     io::{self, Cursor},
     path::{Path, PathBuf},
     process::{Command, Stdio}
@@ -135,11 +135,20 @@ fn copy_recursive(src: &Path, dst: &Path) -> Result<()> {
 pub fn build_exe(name: &str, profile: &str) -> Result<()> {
     let args = vec!["build", "--bin", name, "--profile", profile];
 
-    Command::new("cargo")
+    let output = Command::new("cargo")
         .args(&args)
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
-        .output()?;
+        .output()
+        .expect("Failed to execute cargo build");
+
+    if !output.status.success() {
+        return Err(anyhow!(
+            "Failed to build {}. Status code: {}",
+            name,
+            output.status.code().unwrap_or(1)
+        ));
+    }
 
     Ok(())
 }
