@@ -1,6 +1,6 @@
 use crate::{
-    Browser, CefString, CursorHandle, CursorInfo, CursorType, Frame, LogSeverity, RefCountedPtr,
-    Size, Wrappable, Wrapped, ref_counted_ptr
+    Browser, CefString, CefStringList, CursorHandle, CursorInfo, CursorType, Frame, LogSeverity,
+    RefCountedPtr, Size, Wrappable, Wrapped, ref_counted_ptr
 };
 use cef_ui_sys::{
     cef_browser_t, cef_cursor_handle_t, cef_cursor_info_t, cef_cursor_type_t,
@@ -128,13 +128,12 @@ impl DisplayHandlerWrapper {
     unsafe extern "C" fn c_on_favicon_urlchange(
         this: *mut cef_display_handler_t,
         browser: *mut cef_browser_t,
-        _icon_urls: cef_string_list_t
+        icon_urls: cef_string_list_t
     ) {
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
-        // TODO: For some reason this line crashes CEF (Trace/breakpoint trap (core dumped))
-        // let icon_urls = CefStringList::from_ptr(icon_urls).map_or(Vec::new(), |s| s.into());
-        let icon_urls = Vec::new();
+        //TODO: For some reason this line crashes CEF (Trace/breakpoint trap (core dumped))
+        let icon_urls = CefStringList::from_ptr(icon_urls).map_or(Vec::new(), |s| s.into());
 
         this.0
             .on_favicon_urlchange(browser, icon_urls);
