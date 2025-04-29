@@ -132,11 +132,17 @@ impl DisplayHandlerWrapper {
     ) {
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
-        //TODO: For some reason this line crashes CEF (Trace/breakpoint trap (core dumped))
-        let icon_urls = CefStringList::from_ptr(icon_urls).map_or(Vec::new(), |s| s.into());
+
+        let mut icons = Vec::new();
+        let len = cef_ui_sys::cef_string_list_size(icon_urls);
+        for i in 0..len {
+            let mut icon_url = CefString::new("");
+            cef_ui_sys::cef_string_list_value(icon_urls, i, icon_url.as_mut_ptr());
+            icons.push(icon_url.into());
+        }
 
         this.0
-            .on_favicon_urlchange(browser, icon_urls);
+            .on_favicon_urlchange(browser, icons);
     }
 
     /// Called when web content in the page has toggled fullscreen mode. If
