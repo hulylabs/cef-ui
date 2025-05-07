@@ -1,6 +1,6 @@
 use crate::{
-    Browser, CefString, CefStringList, CursorHandle, CursorInfo, CursorType, Frame, LogSeverity,
-    RefCountedPtr, Size, Wrappable, Wrapped, ref_counted_ptr
+    Browser, CefString, CursorHandle, CursorInfo, CursorType, Frame, LogSeverity, RefCountedPtr,
+    Size, Wrappable, Wrapped, ref_counted_ptr
 };
 use cef_ui_sys::{
     cef_browser_t, cef_cursor_handle_t, cef_cursor_info_t, cef_cursor_type_t,

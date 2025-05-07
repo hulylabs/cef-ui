@@ -1,11 +1,11 @@
-use crate::{free_cef_string, CefString, Rect};
-use anyhow::{anyhow, Error, Result};
+use crate::{CefString, Rect, RuntimeStyle, free_cef_string};
+use anyhow::{Error, Result, anyhow};
 use cef_ui_sys::{
     cef_event_handle_t, cef_main_args_t, cef_string_t, cef_window_handle_t, cef_window_info_t
 };
 use std::{
     env::args,
-    ffi::{c_char, c_int, CString},
+    ffi::{CString, c_char, c_int},
     mem::zeroed
 };
 
@@ -185,6 +185,11 @@ impl WindowInfo {
     /// Tries to assign a String to a cef_string_t.
     fn set_string(s: &String, cef: &mut cef_string_t) {
         *cef = CefString::new(s.as_str()).into_raw();
+    }
+
+    pub fn runtime_style(mut self, runtime_style: RuntimeStyle) -> Self {
+        self.0.runtime_style = runtime_style.into();
+        self
     }
 }
 

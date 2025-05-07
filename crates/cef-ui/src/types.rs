@@ -3,9 +3,9 @@ use cef_ui_sys::{
     cef_cursor_handle_t, cef_cursor_info_t, cef_cursor_type_t, cef_errorcode_t,
     cef_horizontal_alignment_t, cef_insets_t, cef_log_items_t, cef_log_severity_t,
     cef_paint_element_type_t, cef_point_t, cef_range_t, cef_rect_t, cef_referrer_policy_t,
-    cef_resource_type_t, cef_screen_info_t, cef_size_t, cef_state_t, cef_termination_status_t,
-    cef_text_input_mode_t, cef_thread_id_t, cef_touch_handle_state_flags_t,
-    cef_touch_handle_state_flags_t_CEF_THS_FLAG_ALPHA,
+    cef_resource_type_t, cef_runtime_style_t, cef_screen_info_t, cef_size_t, cef_state_t,
+    cef_termination_status_t, cef_text_input_mode_t, cef_thread_id_t,
+    cef_touch_handle_state_flags_t, cef_touch_handle_state_flags_t_CEF_THS_FLAG_ALPHA,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ENABLED,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_NONE,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ORIENTATION,
@@ -3593,6 +3593,32 @@ impl<'a> From<&CursorInfo<'a>> for cef_cursor_info_t {
             image_scale_factor: value.image_scale_factor,
             buffer:             value.buffer.as_ptr() as *mut c_void,
             size:               value.size.into()
+        }
+    }
+}
+
+pub enum RuntimeStyle {
+    Default,
+    Chrome,
+    Alloy
+}
+
+impl From<cef_runtime_style_t> for RuntimeStyle {
+    fn from(value: cef_runtime_style_t) -> Self {
+        match value {
+            cef_runtime_style_t::CEF_RUNTIME_STYLE_DEFAULT => Self::Default,
+            cef_runtime_style_t::CEF_RUNTIME_STYLE_CHROME => Self::Chrome,
+            cef_runtime_style_t::CEF_RUNTIME_STYLE_ALLOY => Self::Alloy
+        }
+    }
+}
+
+impl From<RuntimeStyle> for cef_runtime_style_t {
+    fn from(value: RuntimeStyle) -> Self {
+        match value {
+            RuntimeStyle::Default => cef_runtime_style_t::CEF_RUNTIME_STYLE_DEFAULT,
+            RuntimeStyle::Chrome => cef_runtime_style_t::CEF_RUNTIME_STYLE_CHROME,
+            RuntimeStyle::Alloy => cef_runtime_style_t::CEF_RUNTIME_STYLE_ALLOY
         }
     }
 }

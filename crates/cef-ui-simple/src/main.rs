@@ -254,7 +254,9 @@ fn try_main() -> Result<()> {
     context.initialize()?;
 
     // Create the window.
-    let window_info = WindowInfo::new().window_name(&String::from("cef-ui-simple"));
+    let window_info = WindowInfo::new()
+        .window_name(&String::from("cef-ui-simple"))
+        .runtime_style(cef_ui::RuntimeStyle::Default);
 
     // Create the browser settings.
     let browser_settings = BrowserSettings::new();

@@ -8,4 +8,4 @@ cef-artifacts = "run --bin cef-artifacts --release"
 
 
 CEF_WORKSPACE_DIR = { relative = true, force = true, value = "" }
-CEF_ARTIFACTS_DIR = { relative = true, force = true, value = "/home/nikita/repos/cef131/cef" }
+CEF_ARTIFACTS_DIR = { relative = true, force = true, value = "/home/nikita/repos/cef-linux-x86_64" }
