@@ -1,11 +1,12 @@
 use bitflags::bitflags;
 use cef_ui_sys::{
-    cef_cursor_handle_t, cef_cursor_info_t, cef_cursor_type_t, cef_errorcode_t,
-    cef_horizontal_alignment_t, cef_insets_t, cef_log_items_t, cef_log_severity_t,
-    cef_paint_element_type_t, cef_point_t, cef_range_t, cef_rect_t, cef_referrer_policy_t,
-    cef_resource_type_t, cef_runtime_style_t, cef_screen_info_t, cef_size_t, cef_state_t,
-    cef_termination_status_t, cef_text_input_mode_t, cef_thread_id_t,
-    cef_touch_handle_state_flags_t, cef_touch_handle_state_flags_t_CEF_THS_FLAG_ALPHA,
+    cef_cursor_handle_t, cef_cursor_info_t, cef_cursor_type_t, cef_dom_document_type_t,
+    cef_dom_form_control_type_t, cef_dom_node_type_t, cef_errorcode_t, cef_horizontal_alignment_t,
+    cef_insets_t, cef_log_items_t, cef_log_severity_t, cef_paint_element_type_t, cef_point_t,
+    cef_range_t, cef_rect_t, cef_referrer_policy_t, cef_resource_type_t, cef_runtime_style_t,
+    cef_screen_info_t, cef_size_t, cef_state_t, cef_termination_status_t, cef_text_input_mode_t,
+    cef_thread_id_t, cef_touch_handle_state_flags_t,
+    cef_touch_handle_state_flags_t_CEF_THS_FLAG_ALPHA,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ENABLED,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_NONE,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ORIENTATION,
@@ -1625,45 +1626,45 @@ impl From<&cef_errorcode_t> for ErrorCode {
             cef_errorcode_t::ERR_CACHE_AUTH_FAILURE_AFTER_READ => ErrorCode::CacheAuthFailureAfterRead,
             cef_errorcode_t::ERR_CACHE_ENTRY_NOT_SUITABLE => ErrorCode::CacheEntryNotSuitable,
             cef_errorcode_t::ERR_CACHE_DOOM_FAILURE => ErrorCode::CacheDoomFailure,
-            cef_errorcode_t::ERR_CACHE_OPEN_OR_CREATE_FAILURE => ErrorCode::CacheOpenOrCreateFailure,
-            cef_errorcode_t::ERR_INSECURE_RESPONSE => ErrorCode::InsecureResponse,
-            cef_errorcode_t::ERR_NO_PRIVATE_KEY_FOR_CERT => ErrorCode::NoPrivateKeyForCert,
-            cef_errorcode_t::ERR_ADD_USER_CERT_FAILED => ErrorCode::AddUserCertFailed,
-            cef_errorcode_t::ERR_INVALID_SIGNED_EXCHANGE => ErrorCode::InvalidSignedExchange,
-            cef_errorcode_t::ERR_INVALID_WEB_BUNDLE => ErrorCode::InvalidWebBundle,
-            cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_FAILED => ErrorCode::TrustTokenOperationFailed,
-            cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_SUCCESS_WITHOUT_SENDING_REQUEST => ErrorCode::TrustTokenOperationSuccessWithoutSendingRequest,
-            cef_errorcode_t::ERR_PKCS12_IMPORT_BAD_PASSWORD => ErrorCode::Pkcs12ImportBadPassword,
-            cef_errorcode_t::ERR_PKCS12_IMPORT_FAILED => ErrorCode::Pkcs12ImportFailed,
-            cef_errorcode_t::ERR_IMPORT_CA_CERT_NOT_CA => ErrorCode::ImportCaCertNotCa,
-            cef_errorcode_t::ERR_IMPORT_CERT_ALREADY_EXISTS => ErrorCode::ImportCertAlreadyExists,
-            cef_errorcode_t::ERR_IMPORT_CA_CERT_FAILED => ErrorCode::ImportCaCertFailed,
-            cef_errorcode_t::ERR_IMPORT_SERVER_CERT_FAILED => ErrorCode::ImportServerCertFailed,
-            cef_errorcode_t::ERR_PKCS12_IMPORT_INVALID_MAC => ErrorCode::Pkcs12ImportInvalidMac,
-            cef_errorcode_t::ERR_PKCS12_IMPORT_INVALID_FILE => ErrorCode::Pkcs12ImportInvalidFile,
-            cef_errorcode_t::ERR_PKCS12_IMPORT_UNSUPPORTED => ErrorCode::Pkcs12ImportUnsupported,
-            cef_errorcode_t::ERR_KEY_GENERATION_FAILED => ErrorCode::KeyGenerationFailed,
-            cef_errorcode_t::ERR_PRIVATE_KEY_EXPORT_FAILED => ErrorCode::PrivateKeyExportFailed,
-            cef_errorcode_t::ERR_SELF_SIGNED_CERT_GENERATION_FAILED => ErrorCode::SelfSignedCertGenerationFailed,
-            cef_errorcode_t::ERR_CERT_DATABASE_CHANGED => ErrorCode::CertDatabaseChanged,
-            cef_errorcode_t::ERR_CERT_VERIFIER_CHANGED => ErrorCode::CertVerifierChanged,
-            cef_errorcode_t::ERR_DNS_MALFORMED_RESPONSE => ErrorCode::DnsMalformedResponse,
-            cef_errorcode_t::ERR_DNS_SERVER_REQUIRES_TCP => ErrorCode::DnsServerRequiresTcp,
-            cef_errorcode_t::ERR_DNS_SERVER_FAILED => ErrorCode::DnsServerFailed,
-            cef_errorcode_t::ERR_DNS_TIMED_OUT => ErrorCode::DnsTimedOut,
-            cef_errorcode_t::ERR_DNS_CACHE_MISS => ErrorCode::DnsCacheMiss,
-            cef_errorcode_t::ERR_DNS_SEARCH_EMPTY => ErrorCode::DnsSearchEmpty,
-            cef_errorcode_t::ERR_DNS_SORT_ERROR => ErrorCode::DnsSortError,
-            cef_errorcode_t::ERR_DNS_SECURE_RESOLVER_HOSTNAME_RESOLUTION_FAILED => ErrorCode::DnsSecureResolverHostnameResolutionFailed,
-            cef_errorcode_t::ERR_DNS_NAME_HTTPS_ONLY => ErrorCode::DnsNameHttpsOnly,
-            cef_errorcode_t::ERR_DNS_REQUEST_CANCELLED => ErrorCode::DnsRequestCancelled,
-            cef_errorcode_t::ERR_DNS_NO_MATCHING_SUPPORTED_ALPN => ErrorCode::DnsNoMatchingSupportedAlpn,
-            cef_errorcode_t::ERR_DICTIONARY_LOAD_FAILED => ErrorCode::DictionaryLoadFailed,
-            cef_errorcode_t::ERR_NETWORK_ACCESS_REVOKED => ErrorCode::NetworkAccessRevoked,
-            cef_errorcode_t::ERR_ZSTD_WINDOW_SIZE_TOO_BIG => ErrorCode::ZstdWindowSizeTooBig,
-            cef_errorcode_t::ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER => ErrorCode::UnxpectedContentDictionaryHeader,
-            cef_errorcode_t::ERR_DNS_SECURE_PROBE_RECORD_INVALID => ErrorCode::DnsSecureProbeRecordInvalid,
-        }
+    cef_errorcode_t::ERR_CACHE_OPEN_OR_CREATE_FAILURE => ErrorCode::CacheOpenOrCreateFailure,
+    cef_errorcode_t::ERR_INSECURE_RESPONSE => ErrorCode::InsecureResponse,
+    cef_errorcode_t::ERR_NO_PRIVATE_KEY_FOR_CERT => ErrorCode::NoPrivateKeyForCert,
+    cef_errorcode_t::ERR_ADD_USER_CERT_FAILED => ErrorCode::AddUserCertFailed,
+    cef_errorcode_t::ERR_INVALID_SIGNED_EXCHANGE => ErrorCode::InvalidSignedExchange,
+    cef_errorcode_t::ERR_INVALID_WEB_BUNDLE => ErrorCode::InvalidWebBundle,
+    cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_FAILED => ErrorCode::TrustTokenOperationFailed,
+    cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_SUCCESS_WITHOUT_SENDING_REQUEST => ErrorCode::TrustTokenOperationSuccessWithoutSendingRequest,
+    cef_errorcode_t::ERR_PKCS12_IMPORT_BAD_PASSWORD => ErrorCode::Pkcs12ImportBadPassword,
+    cef_errorcode_t::ERR_PKCS12_IMPORT_FAILED => ErrorCode::Pkcs12ImportFailed,
+    cef_errorcode_t::ERR_IMPORT_CA_CERT_NOT_CA => ErrorCode::ImportCaCertNotCa,
+    cef_errorcode_t::ERR_IMPORT_CERT_ALREADY_EXISTS => ErrorCode::ImportCertAlreadyExists,
+    cef_errorcode_t::ERR_IMPORT_CA_CERT_FAILED => ErrorCode::ImportCaCertFailed,
+    cef_errorcode_t::ERR_IMPORT_SERVER_CERT_FAILED => ErrorCode::ImportServerCertFailed,
+    cef_errorcode_t::ERR_PKCS12_IMPORT_INVALID_MAC => ErrorCode::Pkcs12ImportInvalidMac,
+    cef_errorcode_t::ERR_PKCS12_IMPORT_INVALID_FILE => ErrorCode::Pkcs12ImportInvalidFile,
+    cef_errorcode_t::ERR_PKCS12_IMPORT_UNSUPPORTED => ErrorCode::Pkcs12ImportUnsupported,
+    cef_errorcode_t::ERR_KEY_GENERATION_FAILED => ErrorCode::KeyGenerationFailed,
+    cef_errorcode_t::ERR_PRIVATE_KEY_EXPORT_FAILED => ErrorCode::PrivateKeyExportFailed,
+    cef_errorcode_t::ERR_SELF_SIGNED_CERT_GENERATION_FAILED => ErrorCode::SelfSignedCertGenerationFailed,
+    cef_errorcode_t::ERR_CERT_DATABASE_CHANGED => ErrorCode::CertDatabaseChanged,
+    cef_errorcode_t::ERR_CERT_VERIFIER_CHANGED => ErrorCode::CertVerifierChanged,
+    cef_errorcode_t::ERR_DNS_MALFORMED_RESPONSE => ErrorCode::DnsMalformedResponse,
+    cef_errorcode_t::ERR_DNS_SERVER_REQUIRES_TCP => ErrorCode::DnsServerRequiresTcp,
+    cef_errorcode_t::ERR_DNS_SERVER_FAILED => ErrorCode::DnsServerFailed,
+    cef_errorcode_t::ERR_DNS_TIMED_OUT => ErrorCode::DnsTimedOut,
+    cef_errorcode_t::ERR_DNS_CACHE_MISS => ErrorCode::DnsCacheMiss,
+    cef_errorcode_t::ERR_DNS_SEARCH_EMPTY => ErrorCode::DnsSearchEmpty,
+    cef_errorcode_t::ERR_DNS_SORT_ERROR => ErrorCode::DnsSortError,
+    cef_errorcode_t::ERR_DNS_SECURE_RESOLVER_HOSTNAME_RESOLUTION_FAILED => ErrorCode::DnsSecureResolverHostnameResolutionFailed,
+    cef_errorcode_t::ERR_DNS_NAME_HTTPS_ONLY => ErrorCode::DnsNameHttpsOnly,
+    cef_errorcode_t::ERR_DNS_REQUEST_CANCELLED => ErrorCode::DnsRequestCancelled,
+    cef_errorcode_t::ERR_DNS_NO_MATCHING_SUPPORTED_ALPN => ErrorCode::DnsNoMatchingSupportedAlpn,
+    cef_errorcode_t::ERR_DICTIONARY_LOAD_FAILED => ErrorCode::DictionaryLoadFailed,
+    cef_errorcode_t::ERR_NETWORK_ACCESS_REVOKED => ErrorCode::NetworkAccessRevoked,
+    cef_errorcode_t::ERR_ZSTD_WINDOW_SIZE_TOO_BIG => ErrorCode::ZstdWindowSizeTooBig,
+    cef_errorcode_t::ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER => ErrorCode::UnxpectedContentDictionaryHeader,
+    cef_errorcode_t::ERR_DNS_SECURE_PROBE_RECORD_INVALID => ErrorCode::DnsSecureProbeRecordInvalid,
+}
     }
 }
 
@@ -3619,6 +3620,280 @@ impl From<RuntimeStyle> for cef_runtime_style_t {
             RuntimeStyle::Default => cef_runtime_style_t::CEF_RUNTIME_STYLE_DEFAULT,
             RuntimeStyle::Chrome => cef_runtime_style_t::CEF_RUNTIME_STYLE_CHROME,
             RuntimeStyle::Alloy => cef_runtime_style_t::CEF_RUNTIME_STYLE_ALLOY
+        }
+    }
+}
+
+///
+/// DOM document types.
+///
+pub enum DOMDocumentType {
+    Unknown,
+    Html,
+    Xhtml,
+    Plugin
+}
+impl From<cef_dom_document_type_t> for DOMDocumentType {
+    fn from(value: cef_dom_document_type_t) -> Self {
+        match value {
+            cef_dom_document_type_t::DOM_DOCUMENT_TYPE_UNKNOWN => Self::Unknown,
+            cef_dom_document_type_t::DOM_DOCUMENT_TYPE_HTML => Self::Html,
+            cef_dom_document_type_t::DOM_DOCUMENT_TYPE_XHTML => Self::Xhtml,
+            cef_dom_document_type_t::DOM_DOCUMENT_TYPE_PLUGIN => Self::Plugin
+        }
+    }
+}
+
+impl From<DOMDocumentType> for cef_dom_document_type_t {
+    fn from(value: DOMDocumentType) -> Self {
+        match value {
+            DOMDocumentType::Unknown => cef_dom_document_type_t::DOM_DOCUMENT_TYPE_UNKNOWN,
+            DOMDocumentType::Html => cef_dom_document_type_t::DOM_DOCUMENT_TYPE_HTML,
+            DOMDocumentType::Xhtml => cef_dom_document_type_t::DOM_DOCUMENT_TYPE_XHTML,
+            DOMDocumentType::Plugin => cef_dom_document_type_t::DOM_DOCUMENT_TYPE_PLUGIN
+        }
+    }
+}
+
+///
+/// DOM node types.
+///
+pub enum DOMNodeType {
+    Unsupported,
+    Element,
+    Attribute,
+    Text,
+    CdataSection,
+    ProcessingInstructions,
+    Comment,
+    Document,
+    DocumentType,
+    DocumentFragment
+}
+
+impl From<cef_dom_node_type_t> for DOMNodeType {
+    fn from(value: cef_dom_node_type_t) -> Self {
+        match value {
+            cef_dom_node_type_t::DOM_NODE_TYPE_UNSUPPORTED => Self::Unsupported,
+            cef_dom_node_type_t::DOM_NODE_TYPE_ELEMENT => Self::Element,
+            cef_dom_node_type_t::DOM_NODE_TYPE_ATTRIBUTE => Self::Attribute,
+            cef_dom_node_type_t::DOM_NODE_TYPE_TEXT => Self::Text,
+            cef_dom_node_type_t::DOM_NODE_TYPE_CDATA_SECTION => Self::CdataSection,
+            cef_dom_node_type_t::DOM_NODE_TYPE_PROCESSING_INSTRUCTIONS => {
+                Self::ProcessingInstructions
+            },
+            cef_dom_node_type_t::DOM_NODE_TYPE_COMMENT => Self::Comment,
+            cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT => Self::Document,
+            cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT_TYPE => Self::DocumentType,
+            cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT_FRAGMENT => Self::DocumentFragment
+        }
+    }
+}
+
+impl From<DOMNodeType> for cef_dom_node_type_t {
+    fn from(value: DOMNodeType) -> Self {
+        match value {
+            DOMNodeType::Unsupported => cef_dom_node_type_t::DOM_NODE_TYPE_UNSUPPORTED,
+            DOMNodeType::Element => cef_dom_node_type_t::DOM_NODE_TYPE_ELEMENT,
+            DOMNodeType::Attribute => cef_dom_node_type_t::DOM_NODE_TYPE_ATTRIBUTE,
+            DOMNodeType::Text => cef_dom_node_type_t::DOM_NODE_TYPE_TEXT,
+            DOMNodeType::CdataSection => cef_dom_node_type_t::DOM_NODE_TYPE_CDATA_SECTION,
+            DOMNodeType::ProcessingInstructions => {
+                cef_dom_node_type_t::DOM_NODE_TYPE_PROCESSING_INSTRUCTIONS
+            },
+            DOMNodeType::Comment => cef_dom_node_type_t::DOM_NODE_TYPE_COMMENT,
+            DOMNodeType::Document => cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT,
+            DOMNodeType::DocumentType => cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT_TYPE,
+            DOMNodeType::DocumentFragment => cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT_FRAGMENT
+        }
+    }
+}
+
+///
+/// DOM form control types.
+///
+pub enum DOMFormControlType {
+    Unsupported,
+    ButtonButton,
+    ButtonSubmit,
+    ButtonReset,
+    ButtonPopover,
+    Fieldset,
+    InputButton,
+    InputCheckbox,
+    InputColor,
+    InputDate,
+    InputDatetimeLocal,
+    InputEmail,
+    InputFile,
+    InputHidden,
+    InputImage,
+    InputMonth,
+    InputNumber,
+    InputPassword,
+    InputRadio,
+    InputRange,
+    InputReset,
+    InputSearch,
+    InputSubmit,
+    InputTelephone,
+    InputText,
+    InputTime,
+    InputUrl,
+    InputWeek,
+    Output,
+    SelectOne,
+    SelectMultiple,
+    TextArea
+}
+impl From<cef_dom_form_control_type_t> for DOMFormControlType {
+    fn from(value: cef_dom_form_control_type_t) -> Self {
+        match value {
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_UNSUPPORTED => Self::Unsupported,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_BUTTON_BUTTON => Self::ButtonButton,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_BUTTON_SUBMIT => Self::ButtonSubmit,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_BUTTON_RESET => Self::ButtonReset,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_BUTTON_POPOVER => {
+                Self::ButtonPopover
+            },
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_FIELDSET => Self::Fieldset,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_BUTTON => Self::InputButton,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_CHECKBOX => {
+                Self::InputCheckbox
+            },
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_COLOR => Self::InputColor,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_DATE => Self::InputDate,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_DATETIME_LOCAL => {
+                Self::InputDatetimeLocal
+            },
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_EMAIL => Self::InputEmail,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_FILE => Self::InputFile,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_HIDDEN => Self::InputHidden,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_IMAGE => Self::InputImage,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_MONTH => Self::InputMonth,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_NUMBER => Self::InputNumber,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_PASSWORD => {
+                Self::InputPassword
+            },
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_RADIO => Self::InputRadio,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_RANGE => Self::InputRange,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_RESET => Self::InputReset,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_SEARCH => Self::InputSearch,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_SUBMIT => Self::InputSubmit,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_TELEPHONE => {
+                Self::InputTelephone
+            },
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_TEXT => Self::InputText,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_TIME => Self::InputTime,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_URL => Self::InputUrl,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_WEEK => Self::InputWeek,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_OUTPUT => Self::Output,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_SELECT_ONE => Self::SelectOne,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_SELECT_MULTIPLE => {
+                Self::SelectMultiple
+            },
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_TEXT_AREA => Self::TextArea
+        }
+    }
+}
+
+impl From<DOMFormControlType> for cef_dom_form_control_type_t {
+    fn from(value: DOMFormControlType) -> Self {
+        match value {
+            DOMFormControlType::Unsupported => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_UNSUPPORTED
+            },
+            DOMFormControlType::ButtonButton => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_BUTTON_BUTTON
+            },
+            DOMFormControlType::ButtonSubmit => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_BUTTON_SUBMIT
+            },
+            DOMFormControlType::ButtonReset => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_BUTTON_RESET
+            },
+            DOMFormControlType::ButtonPopover => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_BUTTON_POPOVER
+            },
+            DOMFormControlType::Fieldset => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_FIELDSET
+            },
+            DOMFormControlType::InputButton => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_BUTTON
+            },
+            DOMFormControlType::InputCheckbox => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_CHECKBOX
+            },
+            DOMFormControlType::InputColor => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_COLOR
+            },
+            DOMFormControlType::InputDate => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_DATE
+            },
+            DOMFormControlType::InputDatetimeLocal => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_DATETIME_LOCAL
+            },
+            DOMFormControlType::InputEmail => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_EMAIL
+            },
+            DOMFormControlType::InputFile => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_FILE
+            },
+            DOMFormControlType::InputHidden => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_HIDDEN
+            },
+            DOMFormControlType::InputImage => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_IMAGE
+            },
+            DOMFormControlType::InputMonth => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_MONTH
+            },
+            DOMFormControlType::InputNumber => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_NUMBER
+            },
+            DOMFormControlType::InputPassword => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_PASSWORD
+            },
+            DOMFormControlType::InputRadio => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_RADIO
+            },
+            DOMFormControlType::InputRange => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_RANGE
+            },
+            DOMFormControlType::InputReset => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_RESET
+            },
+            DOMFormControlType::InputSearch => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_SEARCH
+            },
+            DOMFormControlType::InputSubmit => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_SUBMIT
+            },
+            DOMFormControlType::InputTelephone => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_TELEPHONE
+            },
+            DOMFormControlType::InputText => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_TEXT
+            },
+            DOMFormControlType::InputTime => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_TIME
+            },
+            DOMFormControlType::InputUrl => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_URL
+            },
+            DOMFormControlType::InputWeek => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_INPUT_WEEK
+            },
+            DOMFormControlType::Output => cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_OUTPUT,
+            DOMFormControlType::SelectOne => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_SELECT_ONE
+            },
+            DOMFormControlType::SelectMultiple => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_SELECT_MULTIPLE
+            },
+            DOMFormControlType::TextArea => {
+                cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_TEXT_AREA
+            },
         }
     }
 }

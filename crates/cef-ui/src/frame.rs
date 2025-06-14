@@ -1,5 +1,5 @@
 use crate::{
-    Browser, CefString, ProcessId, ProcessMessage, Request, StringVisitor, UrlRequest,
+    Browser, CefString, DOMVisitor, ProcessId, ProcessMessage, Request, StringVisitor, UrlRequest,
     UrlRequestClient, ref_counted_ptr, try_c
 };
 use anyhow::Result;
@@ -180,12 +180,13 @@ impl Frame {
     // struct _cef_v8context_t*(CEF_CALLBACK* get_v8context)(
     // struct _cef_frame_t* self);
 
-    // ///
-    // /// Visit the DOM document. This function can only be called from the render
-    // /// process.
-    // ///
-    // void(CEF_CALLBACK* visit_dom)(struct _cef_frame_t* self,
-    // struct _cef_domvisitor_t* visitor);
+    /// Visit the DOM document. This function can only be called from the render
+    /// process.
+    pub fn visit_dom(&self, visitor: DOMVisitor) -> Result<()> {
+        try_c!(self, visit_dom, {
+            Ok(visit_dom(self.as_ptr(), visitor.into_raw()))
+        })
+    }
 
     /// Create a new URL request that will be treated as originating from this
     /// frame and the associated browser. Use cef_urlrequest_t::Create instead if
