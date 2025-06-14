@@ -1,8 +1,10 @@
 use crate::{
-    ref_counted_ptr, v8_context::V8Context, Browser, DictionaryValue, Frame, RefCountedPtr, Wrappable, Wrapped
+    Browser, DictionaryValue, Frame, ProcessId, ProcessMessage, RefCountedPtr, Wrappable, Wrapped,
+    ref_counted_ptr, v8_context::V8Context
 };
 use cef_ui_sys::{
-    cef_browser_t, cef_dictionary_value_t, cef_frame_t, cef_render_process_handler_t, cef_v8context_t
+    cef_browser_t, cef_dictionary_value_t, cef_frame_t, cef_process_id_t, cef_process_message_t,
+    cef_render_process_handler_t, cef_v8context_t
 };
 use std::mem::zeroed;
 
@@ -11,9 +13,7 @@ use std::mem::zeroed;
 /// unless otherwise indicated.
 pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     /// Called after WebKit has been initialized.
-    fn on_web_kit_initialized(
-        &mut self
-    );
+    fn on_web_kit_initialized(&mut self);
 
     /// Called after a browser has been created. When browsing cross-origin a new
     /// browser will be created before the old browser with the same identifier is
@@ -22,17 +22,10 @@ pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     /// cef_browser_host_t::cef_browser_host_create_browser_sync(),
     /// cef_life_span_handler_t::on_before_popup() or
     /// cef_browser_view_t::cef_browser_view_create().
-    fn on_browser_created(
-        &mut self,
-        browser: Browser,
-        extra_info: Option<DictionaryValue>
-    );
+    fn on_browser_created(&mut self, browser: Browser, extra_info: Option<DictionaryValue>);
 
     /// Called before a browser is destroyed.
-    fn on_browser_destroyed(
-        &mut self,
-        browser: Browser
-    );
+    fn on_browser_destroyed(&mut self, browser: Browser);
 
     // /// Return the handler for browser load status events.
     // struct _cef_load_handler_t*(CEF_CALLBACK* get_load_handler)(
@@ -44,12 +37,7 @@ pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     /// from the thread on which they are created. A task runner for posting tasks
     /// on the associated thread can be retrieved via the
     /// cef_v8context_t::get_task_runner() function.
-    fn on_context_created(
-        &mut self,
-        browser: Browser,
-        frame: Frame,
-        context: V8Context
-    );
+    fn on_context_created(&mut self, browser: Browser, frame: Frame, context: V8Context);
 
     // /// Called immediately before the V8 context for a frame is released. No
     // /// references to the context should be kept after this function is called.
@@ -82,17 +70,17 @@ pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     //     struct _cef_frame_t* frame,
     //     struct _cef_domnode_t* node);
 
-    // /// Called when a new message is received from a different process. Return
-    // /// true (1) if the message was handled or false (0) otherwise. It is safe to
-    // /// keep a reference to |message| outside of this callback.
-    // int(CEF_CALLBACK* on_process_message_received)(
-    //     struct _cef_render_process_handler_t* self,
-    //     struct _cef_browser_t* browser,
-    //     struct _cef_frame_t* frame,
-    //     cef_process_id_t source_process,
-    //     struct _cef_process_message_t* message);
+    /// Called when a new message is received from a different process. Return
+    /// true (1) if the message was handled or false (0) otherwise. It is safe to
+    /// keep a reference to |message| outside of this callback.
+    fn on_process_message_received(
+        &mut self,
+        browser: Browser,
+        frame: Frame,
+        source_process: ProcessId,
+        message: &mut ProcessMessage
+    ) -> bool;
 }
-
 // Structure used to implement render process callbacks. The functions of this
 // structure will be called on the render process main thread (TID_RENDERER)
 // unless otherwise indicated.
@@ -128,23 +116,42 @@ impl RenderProcessHandlerWrapper {
     unsafe extern "C" fn on_web_kit_initialized(this: *mut cef_render_process_handler_t) {
         let this: &mut Self = Wrapped::wrappable(this);
 
-        this.0
-            .on_web_kit_initialized();
+        this.0.on_web_kit_initialized();
     }
 
     unsafe extern "C" fn on_context_created(
-        this : *mut cef_render_process_handler_t,
+        this: *mut cef_render_process_handler_t,
         browser: *mut cef_browser_t,
         frame: *mut cef_frame_t,
         context: *mut cef_v8context_t
     ) {
-        let this : &mut Self = Wrapped::wrappable(this);
+        let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
         let frame = Frame::from_ptr_unchecked(frame);
         let context = V8Context::from_ptr_unchecked(context);
 
         this.0
             .on_context_created(browser, frame, context);
+    }
+
+    unsafe extern "C" fn on_process_message_received(
+        this: *mut cef_render_process_handler_t,
+        browser: *mut cef_browser_t,
+        frame: *mut cef_frame_t,
+        source_process: cef_process_id_t,
+        message: *mut cef_process_message_t
+    ) -> i32 {
+        let this: &mut Self = Wrapped::wrappable(this);
+        let browser = Browser::from_ptr_unchecked(browser);
+        let frame = Frame::from_ptr_unchecked(frame);
+        let source_process = ProcessId::from(source_process);
+        let mut message = ProcessMessage::from_ptr_unchecked(message);
+
+        let res = this
+            .0
+            .on_process_message_received(browser, frame, source_process, &mut message);
+
+        res as i32
     }
 }
 
@@ -155,16 +162,16 @@ impl Wrappable for RenderProcessHandlerWrapper {
     fn wrap(self) -> RefCountedPtr<cef_render_process_handler_t> {
         RefCountedPtr::wrap(
             cef_render_process_handler_t {
-                base:                           unsafe { zeroed() },
-                on_web_kit_initialized:         Some(Self::on_web_kit_initialized),
-                on_browser_created:             Some(Self::c_on_browser_created),
-                on_browser_destroyed:           None,
-                get_load_handler:               None,
-                on_context_created:             Some(Self::on_context_created),
-                on_context_released:            None,
-                on_uncaught_exception:          None,
-                on_focused_node_changed:        None,
-                on_process_message_received:    None,
+                base:                        unsafe { zeroed() },
+                on_web_kit_initialized:      Some(Self::on_web_kit_initialized),
+                on_browser_created:          Some(Self::c_on_browser_created),
+                on_browser_destroyed:        None,
+                get_load_handler:            None,
+                on_context_created:          Some(Self::on_context_created),
+                on_context_released:         None,
+                on_uncaught_exception:       None,
+                on_focused_node_changed:     None,
+                on_process_message_received: Some(Self::on_process_message_received)
             },
             self
         )
