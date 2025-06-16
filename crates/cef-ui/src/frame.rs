@@ -1,6 +1,6 @@
 use crate::{
     Browser, CefString, DOMVisitor, ProcessId, ProcessMessage, Request, StringVisitor, UrlRequest,
-    UrlRequestClient, ref_counted_ptr, try_c
+    UrlRequestClient, V8Context, ref_counted_ptr, try_c
 };
 use anyhow::Result;
 use cef_ui_sys::cef_frame_t;
@@ -172,13 +172,13 @@ impl Frame {
         })
     }
 
-    // TODO: Fix this!
-
-    // /// Get the V8 context associated with the frame. This function can only be
-    // /// called from the render process.
-    // ///
-    // struct _cef_v8context_t*(CEF_CALLBACK* get_v8context)(
-    // struct _cef_frame_t* self);
+    /// Get the V8 context associated with the frame. This function can only be
+    /// called from the render process.
+    pub fn get_v8context(&self) -> Result<V8Context> {
+        try_c!(self, get_v8context, {
+            Ok(V8Context::from_ptr_unchecked(get_v8context(self.as_ptr())))
+        })
+    }
 
     /// Visit the DOM document. This function can only be called from the render
     /// process.

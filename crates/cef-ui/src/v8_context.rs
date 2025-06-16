@@ -1,12 +1,35 @@
-
-use std::mem::zeroed;
+use std::{mem::zeroed, ptr::null_mut};
 
 use anyhow::Result;
 
-use cef_ui_sys::{cef_string_t, cef_v8_propertyattribute_t, cef_v8context_get_current_context, cef_v8context_get_entered_context, cef_v8context_in_context, cef_v8context_t, cef_v8handler_t, cef_v8value_create_function, cef_v8value_create_int, cef_v8value_create_string, cef_v8value_t};
+use cef_ui_sys::{
+    cef_register_extension, cef_string_t, cef_v8_propertyattribute_t,
+    cef_v8context_get_current_context, cef_v8context_get_entered_context, cef_v8context_in_context,
+    cef_v8context_t, cef_v8handler_t, cef_v8value_create_function, cef_v8value_create_int,
+    cef_v8value_create_object, cef_v8value_create_string, cef_v8value_t
+};
 
-use crate::{ref_counted_ptr, try_c, Browser, CefString, Frame, RefCountedPtr, Wrappable, Wrapped};
+use crate::{Browser, CefString, Frame, RefCountedPtr, Wrappable, Wrapped, ref_counted_ptr, try_c};
 
+pub fn register_extension(
+    extension_name: &str,
+    javascript_code: &str,
+    handler: Option<V8Handler>
+) -> Result<bool> {
+    unsafe {
+        let handler = match handler {
+            Some(h) => h.as_ptr(),
+            None => null_mut()
+        };
+        let result = cef_register_extension(
+            CefString::new(extension_name).as_ptr(),
+            CefString::new(javascript_code).as_ptr(),
+            handler
+        );
+
+        Ok(result != 0)
+    }
+}
 ref_counted_ptr!(V8Context, cef_v8context_t);
 
 /// Structure representing a V8 context handle. V8 handles can only be accessed
@@ -33,19 +56,25 @@ impl V8Context {
     /// Returns the browser for this context. This function will return an NULL
     /// reference for WebWorker contexts.
     pub fn get_browser(&self) -> Result<Browser> {
-        try_c!(self, get_browser, { Ok(Browser::from_ptr_unchecked(get_browser(self.as_ptr()))) })
+        try_c!(self, get_browser, {
+            Ok(Browser::from_ptr_unchecked(get_browser(self.as_ptr())))
+        })
     }
 
     /// Returns the frame for this context. This function will return an NULL
     /// reference for WebWorker contexts.
     pub fn get_frame(&self) -> Result<Frame> {
-        try_c!(self, get_frame, { Ok(Frame::from_ptr_unchecked(get_frame(self.as_ptr()))) })
+        try_c!(self, get_frame, {
+            Ok(Frame::from_ptr_unchecked(get_frame(self.as_ptr())))
+        })
     }
 
     /// Returns the global object for this context. The context must be entered
     /// before calling this function.
     pub fn get_global(&self) -> Result<V8Value> {
-        try_c!(self, get_global, { Ok(V8Value::from_ptr_unchecked(get_global(self.as_ptr()))) })
+        try_c!(self, get_global, {
+            Ok(V8Value::from_ptr_unchecked(get_global(self.as_ptr())))
+        })
     }
 
     /// Enter this context. A context must be explicitly entered before creating a
@@ -66,42 +95,58 @@ impl V8Context {
     /// Returns true (1) if this object is pointing to the same handle as |that|
     /// object.
     pub fn is_same(&self, that: Self) -> Result<bool> {
-        try_c!(self, is_same, { Ok(is_same(self.as_ptr(), that.into_raw()) != 0) })
+        try_c!(self, is_same, {
+            Ok(is_same(self.as_ptr(), that.into_raw()) != 0)
+        })
     }
 
-    // /// Execute a string of JavaScript code in this V8 context. The |script_url|
-    // /// parameter is the URL where the script in question can be found, if any.
-    // /// The |start_line| parameter is the base line number to use for error
-    // /// reporting. On success |retval| will be set to the return value, if any,
-    // /// and the function will return true (1). On failure |exception| will be set
-    // /// to the exception, if any, and the function will return false (0).
-    // pub fn eval(&self, code: &str, script_url: &str, start_line: i32, retval: &mut V8Value) -> Result<i32> {
-    //     try_c!(self, eval, { 
-    //         let mut retval_raw: cef_v8value_t = zeroed();
-    //         let mut retval_raw: *mut cef_v8value_t = &mut retval_raw;
-    //         let retval_raw: *mut *mut cef_v8value_t = &mut retval_raw;
+    /// Execute a string of JavaScript code in this V8 context. The |script_url|
+    /// parameter is the URL where the script in question can be found, if any.
+    /// The |start_line| parameter is the base line number to use for error
+    /// reporting. On success |retval| will be set to the return value, if any,
+    /// and the function will return true (1). On failure |exception| will be set
+    /// to the exception, if any, and the function will return false (0).
+    pub fn eval(
+        &self,
+        code: &str,
+        script_url: &str,
+        start_line: i32,
+        retval: &mut V8Value
+    ) -> Result<bool> {
+        try_c!(self, eval, {
+            let mut retval_raw = null_mut();
+            let mut exception_raw = null_mut();
 
-    //         let result = eval(
-    //             self.as_ptr(),
-    //             CefString::new(code).as_ptr(),
-    //             CefString::new(script_url).as_ptr(),
-    //             start_line,
-    //             retval_raw,
-    //             null_mut());
+            let result = eval(
+                self.as_ptr(),
+                CefString::new(code).as_ptr(),
+                CefString::new(script_url).as_ptr(),
+                start_line,
+                &mut retval_raw,
+                &mut exception_raw
+            );
 
-    //         *retval = V8Value::from_ptr_unchecked(*retval_raw);
-    //         Ok(result)
-    //     })
-    // }
+            *retval = V8Value::from_ptr_unchecked(retval_raw);
+            Ok(result != 0)
+        })
+    }
 
     /// Returns the current (top) context object in the V8 context stack.
     pub fn get_current_context() -> Result<Self> {
-        unsafe { Ok(V8Context::from_ptr_unchecked(cef_v8context_get_current_context())) }
+        unsafe {
+            Ok(V8Context::from_ptr_unchecked(
+                cef_v8context_get_current_context()
+            ))
+        }
     }
 
     /// Returns the entered (bottom) context object in the V8 context stack.
     pub fn get_entered_context() -> Result<Self> {
-        unsafe { Ok(V8Context::from_ptr_unchecked(cef_v8context_get_entered_context())) }
+        unsafe {
+            Ok(V8Context::from_ptr_unchecked(
+                cef_v8context_get_entered_context()
+            ))
+        }
     }
 
     /// Returns true (1) if V8 is currently inside a context.
@@ -168,15 +213,16 @@ impl V8HandlerWrapper {
         let object: V8Value = V8Value::from_ptr_unchecked(object);
         let arguments = if arguments_count > 0 {
             std::slice::from_raw_parts(arguments, arguments_count)
-            .iter()
-            .map(|&arg| V8Value::from_ptr_unchecked(arg))
-            .collect()
+                .iter()
+                .map(|&arg| V8Value::from_ptr_unchecked(arg))
+                .collect()
         } else {
             vec![]
         };
 
         this.0
-            .execute(name, object, arguments_count, arguments).unwrap()
+            .execute(name, object, arguments_count, arguments)
+            .unwrap()
     }
 }
 
@@ -262,7 +308,9 @@ impl V8Value {
 
     /// True if the value type is an ArrayBuffer.
     pub fn is_array_buffer(&self) -> Result<bool> {
-        try_c!(self, is_array_buffer, { Ok(is_array_buffer(self.as_ptr()) != 0) })
+        try_c!(self, is_array_buffer, {
+            Ok(is_array_buffer(self.as_ptr()) != 0)
+        })
     }
 
     /// True if the value type is function.
@@ -278,12 +326,16 @@ impl V8Value {
     /// Returns true (1) if this object is pointing to the same handle as |that|
     /// object.
     pub fn is_same(&self, that: &Self) -> Result<bool> {
-        try_c!(self, is_same, { Ok(is_same(self.as_ptr(), that.as_ptr()) != 0) })
+        try_c!(self, is_same, {
+            Ok(is_same(self.as_ptr(), that.as_ptr()) != 0)
+        })
     }
 
     /// Return a bool value.
     pub fn get_bool_value(&self) -> Result<bool> {
-        try_c!(self, get_bool_value, { Ok(get_bool_value(self.as_ptr()) != 0) })
+        try_c!(self, get_bool_value, {
+            Ok(get_bool_value(self.as_ptr()) != 0)
+        })
     }
 
     /// Return an int value.
@@ -298,7 +350,9 @@ impl V8Value {
 
     /// Return a double value.
     pub fn get_double_value(&self) -> Result<f64> {
-        try_c!(self, get_double_value, { Ok(get_double_value(self.as_ptr())) })
+        try_c!(self, get_double_value, {
+            Ok(get_double_value(self.as_ptr()))
+        })
     }
 
     /// Return a Date value.
@@ -308,18 +362,24 @@ impl V8Value {
 
     /// Return a string value.
     pub fn get_string_value(&self) -> Result<String> {
-        try_c!(self, get_string_value, { Ok(CefString::from_userfree_ptr_unchecked(get_string_value(self.as_ptr())).into()) })
+        try_c!(self, get_string_value, {
+            Ok(CefString::from_userfree_ptr_unchecked(get_string_value(self.as_ptr())).into())
+        })
     }
 
     /// Returns true (1) if this is a user created object.
     pub fn is_user_created(&self) -> Result<bool> {
-        try_c!(self, is_user_created, { Ok(is_user_created(self.as_ptr()) != 0) })
+        try_c!(self, is_user_created, {
+            Ok(is_user_created(self.as_ptr()) != 0)
+        })
     }
 
     /// Returns true (1) if the last function call resulted in an exception. This
     /// attribute exists only in the scope of the current CEF value object.
     pub fn has_exception(&self) -> Result<bool> {
-        try_c!(self, has_exception, { Ok(has_exception(self.as_ptr()) != 0) })
+        try_c!(self, has_exception, {
+            Ok(has_exception(self.as_ptr()) != 0)
+        })
     }
 
     /// Returns the exception resulting from the last function call. This
@@ -330,13 +390,17 @@ impl V8Value {
 
     /// Clears the last exception and returns true (1) on success.
     pub fn clear_exception(&self) -> Result<bool> {
-        try_c!(self, clear_exception, { Ok(clear_exception(self.as_ptr()) != 0) })
+        try_c!(self, clear_exception, {
+            Ok(clear_exception(self.as_ptr()) != 0)
+        })
     }
 
     /// Returns true (1) if this object will re-throw future exceptions. This
     /// attribute exists only in the scope of the current CEF value object.
     pub fn will_rethrow_exceptions(&self) -> Result<bool> {
-        try_c!(self, will_rethrow_exceptions, { Ok(will_rethrow_exceptions(self.as_ptr()) != 0) })
+        try_c!(self, will_rethrow_exceptions, {
+            Ok(will_rethrow_exceptions(self.as_ptr()) != 0)
+        })
     }
 
     /// Set whether this object will re-throw future exceptions. By default
@@ -345,17 +409,23 @@ impl V8Value {
     /// caught and not re-thrown. Returns true (1) on success. This attribute
     /// exists only in the scope of the current CEF value object.
     pub fn set_rethrow_exceptions(&self, rethrow: bool) -> Result<bool> {
-        try_c!(self, set_rethrow_exceptions, { Ok(set_rethrow_exceptions(self.as_ptr(), rethrow as i32) != 0) })
+        try_c!(self, set_rethrow_exceptions, {
+            Ok(set_rethrow_exceptions(self.as_ptr(), rethrow as i32) != 0)
+        })
     }
 
     /// Returns true (1) if the object has a value with the specified identifier.
     pub fn has_value_by_key(&self, key: &str) -> Result<bool> {
-        try_c!(self, has_value_bykey, { Ok(has_value_bykey(self.as_ptr(), CefString::new(key).as_ptr()) != 0) })
+        try_c!(self, has_value_bykey, {
+            Ok(has_value_bykey(self.as_ptr(), CefString::new(key).as_ptr()) != 0)
+        })
     }
 
     /// Returns true (1) if the object has a value with the specified identifier.
     pub fn has_value_by_index(&self, index: i32) -> Result<bool> {
-        try_c!(self, has_value_byindex, { Ok(has_value_byindex(self.as_ptr(), index) != 0) })
+        try_c!(self, has_value_byindex, {
+            Ok(has_value_byindex(self.as_ptr(), index) != 0)
+        })
     }
 
     /// Deletes the value with the specified identifier and returns true (1) on
@@ -363,7 +433,9 @@ impl V8Value {
     /// exception is thrown. For read-only and don't-delete values this function
     /// will return true (1) even though deletion failed.
     pub fn delete_value_by_key(&self, key: &str) -> Result<bool> {
-        try_c!(self, delete_value_bykey, { Ok(delete_value_bykey(self.as_ptr(), CefString::new(key).as_ptr()) != 0) })
+        try_c!(self, delete_value_bykey, {
+            Ok(delete_value_bykey(self.as_ptr(), CefString::new(key).as_ptr()) != 0)
+        })
     }
 
     /// Deletes the value with the specified identifier and returns true (1) on
@@ -371,19 +443,31 @@ impl V8Value {
     /// deletion fails or an exception is thrown. For read-only and don't-delete
     /// values this function will return true (1) even though deletion failed.
     pub fn delete_value_by_index(&self, index: i32) -> Result<bool> {
-        try_c!(self, delete_value_byindex, { Ok(delete_value_byindex(self.as_ptr(), index) != 0) })
+        try_c!(self, delete_value_byindex, {
+            Ok(delete_value_byindex(self.as_ptr(), index) != 0)
+        })
     }
 
     /// Returns the value with the specified identifier on success. Returns NULL
     /// if this function is called incorrectly or an exception is thrown.
     pub fn get_value_by_key(&self, key: &str) -> Result<Self> {
-        try_c!(self, get_value_bykey, { Ok(V8Value::from_ptr_unchecked(get_value_bykey(self.as_ptr(), CefString::new(key).as_ptr()))) })
+        try_c!(self, get_value_bykey, {
+            Ok(V8Value::from_ptr_unchecked(get_value_bykey(
+                self.as_ptr(),
+                CefString::new(key).as_ptr()
+            )))
+        })
     }
 
     /// Returns the value with the specified identifier on success. Returns NULL
     /// if this function is called incorrectly or an exception is thrown.
     pub fn get_value_by_index(&self, index: i32) -> Result<Self> {
-        try_c!(self, get_value_byindex, { Ok(V8Value::from_ptr_unchecked(get_value_byindex(self.as_ptr(), index))) })
+        try_c!(self, get_value_byindex, {
+            Ok(V8Value::from_ptr_unchecked(get_value_byindex(
+                self.as_ptr(),
+                index
+            )))
+        })
     }
 
     // TODO: create a wrapper for cef_v8_propertyattribute_t and pass it as parameter
@@ -392,7 +476,14 @@ impl V8Value {
     /// exception is thrown. For read-only values this function will return true
     /// (1) even though assignment failed.
     pub fn set_value_by_key(&self, key: &str, value: Self) -> Result<bool> {
-        try_c!(self, set_value_bykey, { Ok(set_value_bykey(self.as_ptr(), CefString::new(key).as_ptr(), value.into_raw(), cef_v8_propertyattribute_t::V8_PROPERTY_ATTRIBUTE_NONE) != 0) })
+        try_c!(self, set_value_bykey, {
+            Ok(set_value_bykey(
+                self.as_ptr(),
+                CefString::new(key).as_ptr(),
+                value.into_raw(),
+                cef_v8_propertyattribute_t::V8_PROPERTY_ATTRIBUTE_NONE
+            ) != 0)
+        })
     }
 
     /// Associates a value with the specified identifier and returns true (1) on
@@ -400,7 +491,9 @@ impl V8Value {
     /// exception is thrown. For read-only values this function will return true
     /// (1) even though assignment failed.
     pub fn set_value_by_index(&self, index: i32, value: Self) -> Result<bool> {
-        try_c!(self, set_value_byindex, { Ok(set_value_byindex(self.as_ptr(), index, value.into_raw()) != 0) })
+        try_c!(self, set_value_byindex, {
+            Ok(set_value_byindex(self.as_ptr(), index, value.into_raw()) != 0)
+        })
     }
 
     // /// Registers an identifier and returns true (1) on success. Access to the
@@ -525,7 +618,6 @@ impl V8Value {
     // int(CEF_CALLBACK* reject_promise)(struct _cef_v8value_t* self,
     //     const cef_string_t* errorMsg);
 
-
     // /// Create a new cef_v8value_t object of type undefined.
     // CEF_EXPORT cef_v8value_t* cef_v8value_create_undefined(void);
 
@@ -534,7 +626,7 @@ impl V8Value {
 
     // /// Create a new cef_v8value_t object of type bool.
     // CEF_EXPORT cef_v8value_t* cef_v8value_create_bool(int value);
-  
+
     /// Create a new cef_v8value_t object of type int.
     pub fn create_int(i: i32) -> Self {
         unsafe { V8Value::from_ptr_unchecked(cef_v8value_create_int(i)) }
@@ -552,18 +644,21 @@ impl V8Value {
     // /// enter() and exit() on a stored cef_v8context_t reference.
     // CEF_EXPORT cef_v8value_t* cef_v8value_create_date(cef_basetime_t date);
 
-    pub fn create_string(s: CefString) -> Self {
-        unsafe { V8Value::from_ptr_unchecked(cef_v8value_create_string(s.as_ptr())) }
+    pub fn create_string(s: &str) -> Self {
+        unsafe {
+            V8Value::from_ptr_unchecked(cef_v8value_create_string(CefString::new(s).as_ptr()))
+        }
     }
 
-    // /// Create a new cef_v8value_t object of type object with optional accessor
-    // /// and/or interceptor. This function should only be called from within the
-    // /// scope of a cef_render_process_handler_t, cef_v8handler_t or cef_v8accessor_t
-    // /// callback, or in combination with calling enter() and exit() on a stored
-    // /// cef_v8context_t reference.
-    // CEF_EXPORT cef_v8value_t* cef_v8value_create_object(
-    //     cef_v8accessor_t* accessor,
-    //     cef_v8interceptor_t* interceptor);
+    /// Create a new cef_v8value_t object of type object with optional accessor
+    /// and/or interceptor. This function should only be called from within the
+    /// scope of a cef_render_process_handler_t, cef_v8handler_t or cef_v8accessor_t
+    /// callback, or in combination with calling enter() and exit() on a stored
+    /// cef_v8context_t reference.
+    /// TODO: add accessor and interceptor parameters
+    pub fn create_object() -> Self {
+        unsafe { V8Value::from_ptr_unchecked(cef_v8value_create_object(null_mut(), null_mut())) }
+    }
 
     // /// Create a new cef_v8value_t object of type array with the specified |length|.
     // /// If |length| is negative the returned array will have length 0. This function
@@ -591,7 +686,12 @@ impl V8Value {
     /// cef_v8handler_t or cef_v8accessor_t callback, or in combination with calling
     /// enter() and exit() on a stored cef_v8context_t reference.
     pub fn create_function(name: &str, handler: V8Handler) -> Result<V8Value> {
-       unsafe { Ok(V8Value::from_ptr_unchecked(cef_v8value_create_function(CefString::new(name).as_ptr(), handler.as_ptr()))) }
+        unsafe {
+            Ok(V8Value::from_ptr_unchecked(cef_v8value_create_function(
+                CefString::new(name).as_ptr(),
+                handler.as_ptr()
+            )))
+        }
     }
 
     // /// Create a new cef_v8value_t object of type Promise. This function should only
@@ -599,5 +699,4 @@ impl V8Value {
     // /// cef_v8handler_t or cef_v8accessor_t callback, or in combination with calling
     // /// enter() and exit() on a stored cef_v8context_t reference.
     // CEF_EXPORT cef_v8value_t* cef_v8value_create_promise(void);
-
 }
