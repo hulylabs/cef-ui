@@ -363,7 +363,12 @@ impl V8Value {
     /// Return a string value.
     pub fn get_string_value(&self) -> Result<String> {
         try_c!(self, get_string_value, {
-            Ok(CefString::from_userfree_ptr_unchecked(get_string_value(self.as_ptr())).into())
+            let s = get_string_value(self.as_ptr());
+            let result = match CefString::from_userfree_ptr(s) {
+                Some(str) => str.into(),
+                None => String::new()
+            };
+            Ok(result)
         })
     }
 
@@ -540,8 +545,12 @@ impl V8Value {
     //     struct _cef_v8value_t* self,
     //     int change_in_bytes);
 
-    // /// Returns the number of elements in the array.
-    // int(CEF_CALLBACK* get_array_length)(struct _cef_v8value_t* self);
+    /// Returns the number of elements in the array.
+    pub fn get_array_length(&self) -> Result<i32> {
+        try_c!(self, get_array_length, {
+            Ok(get_array_length(self.as_ptr()))
+        })
+    }
 
     // /// Returns the ReleaseCallback object associated with the ArrayBuffer or NULL
     // /// if the ArrayBuffer was not created with CreateArrayBuffer.
