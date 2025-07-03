@@ -366,7 +366,7 @@ impl V8Value {
             let s = get_string_value(self.as_ptr());
             let result = match CefString::from_userfree_ptr(s) {
                 Some(str) => str.into(),
-                None => String::new()
+                None => Err(anyhow::anyhow!("string is empty"))?
             };
             Ok(result)
         })
