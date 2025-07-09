@@ -1,9 +1,9 @@
 use crate::{
-    CefString, CefStringList, Client, Color, CommandId, CompositionUnderline, DictionaryValue,
-    DragData, DragOperations, Frame, KeyEvent, MouseButtonType, MouseEvent, NativeWindowHandle,
-    NavigationEntry, NavigationEntryVisitor, PaintElementType, Point, Range, RequestContext, Size,
-    State, TouchEvent, WindowInfo, WindowOpenDisposition, ZoomCommand, free_cef_string,
-    ref_counted_ptr, try_c
+    CefString, CefStringList, Client, Color, CommandId, CompositionUnderline,
+    DevToolsMessageObserver, DictionaryValue, DragData, DragOperations, Frame, KeyEvent,
+    MouseButtonType, MouseEvent, NativeWindowHandle, NavigationEntry, NavigationEntryVisitor,
+    PaintElementType, Point, Range, Registration, RequestContext, Size, State, TouchEvent,
+    WindowInfo, WindowOpenDisposition, ZoomCommand, free_cef_string, ref_counted_ptr, try_c
 };
 use anyhow::Result;
 use cef_ui_sys::{
@@ -787,17 +787,20 @@ impl BrowserHost {
         })
     }
 
-    // TODO: Fix this!
-
-    // ///
-    // /// Add an observer for DevTools protocol messages (function results and
-    // /// events). The observer will remain registered until the returned
-    // /// Registration object is destroyed. See the SendDevToolsMessage
-    // /// documentation for additional usage information.
-    // ///
-    // struct _cef_registration_t*(CEF_CALLBACK* add_dev_tools_message_observer)(
-    // struct _cef_browser_host_t* self,
-    // struct _cef_dev_tools_message_observer_t* observer);
+    /// Add an observer for DevTools protocol messages (method results and
+    /// events). The observer will remain registered until the returned
+    /// Registration object is destroyed. See the SendDevToolsMessage
+    /// documentation for additional usage information.
+    pub fn add_dev_tools_message_observer(
+        &self,
+        observer: DevToolsMessageObserver
+    ) -> Result<Registration> {
+        try_c!(self, add_dev_tools_message_observer, {
+            Ok(Registration::from_ptr_unchecked(
+                add_dev_tools_message_observer(self.as_ptr(), observer.into_raw())
+            ))
+        })
+    }
 
     /// Retrieve a snapshot of current navigation entries as values sent to the
     /// specified visitor. If |current_only| is true (1) only the current
