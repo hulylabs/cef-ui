@@ -48,3 +48,7 @@ impl Wrappable for CefTaskWrapper {
 pub fn post_task(tid: ThreadId, task: CefTask) -> bool {
     unsafe { cef_post_task(tid.into(), task.into_raw()) != 0 }
 }
+
+pub fn currently_on(tid: ThreadId) -> bool {
+    unsafe { cef_ui_sys::cef_currently_on(tid.into()) != 0 }
+}
