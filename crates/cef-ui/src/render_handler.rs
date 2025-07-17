@@ -21,12 +21,16 @@ use std::{
 pub trait RenderHandlerCallbacks: Send + Sync + 'static {
     /// Return the handler for accessibility notifications. If no handler is
     /// provided the default implementation will be used.
-    fn get_accessibility_handler(&mut self) -> Option<AccessibilityHandler>;
+    fn get_accessibility_handler(&mut self) -> Option<AccessibilityHandler> {
+        None
+    }
 
     // /// Called to retrieve the root window rectangle in screen DIP coordinates.
     // /// Return true (1) if the rectangle was provided. If this function returns
     // /// false (0) the rectangle from GetViewRect will be used.
-    fn get_root_screen_rect(&mut self, browser: Browser) -> Option<Rect>;
+    fn get_root_screen_rect(&mut self, _browser: Browser) -> Option<Rect> {
+        None
+    }
 
     /// Called to retrieve the view rectangle in screen DIP coordinates. This
     /// function must always provide a non-NULL rectangle.
@@ -36,7 +40,9 @@ pub trait RenderHandlerCallbacks: Send + Sync + 'static {
     /// coordinates. Windows/Linux should provide screen device (pixel)
     /// coordinates and MacOS should provide screen DIP coordinates. Return true
     /// (1) if the requested coordinates were provided.
-    fn get_screen_point(&mut self, browser: Browser, view: &Point) -> Option<Point>;
+    fn get_screen_point(&mut self, _browser: Browser, _view: &Point) -> Option<Point> {
+        None
+    }
 
     /// Called to allow the client to fill in the CefScreenInfo object with
     /// appropriate values. Return true (1) if the |screen_info| structure has
@@ -45,15 +51,17 @@ pub trait RenderHandlerCallbacks: Send + Sync + 'static {
     /// If the screen info rectangle is left NULL the rectangle from GetViewRect
     /// will be used. If the rectangle is still NULL or invalid popups may not be
     /// drawn correctly.
-    fn get_screen_info(&mut self, browser: Browser) -> Option<ScreenInfo>;
+    fn get_screen_info(&mut self, _browser: Browser) -> Option<ScreenInfo> {
+        None
+    }
 
     /// Called when the browser wants to show or hide the popup widget. The popup
     /// should be shown if |show| is true (1) and hidden if |show| is false (0).
-    fn on_popup_show(&mut self, browser: Browser, show: bool);
+    fn on_popup_show(&mut self, _browser: Browser, _show: bool) {}
 
     /// Called when the browser wants to move or resize the popup widget. |rect|
     /// contains the new location and size in view coordinates.
-    fn on_popup_size(&mut self, browser: Browser, rect: &Rect);
+    fn on_popup_size(&mut self, _browser: Browser, _rect: &Rect) {}
 
     /// Called when an element should be painted. Pixel values passed to this
     /// function are scaled relative to view coordinates based on the value of
@@ -83,19 +91,31 @@ pub trait RenderHandlerCallbacks: Send + Sync + 'static {
     /// is set to true (1), and is currently only supported on Windows.
     fn on_accelerated_paint(
         &mut self,
-        browser: Browser,
-        paint_element_type: PaintElementType,
-        dirty_rects: &[Rect]
-    );
+        _browser: Browser,
+        _paint_element_type: PaintElementType,
+        _dirty_rects: &[Rect]
+    ) {
+        unimplemented!(
+            "on_accelerated_paint must be implemented when cef_window_tInfo::shared_texture_enabled is set to true"
+        );
+    }
 
     /// Called to retrieve the size of the touch handle for the specified
     /// |orientation|.
-    fn get_touch_handle_size(&mut self, browser: Browser, orientation: HorizontalAlignment)
-    -> Size;
+    fn get_touch_handle_size(
+        &mut self,
+        _browser: Browser,
+        _orientation: HorizontalAlignment
+    ) -> Size {
+        Size {
+            width:  0,
+            height: 0
+        }
+    }
 
     /// Called when touch handle state is updated. The client is responsible for
     /// rendering the touch handles.
-    fn on_touch_handle_state_changed(&mut self, browser: Browser, state: &TouchHandleState);
+    fn on_touch_handle_state_changed(&mut self, _browser: Browser, _state: &TouchHandleState) {}
 
     /// Called when the user starts dragging content in the web view. Contextual
     /// information about the dragged content is supplied by |drag_data|. (|x|,
@@ -111,45 +131,49 @@ pub trait RenderHandlerCallbacks: Send + Sync + 'static {
     /// operation has ended.
     fn start_dragging(
         &mut self,
-        browser: Browser,
-        drag_data: DragData,
-        allowed_ops: DragOperations,
-        drag_start: &Point
-    ) -> bool;
+        _browser: Browser,
+        _drag_data: DragData,
+        _allowed_ops: DragOperations,
+        _drag_start: &Point
+    ) -> bool {
+        false
+    }
 
     /// Called when the web view wants to update the mouse cursor during a drag &
     /// drop operation. |operation| describes the allowed operation (none, move,
     /// copy, link).
-    fn update_drag_cursor(&mut self, browser: Browser, operation: DragOperations);
+    fn update_drag_cursor(&mut self, _browser: Browser, _operation: DragOperations) {}
 
     /// Called when the scroll offset has changed.
-    fn on_scroll_offset_changed(&mut self, browser: Browser, x: f64, y: f64);
+    fn on_scroll_offset_changed(&mut self, _browser: Browser, _x: f64, _y: f64) {}
 
     /// Called when the IME composition range has changed. |selected_range| is the
     /// range of characters that have been selected. |character_bounds| is the
     /// bounds of each character in view coordinates.
     fn on_ime_composition_range_changed(
         &mut self,
-        browser: Browser,
-        selected_range: &Range,
-        character_bounds: &[Rect]
-    );
+        _browser: Browser,
+        _selected_range: &Range,
+        _character_bounds: &[Rect]
+    ) {
+    }
 
     /// Called when text selection has changed for the specified |browser|.
     /// |selected_text| is the currently selected text and |selected_range| is the
     /// character range.
     fn on_text_selection_changed(
         &mut self,
-        browser: Browser,
-        selected_text: Option<String>,
-        selected_range: &Range
-    );
+        _browser: Browser,
+        _selected_text: Option<String>,
+        _selected_range: &Range
+    ) {
+    }
 
     /// Called when an on-screen keyboard should be shown or hidden for the
     /// specified |browser|. |input_mode| specifies what kind of keyboard should
     /// be opened. If |input_mode| is CEF_TEXT_INPUT_MODE_NONE, any existing
     /// keyboard for this browser should be hidden.
-    fn on_virtual_keyboard_requested(&mut self, browser: Browser, input_mode: TextInputMode);
+    fn on_virtual_keyboard_requested(&mut self, _browser: Browser, _input_mode: TextInputMode) {}
 }
 
 // Implement this structure to handle events when window rendering is disabled.
