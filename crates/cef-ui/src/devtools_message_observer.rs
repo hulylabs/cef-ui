@@ -29,7 +29,9 @@ pub trait DevToolsMessageObserverCallbacks: Send + Sync + 'static {
     /// CefParseJSON function if desired, however be aware of performance
     /// considerations when parsing large messages (some of which may exceed 1MB
     /// in size).
-    fn on_dev_tools_message(&mut self, browser: Browser, message: &[u8]) -> bool;
+    fn on_dev_tools_message(&mut self, _browser: Browser, _message: &[u8]) -> bool {
+        false
+    }
 
     /// Method that will be called after attempted execution of a DevTools
     /// protocol method. |browser| is the originating browser instance.
@@ -43,11 +45,12 @@ pub trait DevToolsMessageObserverCallbacks: Send + Sync + 'static {
     /// contents.
     fn on_dev_tools_method_result(
         &mut self,
-        browser: Browser,
-        message_id: i32,
-        success: bool,
-        result: &[u8]
-    );
+        _browser: Browser,
+        _message_id: i32,
+        _success: bool,
+        _result: &[u8]
+    ) {
+    }
 
     /// Method that will be called on receipt of a DevTools protocol event.
     /// |browser| is the originating browser instance. |method| is the "method"
@@ -55,18 +58,18 @@ pub trait DevToolsMessageObserverCallbacks: Send + Sync + 'static {
     /// may be empty). |params| is only valid for the scope of this callback and
     /// should be copied if necessary. See the OnDevToolsMessage documentation for
     /// additional details on |params| contents.
-    fn on_dev_tools_event(&mut self, browser: Browser, method: &str, params: &[u8]);
+    fn on_dev_tools_event(&mut self, _browser: Browser, _method: &str, _params: &[u8]) {}
 
     /// Method that will be called when the DevTools agent has attached. |browser|
     /// is the originating browser instance. This will generally occur in response
     /// to the first message sent while the agent is detached.
-    fn on_dev_tools_agent_attached(&mut self, browser: Browser);
+    fn on_dev_tools_agent_attached(&mut self, _browser: Browser) {}
 
     /// Method that will be called when the DevTools agent has detached. |browser|
     /// is the originating browser instance. Any method results that were pending
     /// before the agent became detached will not be delivered, and any active
     /// event subscriptions will be canceled.
-    fn on_dev_tools_agent_detached(&mut self, browser: Browser);
+    fn on_dev_tools_agent_detached(&mut self, _browser: Browser) {}
 }
 
 // Structure used to observe DevTools protocol messages. The functions of this
