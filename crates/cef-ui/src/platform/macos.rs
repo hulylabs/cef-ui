@@ -1,4 +1,4 @@
-use crate::{free_cef_string, CefString, Rect, RuntimeStyle};
+use crate::{CefString, Rect, RuntimeStyle, free_cef_string};
 use anyhow::{Error, Result, anyhow};
 use cef_ui_sys::{
     cef_event_handle_t, cef_main_args_t, cef_string_t, cef_window_handle_t, cef_window_info_t
