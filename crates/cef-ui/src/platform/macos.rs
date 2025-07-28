@@ -1,4 +1,4 @@
-use crate::{CefString, Rect, free_cef_string};
+use crate::{free_cef_string, CefString, Rect, RuntimeStyle};
 use anyhow::{Error, Result, anyhow};
 use cef_ui_sys::{
     cef_event_handle_t, cef_main_args_t, cef_string_t, cef_window_handle_t, cef_window_info_t
@@ -189,8 +189,9 @@ impl WindowInfo {
         *cef = CefString::new(s.as_str()).into_raw();
     }
 
-    pub fn runtime_style(&self, runtime_style: RuntimeStyle) {
-        self.0.runtime_style = runtime_style;
+    pub fn runtime_style(mut self, runtime_style: RuntimeStyle) -> Self {
+        self.0.runtime_style = runtime_style.into();
+        self
     }
 }
 
