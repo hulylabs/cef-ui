@@ -1,6 +1,11 @@
 use anyhow::Result;
 
 fn main() -> Result<()> {
+    if std::env::var("CARGO_FEATURE_NO_CEF_LINK").is_ok() {
+        // If the no-cef-link feature is enabled, skip linking to CEF.
+        return Ok(());
+    }
+    
     // Linker flags on x86_64 Linux.
     #[cfg(all(target_os = "linux", target_arch = "x86_64"))]
     {
