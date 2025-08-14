@@ -1409,11 +1409,12 @@ pub trait ContextMenuHandlerCallbacks: Send + Sync + 'static {
     /// |model| outside of this callback.
     fn on_before_context_menu(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        params: ContextMenuParams,
-        model: MenuModel
-    );
+        _browser: Browser,
+        _frame: Frame,
+        _params: ContextMenuParams,
+        _model: MenuModel
+    ) {
+    }
 
     /// Called to allow custom display of the context menu. |params| provides
     /// information about the context menu state. |model| contains the context
@@ -1423,12 +1424,14 @@ pub trait ContextMenuHandlerCallbacks: Send + Sync + 'static {
     /// keep references to |params| or |model| outside of this callback.
     fn run_context_menu(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        params: ContextMenuParams,
-        model: MenuModel,
-        callback: RunContextMenuCallback
-    ) -> bool;
+        _browser: Browser,
+        _frame: Frame,
+        _params: ContextMenuParams,
+        _model: MenuModel,
+        _callback: RunContextMenuCallback
+    ) -> bool {
+        false
+    }
 
     /// Called to execute a command selected from the context menu. Return true
     /// (1) if the command was handled or false (0) for the default
@@ -1439,16 +1442,18 @@ pub trait ContextMenuHandlerCallbacks: Send + Sync + 'static {
     /// reference to |params| outside of this callback.
     fn on_context_menu_command(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        params: ContextMenuParams,
-        command_id: MenuCommandId,
-        event_flags: EventFlags
-    ) -> bool;
+        _browser: Browser,
+        _frame: Frame,
+        _params: ContextMenuParams,
+        _command_id: MenuCommandId,
+        _event_flags: EventFlags
+    ) -> bool {
+        false
+    }
 
     /// Called when the context menu is dismissed irregardless of whether the menu
     /// was canceled or a command was selected.
-    fn on_context_menu_dismissed(&mut self, browser: Browser, frame: Frame);
+    fn on_context_menu_dismissed(&mut self, _browser: Browser, _frame: Frame) {}
 
     /// Called to allow custom display of the quick menu for a windowless browser.
     /// |location| is the top left corner of the selected region. |size| is the
@@ -1459,13 +1464,15 @@ pub trait ContextMenuHandlerCallbacks: Send + Sync + 'static {
     /// the menu.
     fn run_quick_menu(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        location: &Point,
-        size: &Size,
-        edit_state_flags: QuickMenuEditStateFlags,
-        callback: RunQuickMenuCallback
-    ) -> bool;
+        _browser: Browser,
+        _frame: Frame,
+        _location: &Point,
+        _size: &Size,
+        _edit_state_flags: QuickMenuEditStateFlags,
+        _callback: RunQuickMenuCallback
+    ) -> bool {
+        false
+    }
 
     /// Called to execute a command selected from the quick menu for a windowless
     /// browser. Return true (1) if the command was handled or false (0) for the
@@ -1473,15 +1480,17 @@ pub trait ContextMenuHandlerCallbacks: Send + Sync + 'static {
     /// default implementations.
     fn on_quick_menu_command(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        command_id: MenuCommandId,
-        event_flags: EventFlags
-    ) -> bool;
+        _browser: Browser,
+        _frame: Frame,
+        _command_id: MenuCommandId,
+        _event_flags: EventFlags
+    ) -> bool {
+        false
+    }
 
     /// Called when the quick menu for a windowless browser is dismissed
     /// irregardless of whether the menu was canceled or a command was selected.
-    fn on_quick_menu_dismissed(&mut self, browser: Browser, frame: Frame);
+    fn on_quick_menu_dismissed(&mut self, _browser: Browser, _frame: Frame) {}
 }
 
 // Implement this structure to handle context menu events. The functions of
