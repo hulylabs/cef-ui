@@ -25,7 +25,7 @@ pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     fn on_browser_created(&mut self, _browser: Browser, _extra_info: Option<DictionaryValue>) {}
 
     /// Called before a browser is destroyed.
-    fn on_browser_destroyed(&mut self, browser: Browser) {}
+    fn on_browser_destroyed(&mut self, _browser: Browser) {}
 
     // /// Return the handler for browser load status events.
     // struct _cef_load_handler_t*(CEF_CALLBACK* get_load_handler)(
