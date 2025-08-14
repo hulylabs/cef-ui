@@ -146,7 +146,7 @@ macro_rules! ref_counted_ptr {
     ($rust:ident, $cef:ty) => {
         #[repr(transparent)]
         #[derive(Clone)]
-        pub struct $rust(crate::RefCountedPtr<$cef>);
+        pub struct $rust(pub crate::RefCountedPtr<$cef>);
 
         crate::ref_counted!($cef);
 

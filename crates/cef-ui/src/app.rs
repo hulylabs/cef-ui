@@ -23,9 +23,9 @@ pub trait AppCallbacks: Send + Sync + 'static {
     /// behavior including crashes.
     fn on_before_command_line_processing(
         &mut self,
-        process_type: Option<&str>,
-        command_line: Option<CommandLine>
-    );
+        _process_type: Option<&str>,
+        _command_line: Option<CommandLine>
+    ) {}
 
     // TODO: Fix this!
 
@@ -44,11 +44,11 @@ pub trait AppCallbacks: Send + Sync + 'static {
 
     /// Return the handler for functionality specific to the browser process. This
     /// function is called on multiple threads in the browser process.
-    fn get_browser_process_handler(&mut self) -> Option<BrowserProcessHandler>;
+    fn get_browser_process_handler(&mut self) -> Option<BrowserProcessHandler> { None }
 
     /// Return the handler for functionality specific to the render process. This
     /// function is called on the render process main thread.
-    fn get_render_process_handler(&mut self) -> Option<RenderProcessHandler>;
+    fn get_render_process_handler(&mut self) -> Option<RenderProcessHandler> { None }
 }
 
 // Implement this structure to provide handler implementations. Methods will be

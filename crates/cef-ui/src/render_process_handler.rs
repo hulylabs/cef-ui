@@ -13,7 +13,7 @@ use std::mem::zeroed;
 /// unless otherwise indicated.
 pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     /// Called after WebKit has been initialized.
-    fn on_web_kit_initialized(&mut self);
+    fn on_web_kit_initialized(&mut self) {}
 
     /// Called after a browser has been created. When browsing cross-origin a new
     /// browser will be created before the old browser with the same identifier is
@@ -22,10 +22,10 @@ pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     /// cef_browser_host_t::cef_browser_host_create_browser_sync(),
     /// cef_life_span_handler_t::on_before_popup() or
     /// cef_browser_view_t::cef_browser_view_create().
-    fn on_browser_created(&mut self, browser: Browser, extra_info: Option<DictionaryValue>);
+    fn on_browser_created(&mut self, _browser: Browser, _extra_info: Option<DictionaryValue>) {}
 
     /// Called before a browser is destroyed.
-    fn on_browser_destroyed(&mut self, browser: Browser);
+    fn on_browser_destroyed(&mut self, browser: Browser) {}
 
     // /// Return the handler for browser load status events.
     // struct _cef_load_handler_t*(CEF_CALLBACK* get_load_handler)(
@@ -37,7 +37,7 @@ pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     /// from the thread on which they are created. A task runner for posting tasks
     /// on the associated thread can be retrieved via the
     /// cef_v8context_t::get_task_runner() function.
-    fn on_context_created(&mut self, browser: Browser, frame: Frame, context: V8Context);
+    fn on_context_created(&mut self, _browser: Browser, _frame: Frame, _context: V8Context) {}
 
     // /// Called immediately before the V8 context for a frame is released. No
     // /// references to the context should be kept after this function is called.
@@ -75,11 +75,11 @@ pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     /// keep a reference to |message| outside of this callback.
     fn on_process_message_received(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        source_process: ProcessId,
-        message: &mut ProcessMessage
-    ) -> bool;
+        _browser: Browser,
+        _frame: Frame,
+        _source_process: ProcessId,
+        _message: &mut ProcessMessage
+    ) -> bool { false }
 }
 // Structure used to implement render process callbacks. The functions of this
 // structure will be called on the render process main thread (TID_RENDERER)
