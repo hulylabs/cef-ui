@@ -28,7 +28,9 @@ pub trait ClientCallbacks: Send + Sync + 'static {
 
     /// Return the handler for context menus. If no handler is provided the
     /// default implementation will be used.
-    fn get_context_menu_handler(&mut self) -> Option<ContextMenuHandler>;
+    fn get_context_menu_handler(&mut self) -> Option<ContextMenuHandler> {
+        None
+    }
 
     // /// Return the handler for dialogs. If no handler is provided the default
     // /// implementation will be used.
@@ -36,7 +38,9 @@ pub trait ClientCallbacks: Send + Sync + 'static {
     // struct _cef_client_t* self);
 
     /// Return the handler for browser display state events.
-    fn get_display_handler(&mut self) -> Option<DisplayHandler>;
+    fn get_display_handler(&mut self) -> Option<DisplayHandler> {
+        None
+    }
 
     // /// Return the handler for download events. If no handler is returned
     // /// downloads will not be allowed.
@@ -71,13 +75,19 @@ pub trait ClientCallbacks: Send + Sync + 'static {
     // struct _cef_client_t* self);
 
     /// Return the handler for keyboard events.
-    fn get_keyboard_handler(&mut self) -> Option<KeyboardHandler>;
+    fn get_keyboard_handler(&mut self) -> Option<KeyboardHandler> {
+        None
+    }
 
     /// Return the handler for browser life span events.
-    fn get_life_span_handler(&mut self) -> Option<LifeSpanHandler>;
+    fn get_life_span_handler(&mut self) -> Option<LifeSpanHandler> {
+        None
+    }
 
     /// Return the handler for browser load status events.
-    fn get_load_handler(&mut self) -> Option<LoadHandler>;
+    fn get_load_handler(&mut self) -> Option<LoadHandler> {
+        None
+    }
 
     // /// Return the handler for printing on Linux. If a print handler is not
     // /// provided then printing will not be supported on the Linux platform.
@@ -85,21 +95,27 @@ pub trait ClientCallbacks: Send + Sync + 'static {
     // struct _cef_client_t* self);
 
     /// Return the handler for off-screen rendering events.
-    fn get_render_handler(&mut self) -> Option<RenderHandler>;
+    fn get_render_handler(&mut self) -> Option<RenderHandler> {
+        None
+    }
 
     /// Return the handler for browser request events.
-    fn get_request_handler(&mut self) -> Option<RequestHandler>;
+    fn get_request_handler(&mut self) -> Option<RequestHandler> {
+        None
+    }
 
     /// Called when a new message is received from a different process. Return
     /// true (1) if the message was handled or false (0) otherwise.  It is safe to
     /// keep a reference to |message| outside of this callback.
     fn on_process_message_received(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        source_process: ProcessId,
-        message: ProcessMessage
-    ) -> bool;
+        _browser: Browser,
+        _frame: Frame,
+        _source_process: ProcessId,
+        _message: ProcessMessage
+    ) -> bool {
+        false
+    }
 }
 
 // Implement this structure to provide handler implementations.
