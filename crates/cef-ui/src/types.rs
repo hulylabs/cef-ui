@@ -3909,17 +3909,8 @@ pub enum SchemeOptions {
     FetchEnabled = 64
 }
 
-impl From<cef_scheme_options_t> for SchemeOptions {
-    fn from(value: cef_scheme_options_t) -> Self {
-        match value {
-            cef_scheme_options_t::CEF_SCHEME_OPTION_NONE => Self::None,
-            cef_scheme_options_t::CEF_SCHEME_OPTION_STANDARD => Self::Standard,
-            cef_scheme_options_t::CEF_SCHEME_OPTION_LOCAL => Self::Local,
-            cef_scheme_options_t::CEF_SCHEME_OPTION_DISPLAY_ISOLATED => Self::DisplayIsolated,
-            cef_scheme_options_t::CEF_SCHEME_OPTION_SECURE => Self::Secure,
-            cef_scheme_options_t::CEF_SCHEME_OPTION_CORS_ENABLED => Self::CorsEnabled,
-            cef_scheme_options_t::CEF_SCHEME_OPTION_CSP_BYPASSING => Self::CspBypassing,
-            cef_scheme_options_t::CEF_SCHEME_OPTION_FETCH_ENABLED => Self::FetchEnabled
-        }
+impl Into<i32> for SchemeOptions {
+    fn into(self) -> i32 {
+        self as i32
     }
 }
