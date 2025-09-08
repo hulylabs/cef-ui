@@ -7,8 +7,9 @@ use crate::{
 };
 use anyhow::Result;
 use cef_ui_sys::{
-    cef_browser_host_create_browser_sync, cef_browser_host_t, cef_browser_settings_t,
-    cef_browser_t, cef_composition_underline_t, cef_point_t, cef_range_t, cef_string_t
+    cef_browser_host_create_browser, cef_browser_host_create_browser_sync, cef_browser_host_t,
+    cef_browser_settings_t, cef_browser_t, cef_composition_underline_t, cef_point_t, cef_range_t,
+    cef_string_t
 };
 use std::{
     ffi::{c_int, c_void},
@@ -1344,25 +1345,43 @@ impl BrowserHost {
         })
     }
 
-    // TODO: Fix this!
+    ///
+    /// Create a new browser using the window parameters specified by |windowInfo|.
+    /// All values will be copied internally and the actual window (if any) will be
+    /// created on the UI thread. If |request_context| is NULL the global request
+    /// context will be used. This function can be called on any browser process
+    /// thread and will not block. The optional |extra_info| parameter provides an
+    /// opportunity to specify extra information specific to the created browser
+    /// that will be passed to cef_render_process_handler_t::on_browser_created() in
+    /// the render process.
+    ///
+    pub fn create_browser(
+        window_info: &WindowInfo,
+        client: Client,
+        url: &str,
+        settings: &BrowserSettings,
+        extra_info: Option<DictionaryValue>,
+        request_context: Option<RequestContext>
+    ) -> bool {
+        unsafe {
+            let url = CefString::new(url);
+            let extra_info = extra_info
+                .map(|extra_info| extra_info.into_raw())
+                .unwrap_or_else(null_mut);
+            let request_context = request_context
+                .map(|request_context| request_context.into_raw())
+                .unwrap_or_else(null_mut);
 
-    // ///
-    // /// Create a new browser using the window parameters specified by |windowInfo|.
-    // /// All values will be copied internally and the actual window (if any) will be
-    // /// created on the UI thread. If |request_context| is NULL the global request
-    // /// context will be used. This function can be called on any browser process
-    // /// thread and will not block. The optional |extra_info| parameter provides an
-    // /// opportunity to specify extra information specific to the created browser
-    // /// that will be passed to cef_render_process_handler_t::on_browser_created() in
-    // /// the render process.
-    // ///
-    // CEF_EXPORT int cef_browser_host_create_browser(
-    // const cef_window_info_t* windowInfo,
-    // struct _cef_client_t* client,
-    // const cef_string_t* url,
-    // const struct _cef_browser_settings_t* settings,
-    // struct _cef_dictionary_value_t* extra_info,
-    // struct _cef_request_context_t* request_context);
+            cef_browser_host_create_browser(
+                window_info.as_raw(),
+                client.into_raw(),
+                url.as_ptr(),
+                settings.as_raw(),
+                extra_info,
+                request_context
+            ) == 1
+        }
+    }
 
     /// Create a new browser using the window parameters specified by |windowInfo|.
     /// If |request_context| is NULL the global request context will be used. This
