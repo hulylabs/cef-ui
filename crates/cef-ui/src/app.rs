@@ -32,7 +32,7 @@ pub trait AppCallbacks: Send + Sync + 'static {
     /// reference to the |registrar| object. This function is called on the main
     /// thread for each process and the registered schemes should be the same
     /// across all processes.
-    fn on_register_custom_schemes(&mut self, registrar: SchemeRegistrar);
+    fn on_register_custom_schemes(&mut self, _registrar: SchemeRegistrar) {}
 
     // /// Return the handler for resource bundle events. If
     // /// cef_settings_t.pack_loading_disabled is true (1) a handler must be
@@ -110,7 +110,10 @@ impl AppWrapper {
         this: *mut cef_app_t,
         registrar: *mut cef_scheme_registrar_t
     ) {
-        todo!();
+        let this: &mut Self = Wrapped::wrappable(this);
+        let registrar = SchemeRegistrar::from_ptr_unchecked(registrar);
+        this.0
+            .on_register_custom_schemes(registrar);
     }
 
     /// Return the handler for resource bundle events. If
@@ -162,7 +165,7 @@ impl Wrappable for AppWrapper {
 
                 // TODO: Fix this!
                 on_before_command_line_processing: Some(Self::c_on_before_command_line_processing),
-                on_register_custom_schemes:        None,
+                on_register_custom_schemes:        Some(Self::c_on_register_custom_schemes),
                 get_resource_bundle_handler:       None,
                 get_browser_process_handler:       Some(Self::c_get_browser_process_handler),
                 get_render_process_handler:        Some(Self::c_get_render_process_handler)
