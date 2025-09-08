@@ -1,6 +1,6 @@
 use crate::{
-    ref_counted_ptr, BrowserProcessHandler, CefString, CommandLine, RefCountedPtr, Wrappable,
-    RenderProcessHandler, Wrapped
+    BrowserProcessHandler, CefString, CommandLine, RefCountedPtr, RenderProcessHandler,
+    SchemeRegistrar, Wrappable, Wrapped, ref_counted_ptr
 };
 use cef_ui_sys::{
     cef_app_t, cef_browser_process_handler_t, cef_command_line_t, cef_render_process_handler_t,
@@ -25,15 +25,14 @@ pub trait AppCallbacks: Send + Sync + 'static {
         &mut self,
         _process_type: Option<&str>,
         _command_line: Option<CommandLine>
-    ) {}
+    ) {
+    }
 
-    // TODO: Fix this!
-
-    // /// Provides an opportunity to register custom schemes. Do not keep a
-    // /// reference to the |registrar| object. This function is called on the main
-    // /// thread for each process and the registered schemes should be the same
-    // /// across all processes.
-    // fn on_register_custom_schemes(&mut self, registrar: SchemeRegistrar);
+    /// Provides an opportunity to register custom schemes. Do not keep a
+    /// reference to the |registrar| object. This function is called on the main
+    /// thread for each process and the registered schemes should be the same
+    /// across all processes.
+    fn on_register_custom_schemes(&mut self, registrar: SchemeRegistrar);
 
     // /// Return the handler for resource bundle events. If
     // /// cef_settings_t.pack_loading_disabled is true (1) a handler must be
@@ -44,11 +43,15 @@ pub trait AppCallbacks: Send + Sync + 'static {
 
     /// Return the handler for functionality specific to the browser process. This
     /// function is called on multiple threads in the browser process.
-    fn get_browser_process_handler(&mut self) -> Option<BrowserProcessHandler> { None }
+    fn get_browser_process_handler(&mut self) -> Option<BrowserProcessHandler> {
+        None
+    }
 
     /// Return the handler for functionality specific to the render process. This
     /// function is called on the render process main thread.
-    fn get_render_process_handler(&mut self) -> Option<RenderProcessHandler> { None }
+    fn get_render_process_handler(&mut self) -> Option<RenderProcessHandler> {
+        None
+    }
 }
 
 // Implement this structure to provide handler implementations. Methods will be
@@ -162,7 +165,7 @@ impl Wrappable for AppWrapper {
                 on_register_custom_schemes:        None,
                 get_resource_bundle_handler:       None,
                 get_browser_process_handler:       Some(Self::c_get_browser_process_handler),
-                get_render_process_handler:        Some(Self::c_get_render_process_handler),
+                get_render_process_handler:        Some(Self::c_get_render_process_handler)
             },
             self
         )
