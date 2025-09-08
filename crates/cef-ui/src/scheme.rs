@@ -4,7 +4,8 @@ use cef_ui_sys::{
 };
 
 use crate::{
-    Browser, CefString, Frame, RefCountedPtr, Request, Wrappable, Wrapped, ref_counted_ptr
+    Browser, CefString, Frame, RefCountedPtr, Request, ResourceHandler, Wrappable, Wrapped,
+    ref_counted_ptr
 };
 use std::mem::zeroed;
 
@@ -17,11 +18,13 @@ pub trait SchemeHandlerFactoryCallbacks: Send + Sync + 'static {
     /// object passed to this method cannot be modified.
     fn create(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        scheme_name: &str,
-        request: Request
-    ) -> Option<*mut cef_resource_handler_t>;
+        _browser: Browser,
+        _frame: Frame,
+        _scheme_name: &str,
+        _request: Request
+    ) -> Option<ResourceHandler> {
+        None
+    }
 }
 
 // Class that creates CefResourceHandler instances for handling scheme
@@ -60,7 +63,7 @@ impl SchemeHandlerFactoryWrapper {
             .0
             .create(browser, frame, &scheme_name, request)
         {
-            Some(handler) => handler,
+            Some(handler) => handler.into_raw(),
             None => std::ptr::null_mut()
         }
     }
