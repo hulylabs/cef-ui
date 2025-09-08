@@ -1,3 +1,4 @@
+use anyhow::Result;
 use cef_ui_sys::{
     cef_browser_t, cef_frame_t, cef_register_scheme_handler_factory, cef_request_t,
     cef_resource_handler_t, cef_scheme_handler_factory_t, cef_scheme_registrar_t, cef_string_t
@@ -5,13 +6,15 @@ use cef_ui_sys::{
 
 use crate::{
     Browser, CefString, Frame, RefCountedPtr, Request, ResourceHandler, Wrappable, Wrapped,
-    ref_counted_ptr
+    ref_counted_ptr, try_c
 };
 use std::mem::zeroed;
 
+// Class that manages custom scheme registrations.
 ref_counted_ptr!(SchemeRegistrar, cef_scheme_registrar_t);
 
-pub trait SchemeRegistrarCallbacks: Send + Sync + 'static {
+/// Class that manages custom scheme registrations.
+impl SchemeRegistrar {
     /// Register a custom scheme. This method should not be called for the
     /// built-in HTTP, HTTPS, FILE, FTP, ABOUT and DATA schemes.
     ///
@@ -20,53 +23,11 @@ pub trait SchemeRegistrarCallbacks: Send + Sync + 'static {
     /// This function may be called on any thread. It should only be called once
     /// per unique |scheme_name| value. If |scheme_name| is already registered or
     /// if an error occurs this method will return false.
-    fn add_custom_scheme(&mut self, scheme_name: &str, options: i32) -> bool;
-}
-
-/// Class that manages the registration of custom schemes.
-impl SchemeRegistrar {
-    pub fn new<C: SchemeRegistrarCallbacks>(delegate: C) -> Self {
-        Self(SchemeRegistrarWrapper::new(delegate).wrap())
-    }
-}
-
-struct SchemeRegistrarWrapper(Box<dyn SchemeRegistrarCallbacks>);
-
-impl SchemeRegistrarWrapper {
-    pub fn new<C: SchemeRegistrarCallbacks>(delegate: C) -> Self {
-        Self(Box::new(delegate))
-    }
-
-    unsafe extern "C" fn c_add_custom_scheme(
-        this: *mut cef_scheme_registrar_t,
-        scheme_name: *const cef_string_t,
-        options: i32
-    ) -> i32 {
-        let this: &mut Self = Wrapped::wrappable(this);
-        let scheme_name: String = CefString::from_ptr_unchecked(scheme_name).into();
-
-        if this
-            .0
-            .add_custom_scheme(&scheme_name, options)
-        {
-            1
-        } else {
-            0
-        }
-    }
-}
-
-impl Wrappable for SchemeRegistrarWrapper {
-    type Cef = cef_scheme_registrar_t;
-
-    fn wrap(self) -> RefCountedPtr<cef_scheme_registrar_t> {
-        RefCountedPtr::wrap(
-            cef_scheme_registrar_t {
-                base:              unsafe { zeroed() },
-                add_custom_scheme: Some(Self::c_add_custom_scheme)
-            },
-            self
-        )
+    pub fn add_custom_scheme(&mut self, scheme_name: &str, options: i32) -> Result<bool> {
+        try_c!(self, add_custom_scheme, {
+            let scheme_name = CefString::new(scheme_name);
+            Ok(add_custom_scheme(self.as_ptr(), scheme_name.as_ptr(), options) == 1)
+        })
     }
 }
 
