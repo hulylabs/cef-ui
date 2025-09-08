@@ -4,8 +4,8 @@ use cef_ui_sys::{
     cef_dom_form_control_type_t, cef_dom_node_type_t, cef_errorcode_t, cef_horizontal_alignment_t,
     cef_insets_t, cef_log_items_t, cef_log_severity_t, cef_paint_element_type_t, cef_point_t,
     cef_range_t, cef_rect_t, cef_referrer_policy_t, cef_resource_type_t, cef_runtime_style_t,
-    cef_screen_info_t, cef_size_t, cef_state_t, cef_termination_status_t, cef_text_input_mode_t,
-    cef_thread_id_t, cef_touch_handle_state_flags_t,
+    cef_scheme_options_t, cef_screen_info_t, cef_size_t, cef_state_t, cef_termination_status_t,
+    cef_text_input_mode_t, cef_thread_id_t, cef_touch_handle_state_flags_t,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ALPHA,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ENABLED,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_NONE,
@@ -3894,6 +3894,32 @@ impl From<DOMFormControlType> for cef_dom_form_control_type_t {
             DOMFormControlType::TextArea => {
                 cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_TEXT_AREA
             },
+        }
+    }
+}
+
+pub enum SchemeOptions {
+    None = 0,
+    Standard = 1,
+    Local = 2,
+    DisplayIsolated = 4,
+    Secure = 8,
+    CorsEnabled = 16,
+    CspBypassing = 32,
+    FetchEnabled = 64
+}
+
+impl From<cef_scheme_options_t> for SchemeOptions {
+    fn from(value: cef_scheme_options_t) -> Self {
+        match value {
+            cef_scheme_options_t::CEF_SCHEME_OPTION_NONE => Self::None,
+            cef_scheme_options_t::CEF_SCHEME_OPTION_STANDARD => Self::Standard,
+            cef_scheme_options_t::CEF_SCHEME_OPTION_LOCAL => Self::Local,
+            cef_scheme_options_t::CEF_SCHEME_OPTION_DISPLAY_ISOLATED => Self::DisplayIsolated,
+            cef_scheme_options_t::CEF_SCHEME_OPTION_SECURE => Self::Secure,
+            cef_scheme_options_t::CEF_SCHEME_OPTION_CORS_ENABLED => Self::CorsEnabled,
+            cef_scheme_options_t::CEF_SCHEME_OPTION_CSP_BYPASSING => Self::CspBypassing,
+            cef_scheme_options_t::CEF_SCHEME_OPTION_FETCH_ENABLED => Self::FetchEnabled
         }
     }
 }
