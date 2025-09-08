@@ -251,7 +251,7 @@ impl CefStringList {
     }
 
     /// Returns an iterator for the string list.
-    pub fn iter(&self) -> CefStringListIter {
+    pub fn iter(&self) -> CefStringListIter<'_> {
         CefStringListIter::new(self)
     }
 }
@@ -401,7 +401,7 @@ impl CefStringMap {
     }
 
     /// Returns an iterator for the string map.
-    pub fn iter(&self) -> CefStringMapIter {
+    pub fn iter(&self) -> CefStringMapIter<'_> {
         CefStringMapIter::new(self)
     }
 }
@@ -562,7 +562,7 @@ impl CefStringMultiMap {
     }
 
     /// Returns an iterator for the string multimap.
-    pub fn iter(&self) -> CefStringMultiMapIter {
+    pub fn iter(&self) -> CefStringMultiMapIter<'_> {
         CefStringMultiMapIter::new(self)
     }
 }

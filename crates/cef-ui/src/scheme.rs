@@ -1,4 +1,3 @@
-use anyhow::Result;
 use cef_ui_sys::{
     cef_browser_t, cef_frame_t, cef_register_scheme_handler_factory, cef_request_t,
     cef_resource_handler_t, cef_scheme_handler_factory_t, cef_scheme_registrar_t, cef_string_t
@@ -6,15 +5,19 @@ use cef_ui_sys::{
 
 use crate::{
     Browser, CefString, Frame, RefCountedPtr, Request, ResourceHandler, Wrappable, Wrapped,
-    ref_counted_ptr, try_c
+    ref_counted_ptr
 };
 use std::mem::zeroed;
 
 // Class that manages custom scheme registrations.
-ref_counted_ptr!(SchemeRegistrar, cef_scheme_registrar_t);
+pub struct SchemeRegistrar(*mut cef_scheme_registrar_t);
 
 /// Class that manages custom scheme registrations.
 impl SchemeRegistrar {
+    pub fn from_ptr_unchecked(ptr: *mut cef_scheme_registrar_t) -> Self {
+        Self(ptr)
+    }
+
     /// Register a custom scheme. This method should not be called for the
     /// built-in HTTP, HTTPS, FILE, FTP, ABOUT and DATA schemes.
     ///
@@ -23,11 +26,19 @@ impl SchemeRegistrar {
     /// This function may be called on any thread. It should only be called once
     /// per unique |scheme_name| value. If |scheme_name| is already registered or
     /// if an error occurs this method will return false.
-    pub fn add_custom_scheme(&self, scheme_name: &str, options: i32) -> Result<bool> {
-        try_c!(self, add_custom_scheme, {
-            let scheme_name = CefString::new(scheme_name);
-            Ok(add_custom_scheme(self.as_ptr(), scheme_name.as_ptr(), options) == 1)
-        })
+    pub fn add_custom_scheme(&self, scheme_name: &str, options: i32) -> bool {
+        unsafe {
+            self.0
+                .as_mut()
+                .and_then(|this| {
+                    this.add_custom_scheme
+                        .map(|add_custom_scheme| {
+                            let name = CefString::new(scheme_name);
+                            add_custom_scheme(this, name.as_ptr(), options) != 0
+                        })
+                })
+                .unwrap_or(false)
+        }
     }
 }
 
