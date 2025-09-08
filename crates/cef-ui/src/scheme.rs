@@ -23,7 +23,7 @@ impl SchemeRegistrar {
     /// This function may be called on any thread. It should only be called once
     /// per unique |scheme_name| value. If |scheme_name| is already registered or
     /// if an error occurs this method will return false.
-    pub fn add_custom_scheme(&mut self, scheme_name: &str, options: i32) -> Result<bool> {
+    pub fn add_custom_scheme(&self, scheme_name: &str, options: i32) -> Result<bool> {
         try_c!(self, add_custom_scheme, {
             let scheme_name = CefString::new(scheme_name);
             Ok(add_custom_scheme(self.as_ptr(), scheme_name.as_ptr(), options) == 1)
