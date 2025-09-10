@@ -10,7 +10,7 @@ use crate::{
 use std::mem::zeroed;
 
 // Class that manages custom scheme registrations.
-pub struct SchemeRegistrar(*mut cef_scheme_registrar_t);
+pub struct SchemeRegistrar(pub *mut cef_scheme_registrar_t);
 
 /// Class that manages custom scheme registrations.
 impl SchemeRegistrar {
