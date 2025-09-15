@@ -26,6 +26,7 @@ pub const _DARWIN_FEATURE_ONLY_VERS_1050: u32 = 1;
 pub const _DARWIN_FEATURE_ONLY_UNIX_CONFORMANCE: u32 = 1;
 pub const _DARWIN_FEATURE_UNIX_CONFORMANCE: u32 = 3;
 pub const __has_ptrcheck: u32 = 0;
+pub const __has_bounds_safety_attributes: u32 = 0;
 pub const USE_CLANG_TYPES: u32 = 0;
 pub const __PTHREAD_SIZE__: u32 = 8176;
 pub const __PTHREAD_ATTR_SIZE__: u32 = 56;
@@ -82,18 +83,6 @@ pub const WINT_MAX: u32 = 2147483647;
 pub const SIG_ATOMIC_MIN: i32 = -2147483648;
 pub const SIG_ATOMIC_MAX: u32 = 2147483647;
 pub const CEF_V8_ENABLE_SANDBOX: u32 = 1;
-pub const DYNAMIC_TARGETS_ENABLED: u32 = 0;
-pub const TARGET_OS_MAC: u32 = 1;
-pub const TARGET_OS_OSX: u32 = 1;
-pub const TARGET_OS_IPHONE: u32 = 0;
-pub const TARGET_OS_IOS: u32 = 0;
-pub const TARGET_OS_WATCH: u32 = 0;
-pub const TARGET_OS_TV: u32 = 0;
-pub const TARGET_OS_MACCATALYST: u32 = 0;
-pub const TARGET_OS_UIKITFORMAC: u32 = 0;
-pub const TARGET_OS_SIMULATOR: u32 = 0;
-pub const TARGET_OS_EMBEDDED: u32 = 0;
-pub const TARGET_OS_UNIX: u32 = 0;
 pub const TARGET_OS_RTKIT: u32 = 0;
 pub const TARGET_RT_LITTLE_ENDIAN: u32 = 1;
 pub const TARGET_RT_BIG_ENDIAN: u32 = 0;
@@ -101,11 +90,6 @@ pub const TARGET_RT_64_BIT: u32 = 1;
 pub const TARGET_RT_MAC_CFM: u32 = 0;
 pub const TARGET_RT_MAC_MACHO: u32 = 1;
 pub const TARGET_CPU_ARM64: u32 = 1;
-pub const TARGET_OS_VISION: u32 = 0;
-pub const TARGET_OS_DRIVERKIT: u32 = 0;
-pub const TARGET_OS_WIN32: u32 = 0;
-pub const TARGET_OS_WINDOWS: u32 = 0;
-pub const TARGET_OS_LINUX: u32 = 0;
 pub const TARGET_CPU_PPC: u32 = 0;
 pub const TARGET_CPU_PPC64: u32 = 0;
 pub const TARGET_CPU_68K: u32 = 0;
@@ -115,8 +99,6 @@ pub const TARGET_CPU_ARM: u32 = 0;
 pub const TARGET_CPU_MIPS: u32 = 0;
 pub const TARGET_CPU_SPARC: u32 = 0;
 pub const TARGET_CPU_ALPHA: u32 = 0;
-pub const TARGET_IPHONE_SIMULATOR: u32 = 0;
-pub const TARGET_OS_NANO: u32 = 0;
 pub const OS_MAC: u32 = 1;
 pub const OS_MACOSX: u32 = 1;
 pub const OS_APPLE: u32 = 1;
@@ -247,12 +229,19 @@ pub const __DARWIN_WCHAR_MIN: i32 = -2147483648;
 pub const _FORTIFY_SOURCE: u32 = 2;
 pub const __API_TO_BE_DEPRECATED: u32 = 100000;
 pub const __API_TO_BE_DEPRECATED_MACOS: u32 = 100000;
+pub const __API_TO_BE_DEPRECATED_MACOSAPPLICATIONEXTENSION: u32 = 100000;
 pub const __API_TO_BE_DEPRECATED_IOS: u32 = 100000;
+pub const __API_TO_BE_DEPRECATED_IOSAPPLICATIONEXTENSION: u32 = 100000;
 pub const __API_TO_BE_DEPRECATED_MACCATALYST: u32 = 100000;
+pub const __API_TO_BE_DEPRECATED_MACCATALYSTAPPLICATIONEXTENSION: u32 = 100000;
 pub const __API_TO_BE_DEPRECATED_WATCHOS: u32 = 100000;
+pub const __API_TO_BE_DEPRECATED_WATCHOSAPPLICATIONEXTENSION: u32 = 100000;
 pub const __API_TO_BE_DEPRECATED_TVOS: u32 = 100000;
+pub const __API_TO_BE_DEPRECATED_TVOSAPPLICATIONEXTENSION: u32 = 100000;
 pub const __API_TO_BE_DEPRECATED_DRIVERKIT: u32 = 100000;
 pub const __API_TO_BE_DEPRECATED_VISIONOS: u32 = 100000;
+pub const __API_TO_BE_DEPRECATED_VISIONOSAPPLICATIONEXTENSION: u32 = 100000;
+pub const __API_TO_BE_DEPRECATED_KERNELKIT: u32 = 100000;
 pub const __MAC_10_0: u32 = 1000;
 pub const __MAC_10_1: u32 = 1010;
 pub const __MAC_10_2: u32 = 1020;
@@ -308,15 +297,21 @@ pub const __MAC_13_3: u32 = 130300;
 pub const __MAC_13_4: u32 = 130400;
 pub const __MAC_13_5: u32 = 130500;
 pub const __MAC_13_6: u32 = 130600;
+pub const __MAC_13_7: u32 = 130700;
 pub const __MAC_14_0: u32 = 140000;
 pub const __MAC_14_1: u32 = 140100;
 pub const __MAC_14_2: u32 = 140200;
 pub const __MAC_14_3: u32 = 140300;
 pub const __MAC_14_4: u32 = 140400;
 pub const __MAC_14_5: u32 = 140500;
+pub const __MAC_14_6: u32 = 140600;
+pub const __MAC_14_7: u32 = 140700;
 pub const __MAC_15_0: u32 = 150000;
 pub const __MAC_15_1: u32 = 150100;
 pub const __MAC_15_2: u32 = 150200;
+pub const __MAC_15_3: u32 = 150300;
+pub const __MAC_15_4: u32 = 150400;
+pub const __MAC_15_5: u32 = 150500;
 pub const __IPHONE_2_0: u32 = 20000;
 pub const __IPHONE_2_1: u32 = 20100;
 pub const __IPHONE_2_2: u32 = 20200;
@@ -396,9 +391,14 @@ pub const __IPHONE_17_2: u32 = 170200;
 pub const __IPHONE_17_3: u32 = 170300;
 pub const __IPHONE_17_4: u32 = 170400;
 pub const __IPHONE_17_5: u32 = 170500;
+pub const __IPHONE_17_6: u32 = 170600;
+pub const __IPHONE_17_7: u32 = 170700;
 pub const __IPHONE_18_0: u32 = 180000;
 pub const __IPHONE_18_1: u32 = 180100;
 pub const __IPHONE_18_2: u32 = 180200;
+pub const __IPHONE_18_3: u32 = 180300;
+pub const __IPHONE_18_4: u32 = 180400;
+pub const __IPHONE_18_5: u32 = 180500;
 pub const __WATCHOS_1_0: u32 = 10000;
 pub const __WATCHOS_2_0: u32 = 20000;
 pub const __WATCHOS_2_1: u32 = 20100;
@@ -446,9 +446,14 @@ pub const __WATCHOS_10_2: u32 = 100200;
 pub const __WATCHOS_10_3: u32 = 100300;
 pub const __WATCHOS_10_4: u32 = 100400;
 pub const __WATCHOS_10_5: u32 = 100500;
+pub const __WATCHOS_10_6: u32 = 100600;
+pub const __WATCHOS_10_7: u32 = 100700;
 pub const __WATCHOS_11_0: u32 = 110000;
 pub const __WATCHOS_11_1: u32 = 110100;
 pub const __WATCHOS_11_2: u32 = 110200;
+pub const __WATCHOS_11_3: u32 = 110300;
+pub const __WATCHOS_11_4: u32 = 110400;
+pub const __WATCHOS_11_5: u32 = 110500;
 pub const __TVOS_9_0: u32 = 90000;
 pub const __TVOS_9_1: u32 = 90100;
 pub const __TVOS_9_2: u32 = 90200;
@@ -497,9 +502,13 @@ pub const __TVOS_17_2: u32 = 170200;
 pub const __TVOS_17_3: u32 = 170300;
 pub const __TVOS_17_4: u32 = 170400;
 pub const __TVOS_17_5: u32 = 170500;
+pub const __TVOS_17_6: u32 = 170600;
 pub const __TVOS_18_0: u32 = 180000;
 pub const __TVOS_18_1: u32 = 180100;
 pub const __TVOS_18_2: u32 = 180200;
+pub const __TVOS_18_3: u32 = 180300;
+pub const __TVOS_18_4: u32 = 180400;
+pub const __TVOS_18_5: u32 = 180500;
 pub const __BRIDGEOS_2_0: u32 = 20000;
 pub const __BRIDGEOS_3_0: u32 = 30000;
 pub const __BRIDGEOS_3_1: u32 = 30100;
@@ -526,9 +535,13 @@ pub const __BRIDGEOS_8_2: u32 = 80200;
 pub const __BRIDGEOS_8_3: u32 = 80300;
 pub const __BRIDGEOS_8_4: u32 = 80400;
 pub const __BRIDGEOS_8_5: u32 = 80500;
+pub const __BRIDGEOS_8_6: u32 = 80600;
 pub const __BRIDGEOS_9_0: u32 = 90000;
 pub const __BRIDGEOS_9_1: u32 = 90100;
 pub const __BRIDGEOS_9_2: u32 = 90200;
+pub const __BRIDGEOS_9_3: u32 = 90300;
+pub const __BRIDGEOS_9_4: u32 = 90400;
+pub const __BRIDGEOS_9_5: u32 = 90500;
 pub const __DRIVERKIT_19_0: u32 = 190000;
 pub const __DRIVERKIT_20_0: u32 = 200000;
 pub const __DRIVERKIT_21_0: u32 = 210000;
@@ -542,15 +555,23 @@ pub const __DRIVERKIT_23_2: u32 = 230200;
 pub const __DRIVERKIT_23_3: u32 = 230300;
 pub const __DRIVERKIT_23_4: u32 = 230400;
 pub const __DRIVERKIT_23_5: u32 = 230500;
+pub const __DRIVERKIT_23_6: u32 = 230600;
 pub const __DRIVERKIT_24_0: u32 = 240000;
 pub const __DRIVERKIT_24_1: u32 = 240100;
 pub const __DRIVERKIT_24_2: u32 = 240200;
+pub const __DRIVERKIT_24_3: u32 = 240300;
+pub const __DRIVERKIT_24_4: u32 = 240400;
+pub const __DRIVERKIT_24_5: u32 = 240500;
 pub const __VISIONOS_1_0: u32 = 10000;
 pub const __VISIONOS_1_1: u32 = 10100;
 pub const __VISIONOS_1_2: u32 = 10200;
+pub const __VISIONOS_1_3: u32 = 10300;
 pub const __VISIONOS_2_0: u32 = 20000;
 pub const __VISIONOS_2_1: u32 = 20100;
 pub const __VISIONOS_2_2: u32 = 20200;
+pub const __VISIONOS_2_3: u32 = 20300;
+pub const __VISIONOS_2_4: u32 = 20400;
+pub const __VISIONOS_2_5: u32 = 20500;
 pub const MAC_OS_X_VERSION_10_0: u32 = 1000;
 pub const MAC_OS_X_VERSION_10_1: u32 = 1010;
 pub const MAC_OS_X_VERSION_10_2: u32 = 1020;
@@ -606,16 +627,25 @@ pub const MAC_OS_VERSION_13_3: u32 = 130300;
 pub const MAC_OS_VERSION_13_4: u32 = 130400;
 pub const MAC_OS_VERSION_13_5: u32 = 130500;
 pub const MAC_OS_VERSION_13_6: u32 = 130600;
+pub const MAC_OS_VERSION_13_7: u32 = 130700;
 pub const MAC_OS_VERSION_14_0: u32 = 140000;
 pub const MAC_OS_VERSION_14_1: u32 = 140100;
 pub const MAC_OS_VERSION_14_2: u32 = 140200;
 pub const MAC_OS_VERSION_14_3: u32 = 140300;
 pub const MAC_OS_VERSION_14_4: u32 = 140400;
 pub const MAC_OS_VERSION_14_5: u32 = 140500;
+pub const MAC_OS_VERSION_14_6: u32 = 140600;
+pub const MAC_OS_VERSION_14_7: u32 = 140700;
 pub const MAC_OS_VERSION_15_0: u32 = 150000;
 pub const MAC_OS_VERSION_15_1: u32 = 150100;
 pub const MAC_OS_VERSION_15_2: u32 = 150200;
-pub const __MAC_OS_X_VERSION_MAX_ALLOWED: u32 = 150200;
+pub const MAC_OS_VERSION_15_3: u32 = 150300;
+pub const MAC_OS_VERSION_15_4: u32 = 150400;
+pub const MAC_OS_VERSION_15_5: u32 = 150500;
+pub const __AVAILABILITY_VERSIONS_VERSION_HASH: u32 = 93585900;
+pub const __AVAILABILITY_VERSIONS_VERSION_STRING: &[u8; 6] = b"Local\0";
+pub const __AVAILABILITY_FILE: &[u8; 23] = b"AvailabilityVersions.h\0";
+pub const __MAC_OS_X_VERSION_MAX_ALLOWED: u32 = 150500;
 pub const __ENABLE_LEGACY_MAC_AVAILABILITY: u32 = 1;
 pub const USE_CLANG_STDDEF: u32 = 0;
 pub const TIME_UTC: u32 = 1;
@@ -965,6 +995,7 @@ pub const _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS: u32 = 35;
 pub const _CS_DARWIN_USER_DIR: u32 = 65536;
 pub const _CS_DARWIN_USER_TEMP_DIR: u32 = 65537;
 pub const _CS_DARWIN_USER_CACHE_DIR: u32 = 65538;
+pub const L_ctermid: u32 = 1024;
 pub const F_ULOCK: u32 = 0;
 pub const F_LOCK: u32 = 1;
 pub const F_TLOCK: u32 = 2;
@@ -976,17 +1007,17 @@ pub const SYNC_VOLUME_FULLSYNC: u32 = 1;
 pub const SYNC_VOLUME_WAIT: u32 = 2;
 pub const kInvalidPlatformThreadId: u32 = 0;
 pub const kInvalidPlatformThreadHandle: u32 = 0;
-pub const CEF_VERSION: &[u8; 41] = b"131.4.1+g437feba+chromium-131.0.6778.265\0";
-pub const CEF_VERSION_MAJOR: u32 = 131;
-pub const CEF_VERSION_MINOR: u32 = 4;
-pub const CEF_VERSION_PATCH: u32 = 1;
-pub const CEF_COMMIT_NUMBER: u32 = 3111;
-pub const CEF_COMMIT_HASH: &[u8; 41] = b"437feba0099fe581b25c41ad49e1f1ed935a38bd\0";
+pub const CEF_VERSION: &[u8; 41] = b"132.3.2+g4997b2f+chromium-132.0.6834.161\0";
+pub const CEF_VERSION_MAJOR: u32 = 132;
+pub const CEF_VERSION_MINOR: u32 = 3;
+pub const CEF_VERSION_PATCH: u32 = 2;
+pub const CEF_COMMIT_NUMBER: u32 = 3117;
+pub const CEF_COMMIT_HASH: &[u8; 41] = b"4997b2f0c8b83884034ff07a019158cfcef2eea8\0";
 pub const COPYRIGHT_YEAR: u32 = 2025;
-pub const CHROME_VERSION_MAJOR: u32 = 131;
+pub const CHROME_VERSION_MAJOR: u32 = 132;
 pub const CHROME_VERSION_MINOR: u32 = 0;
-pub const CHROME_VERSION_BUILD: u32 = 6778;
-pub const CHROME_VERSION_PATCH: u32 = 265;
+pub const CHROME_VERSION_BUILD: u32 = 6834;
+pub const CHROME_VERSION_PATCH: u32 = 161;
 pub type int_least8_t = i8;
 pub type int_least16_t = i16;
 pub type int_least32_t = i32;
@@ -1506,9 +1537,9 @@ extern "C" {
 extern "C" {
     pub fn strftime(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: usize,
-        arg3: *const ::std::os::raw::c_char,
-        arg4: *const tm
+        __maxsize: usize,
+        arg2: *const ::std::os::raw::c_char,
+        arg3: *const tm
     ) -> usize;
 }
 extern "C" {
@@ -1817,6 +1848,23 @@ pub enum cef_color_type_t {
     CEF_COLOR_TYPE_RGBA_8888 = 0,
     CEF_COLOR_TYPE_BGRA_8888 = 1
 }
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct _cef_accelerated_paint_info_common_t {
+    pub timestamp:               u64,
+    pub coded_size:              cef_size_t,
+    pub visible_rect:            cef_rect_t,
+    pub content_rect:            cef_rect_t,
+    pub source_size:             cef_size_t,
+    pub capture_update_rect:     cef_rect_t,
+    pub region_capture_rect:     cef_rect_t,
+    pub capture_counter:         u64,
+    pub has_capture_update_rect: u8,
+    pub has_region_capture_rect: u8,
+    pub has_source_size:         u8,
+    pub has_capture_counter:     u8
+}
+pub type cef_accelerated_paint_info_common_t = _cef_accelerated_paint_info_common_t;
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum cef_runtime_style_t {
@@ -1849,7 +1897,8 @@ pub type cef_window_info_t = _cef_window_info_t;
 #[derive(Debug, Copy, Clone)]
 pub struct _cef_accelerated_paint_info_t {
     pub shared_texture_io_surface: *mut ::std::os::raw::c_void,
-    pub format:                    cef_color_type_t
+    pub format:                    cef_color_type_t,
+    pub extra:                     cef_accelerated_paint_info_common_t
 }
 pub type cef_accelerated_paint_info_t = _cef_accelerated_paint_info_t;
 pub type cef_color_t = u32;
@@ -8974,7 +9023,7 @@ extern "C" {
     ) -> ::std::os::raw::c_long;
 }
 extern "C" {
-    pub fn getcwd(arg1: *mut ::std::os::raw::c_char, arg2: usize) -> *mut ::std::os::raw::c_char;
+    pub fn getcwd(arg1: *mut ::std::os::raw::c_char, __size: usize) -> *mut ::std::os::raw::c_char;
 }
 extern "C" {
     pub fn getegid() -> gid_t;
@@ -8986,7 +9035,10 @@ extern "C" {
     pub fn getgid() -> gid_t;
 }
 extern "C" {
-    pub fn getgroups(arg1: ::std::os::raw::c_int, arg2: *mut gid_t) -> ::std::os::raw::c_int;
+    pub fn getgroups(
+        __gidsetsize: ::std::os::raw::c_int,
+        arg1: *mut gid_t
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn getlogin() -> *mut ::std::os::raw::c_char;
@@ -9031,7 +9083,7 @@ extern "C" {
     pub fn read(
         arg1: ::std::os::raw::c_int,
         arg2: *mut ::std::os::raw::c_void,
-        arg3: usize
+        __nbyte: usize
     ) -> isize;
 }
 extern "C" {
@@ -9068,7 +9120,7 @@ extern "C" {
     pub fn ttyname_r(
         arg1: ::std::os::raw::c_int,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: usize
+        __len: usize
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9085,14 +9137,14 @@ extern "C" {
     pub fn confstr(
         arg1: ::std::os::raw::c_int,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: usize
+        __len: usize
     ) -> usize;
 }
 extern "C" {
     pub fn getopt(
-        arg1: ::std::os::raw::c_int,
-        arg2: *const *mut ::std::os::raw::c_char,
-        arg3: *const ::std::os::raw::c_char
+        __argc: ::std::os::raw::c_int,
+        arg1: *const *mut ::std::os::raw::c_char,
+        arg2: *const ::std::os::raw::c_char
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9198,7 +9250,7 @@ extern "C" {
     pub fn swab(
         arg1: *const ::std::os::raw::c_void,
         arg2: *mut ::std::os::raw::c_void,
-        arg3: isize
+        __nbytes: isize
     );
 }
 extern "C" {
@@ -9223,19 +9275,23 @@ extern "C" {
     pub fn ftruncate(arg1: ::std::os::raw::c_int, arg2: off_t) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn getlogin_r(arg1: *mut ::std::os::raw::c_char, arg2: usize) -> ::std::os::raw::c_int;
+    pub fn getlogin_r(arg1: *mut ::std::os::raw::c_char, __namelen: usize)
+    -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn fchown(arg1: ::std::os::raw::c_int, arg2: uid_t, arg3: gid_t) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn gethostname(arg1: *mut ::std::os::raw::c_char, arg2: usize) -> ::std::os::raw::c_int;
+    pub fn gethostname(
+        arg1: *mut ::std::os::raw::c_char,
+        __namelen: usize
+    ) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn readlink(
         arg1: *const ::std::os::raw::c_char,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: usize
+        __bufsize: usize
     ) -> isize;
 }
 extern "C" {
@@ -9297,9 +9353,9 @@ extern "C" {
 extern "C" {
     pub fn accessx_np(
         arg1: *const accessx_descriptor,
-        arg2: usize,
-        arg3: *mut ::std::os::raw::c_int,
-        arg4: uid_t
+        __sz: usize,
+        arg2: *mut ::std::os::raw::c_int,
+        arg3: uid_t
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9308,9 +9364,9 @@ extern "C" {
 extern "C" {
     pub fn add_profil(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: usize,
-        arg3: ::std::os::raw::c_ulong,
-        arg4: ::std::os::raw::c_uint
+        __bufsiz: usize,
+        arg2: ::std::os::raw::c_ulong,
+        arg3: ::std::os::raw::c_uint
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9329,7 +9385,7 @@ extern "C" {
 extern "C" {
     pub fn getdomainname(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: ::std::os::raw::c_int
+        __namelen: ::std::os::raw::c_int
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9337,7 +9393,7 @@ extern "C" {
         arg1: *const ::std::os::raw::c_char,
         arg2: ::std::os::raw::c_int,
         arg3: *mut ::std::os::raw::c_int,
-        arg4: *mut ::std::os::raw::c_int
+        __ngroups: *mut ::std::os::raw::c_int
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9462,9 +9518,9 @@ extern "C" {
 extern "C" {
     pub fn profil(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: usize,
-        arg3: ::std::os::raw::c_ulong,
-        arg4: ::std::os::raw::c_uint
+        __bufsiz: usize,
+        arg2: ::std::os::raw::c_ulong,
+        arg3: ::std::os::raw::c_uint
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9537,7 +9593,7 @@ extern "C" {
 extern "C" {
     pub fn setdomainname(
         arg1: *const ::std::os::raw::c_char,
-        arg2: ::std::os::raw::c_int
+        __namelen: ::std::os::raw::c_int
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9549,7 +9605,7 @@ extern "C" {
 extern "C" {
     pub fn sethostname(
         arg1: *const ::std::os::raw::c_char,
-        arg2: ::std::os::raw::c_int
+        __namelen: ::std::os::raw::c_int
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9602,7 +9658,7 @@ extern "C" {
     pub fn unwhiteout(arg1: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn valloc(arg1: usize) -> *mut ::std::os::raw::c_void;
+    pub fn valloc(__size: usize) -> *mut ::std::os::raw::c_void;
 }
 extern "C" {
     pub fn syscall(arg1: ::std::os::raw::c_int, ...) -> ::std::os::raw::c_int;
@@ -9622,8 +9678,8 @@ extern "C" {
         arg1: ::std::os::raw::c_int,
         arg2: *mut ::std::os::raw::c_void,
         arg3: *mut ::std::os::raw::c_void,
-        arg4: usize,
-        arg5: ::std::os::raw::c_uint
+        __attrBufSize: usize,
+        arg4: ::std::os::raw::c_uint
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9631,8 +9687,8 @@ extern "C" {
         arg1: ::std::os::raw::c_int,
         arg2: *mut ::std::os::raw::c_void,
         arg3: *mut ::std::os::raw::c_void,
-        arg4: usize,
-        arg5: ::std::os::raw::c_uint
+        __attrBufSize: usize,
+        arg4: ::std::os::raw::c_uint
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9640,8 +9696,8 @@ extern "C" {
         arg1: *const ::std::os::raw::c_char,
         arg2: *mut ::std::os::raw::c_void,
         arg3: *mut ::std::os::raw::c_void,
-        arg4: usize,
-        arg5: ::std::os::raw::c_uint
+        __attrBufSize: usize,
+        arg4: ::std::os::raw::c_uint
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9649,8 +9705,8 @@ extern "C" {
         arg1: *const ::std::os::raw::c_char,
         arg2: *mut ::std::os::raw::c_void,
         arg3: *mut ::std::os::raw::c_void,
-        arg4: usize,
-        arg5: ::std::os::raw::c_uint
+        __attrBufSize: usize,
+        arg4: ::std::os::raw::c_uint
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -9665,11 +9721,11 @@ extern "C" {
         arg1: ::std::os::raw::c_int,
         arg2: *mut ::std::os::raw::c_void,
         arg3: *mut ::std::os::raw::c_void,
-        arg4: usize,
+        __attrBufSize: usize,
+        arg4: *mut ::std::os::raw::c_uint,
         arg5: *mut ::std::os::raw::c_uint,
         arg6: *mut ::std::os::raw::c_uint,
-        arg7: *mut ::std::os::raw::c_uint,
-        arg8: ::std::os::raw::c_uint
+        arg7: ::std::os::raw::c_uint
     ) -> ::std::os::raw::c_int;
 }
 #[repr(C)]
