@@ -52,7 +52,6 @@ jobs:
         cd ./artifacts
         tar -xjf ${{ matrix.archive_name }}
         mv cef_binary_*/* .
-        rmdir cef_binary_*
         ls ../artifacts
         
     - name: Process CEF artifacts
