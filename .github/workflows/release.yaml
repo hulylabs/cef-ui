@@ -52,24 +52,15 @@ jobs:
           ${{ matrix.extract_cmd }} *.tar
         fi
         mv cef_binary_*/* .
-        ls ../artifacts
         
     - name: Process CEF artifacts
       run: cargo cef-artifacts
-      
-    - name: Create artifact
-      run: |
-        ls
-        cd artifacts/cef
-        ${{ matrix.compress_cmd }} ${{ matrix.artifact_name }}.zip *
-        ls
         
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact_name }}
-        path: artifacts/cef/${{ matrix.artifact_name }}.zip
-
+        path: artifacts/cef/*
   # release:
   #   needs: [build]
   #   runs-on: ubuntu-latest
