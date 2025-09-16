@@ -50,7 +50,7 @@ jobs:
       
     - name: Download macOS ARM64 CEF build
       run: |
-        curl --retry 3 --retry-delay 10 --connect-timeout 60 --max-time 3600 \
+        curl  --http1.1 --retry 3 --retry-delay 10 --connect-timeout 60 --max-time 3600 \
           "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_macosarm64_minimal.tar.bz2" \
           -o ./artifacts/cef_macosarm64.tar.bz2
           
