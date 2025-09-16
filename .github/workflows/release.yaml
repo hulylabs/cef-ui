@@ -59,8 +59,10 @@ jobs:
       
     - name: Create artifact
       run: |
+        ls
         cd artifacts/cef
         ${{ matrix.compress_cmd }} ${{ matrix.artifact_name }}.zip *
+        ls
         
     - name: Upload artifact
       uses: actions/upload-artifact@v4
