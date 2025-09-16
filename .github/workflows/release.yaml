@@ -6,116 +6,71 @@ on:
       - release/v*
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build:
+    strategy:
+      matrix:
+        include:
+          - platform: windows
+            os: windows-latest
+            url: "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_windows64_minimal.tar.bz2"
+            archive_name: cef_windows64.tar.bz2
+            artifact_name: cef-windows-x86_64
+            compress_cmd: "7z a -tzip"
+            mkdir_cmd: "mkdir"
+            
+          - platform: macos
+            os: macos-latest
+            url: "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_macosarm64_minimal.tar.bz2"
+            archive_name: cef_macosarm64.tar.bz2
+            artifact_name: cef-macos-arm64
+            compress_cmd: "zip -r"
+            mkdir_cmd: "mkdir -p"
+            curl_opts: "--http1.1 --retry 3 --retry-delay 10 --connect-timeout 60 --max-time 3600"
+            
+          - platform: linux
+            os: ubuntu-latest
+            url: "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_linux64_minimal.tar.bz2"
+            archive_name: cef_linux64.tar.bz2
+            artifact_name: cef-linux-x86_64
+            compress_cmd: "zip -r"
+            mkdir_cmd: "mkdir -p"
+            
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
     - name: Create artifacts directory
-      run: mkdir artifacts
+      run: ${{ matrix.mkdir_cmd }} ./artifacts
       
-    - name: Download Windows CEF build
+    - name: Download CEF build
       run: |
-        curl -L "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_windows64_minimal.tar.bz2" -o artifacts/cef_windows64.tar.bz2
-        
-    - name: Extract archive
-      run: |
-        cd artifacts
-        tar -xjf cef_windows64.tar.bz2
-        ls ../artifacts
-        
-    - name: Process CEF artifacts
-      run: cargo cef-artifacts
-      
-    - name: Create Windows artifact
-      run: |
-        cd artifacts/cef
-        7z a -tzip ../cef-windows-x86_64.zip *
-        
-    - name: Upload Windows artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: cef-windows-x86_64
-        path: artifacts/cef-windows-x86_64.zip
-
-  build-macos:
-    runs-on: macos-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Create artifacts directory
-      run: mkdir -p ./artifacts
-      
-    - name: Download macOS ARM64 CEF build
-      run: |
-        curl  --http1.1 --retry 3 --retry-delay 10 --connect-timeout 60 --max-time 3600 \
-          "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_macosarm64_minimal.tar.bz2" \
-          -o ./artifacts/cef_macosarm64.tar.bz2
+        curl -L ${{ matrix.curl_opts }} "${{ matrix.url }}" -o ./artifacts/${{ matrix.archive_name }}
           
     - name: Extract archive
       run: |
         cd ./artifacts
-        tar -xjf cef_macosarm64.tar.bz2
+        tar -xjf ${{ matrix.archive_name }}
+        mv cef_binary_*/* .
+        rmdir cef_binary_*
         ls ../artifacts
         
     - name: Process CEF artifacts
       run: cargo cef-artifacts
       
-    - name: Create macOS artifact
+    - name: Create artifact
       run: |
         cd ./artifacts/cef
-        zip -r ../cef-macos-arm64.zip *
+        ${{ matrix.compress_cmd }} ../${{ matrix.artifact_name }}.zip *
         
-    - name: Upload macOS artifact
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: cef-macos-arm64
-        path: ./artifacts/cef-macos-arm64.zip
-
-  build-linux:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        
-    - name: Create artifacts directory
-      run: mkdir -p ./artifacts
-      
-    - name: Download Linux CEF build
-      run: |
-        curl -L "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_linux64_minimal.tar.bz2" \
-          -o ./artifacts/cef_linux64.tar.bz2
-          
-    - name: Extract archive
-      run: |
-        cd ./artifacts
-        tar -xjf cef_linux64.tar.bz2
-        ls ../artifacts
-        
-    - name: Process CEF artifacts
-      run: cargo cef-artifacts
-      
-    - name: Create Linux artifact
-      run: |
-        cd ./artifacts/cef
-        zip -r ../cef-linux-x86_64.zip *
-        
-    - name: Upload Linux artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: cef-linux-x86_64
-        path: ./artifacts/cef-linux-x86_64.zip
+        name: ${{ matrix.artifact_name }}
+        path: ./artifacts/${{ matrix.artifact_name }}.zip
 
   # release:
-  #   needs: [build-windows, build-macos, build-linux]
+  #   needs: [build]
   #   runs-on: ubuntu-latest
   #   steps:
   #   - name: Download all artifacts
