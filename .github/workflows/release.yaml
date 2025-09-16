@@ -23,6 +23,7 @@ jobs:
       run: |
         cd artifacts
         tar -xjf cef_windows64.tar.bz2
+        ls ../artifacts
         
     - name: Process CEF artifacts
       run: cargo cef-artifacts
@@ -49,13 +50,15 @@ jobs:
       
     - name: Download macOS ARM64 CEF build
       run: |
-        curl -L "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_macosarm64_minimal.tar.bz2" \
+        curl --retry 3 --retry-delay 10 --connect-timeout 60 --max-time 3600 \
+          "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_macosarm64_minimal.tar.bz2" \
           -o ./artifacts/cef_macosarm64.tar.bz2
           
     - name: Extract archive
       run: |
         cd ./artifacts
         tar -xjf cef_macosarm64.tar.bz2
+        ls ../artifacts
         
     - name: Process CEF artifacts
       run: cargo cef-artifacts
@@ -95,6 +98,7 @@ jobs:
       run: |
         cd ./artifacts
         tar -xjf cef_linux64.tar.bz2
+        ls ../artifacts
         
     - name: Process CEF artifacts
       run: cargo cef-artifacts
