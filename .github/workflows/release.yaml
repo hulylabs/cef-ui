@@ -1,0 +1,138 @@
+name: Release CEF Artifacts
+
+on:
+  push:
+    branches:
+      - release/v*
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Create artifacts directory
+      run: mkdir artifacts
+      
+    - name: Download Windows CEF build
+      run: |
+        curl -L "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_windows64_minimal.tar.bz2" -o artifacts/cef_windows64.tar.bz2
+        
+    - name: Extract archive
+      run: |
+        cd artifacts
+        tar -xjf cef_windows64.tar.bz2
+        
+    - name: Process CEF artifacts
+      run: cargo cef-artifacts
+      
+    - name: Create Windows artifact
+      run: |
+        cd artifacts/cef
+        7z a -tzip ../cef-windows-x86_64.zip *
+        
+    - name: Upload Windows artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cef-windows-x86_64
+        path: artifacts/cef-windows-x86_64.zip
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Create artifacts directory
+      run: mkdir -p ./artifacts
+      
+    - name: Download macOS ARM64 CEF build
+      run: |
+        curl -L "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_macosarm64_minimal.tar.bz2" \
+          -o ./artifacts/cef_macosarm64.tar.bz2
+          
+    - name: Extract archive
+      run: |
+        cd ./artifacts
+        tar -xjf cef_macosarm64.tar.bz2
+        
+    - name: Process CEF artifacts
+      run: cargo cef-artifacts
+      
+    - name: Create macOS artifact
+      run: |
+        cd ./artifacts/cef
+        zip -r ../cef-macos-arm64.zip *
+        
+    - name: Upload macOS artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cef-macos-arm64
+        path: ./artifacts/cef-macos-arm64.zip
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        
+    - name: Create artifacts directory
+      run: mkdir -p ./artifacts
+      
+    - name: Download Linux CEF build
+      run: |
+        curl -L "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_linux64_minimal.tar.bz2" \
+          -o ./artifacts/cef_linux64.tar.bz2
+          
+    - name: Extract archive
+      run: |
+        cd ./artifacts
+        tar -xjf cef_linux64.tar.bz2
+        
+    - name: Process CEF artifacts
+      run: cargo cef-artifacts
+      
+    - name: Create Linux artifact
+      run: |
+        cd ./artifacts/cef
+        zip -r ../cef-linux-x86_64.zip *
+        
+    - name: Upload Linux artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cef-linux-x86_64
+        path: ./artifacts/cef-linux-x86_64.zip
+
+  # release:
+  #   needs: [build-windows, build-macos, build-linux]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Download all artifacts
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       path: ./artifacts
+        
+  #   - name: Create GitHub Release
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     run: |
+  #       # Get the tag name or create one based on timestamp
+  #       if [[ $GITHUB_REF == refs/tags/* ]]; then
+  #         TAG_NAME=${GITHUB_REF#refs/tags/}
+  #       else
+  #         TAG_NAME="cef-132.3.2-$(date +%Y%m%d-%H%M%S)"
+  #       fi
+        
+  #       gh release create "$TAG_NAME" \
+  #         --title "CEF 132.3.2 Artifacts" \
+  #         --notes "Pre-built CEF 132.3.2 artifacts for Windows x86_64, macOS ARM64, and Linux x86_64" \
+  #         ./artifacts/cef-windows-x86_64/cef-windows-x86_64.zip \
+  #         ./artifacts/cef-macos-arm64/cef-macos-arm64.zip \
+  #         ./artifacts/cef-linux-x86_64/cef-linux-x86_64.zip
