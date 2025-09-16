@@ -8,7 +8,7 @@ on:
 defaults:
   run:
     shell: bash
-    
+
 jobs:
   build:
     strategy:
@@ -42,11 +42,11 @@ jobs:
       
     - name: Download CEF build
       run: |
-        curl -L --http1.1 "${{ matrix.url }}" -o ./artifacts/cef.tar.bz2
+        curl -L --http1.1 "${{ matrix.url }}" -o artifacts/cef.tar.bz2
           
     - name: Extract archive
       run: |
-        cd ./artifacts
+        cd artifacts
         ${{ matrix.extract_cmd }} cef.tar.bz2    
         if [ "${{ matrix.os }}" = "windows-latest" ]; then
           ${{ matrix.extract_cmd }} *.tar
@@ -59,14 +59,14 @@ jobs:
       
     - name: Create artifact
       run: |
-        cd ./artifacts/cef
-        ${{ matrix.compress_cmd }} ../${{ matrix.artifact_name }}.zip *
+        cd artifacts/cef
+        ${{ matrix.compress_cmd }} ${{ matrix.artifact_name }}.zip *
         
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact_name }}
-        path: ./artifacts/${{ matrix.artifact_name }}.zip
+        path: artifacts/cef/${{ matrix.artifact_name }}.zip
 
   # release:
   #   needs: [build]
