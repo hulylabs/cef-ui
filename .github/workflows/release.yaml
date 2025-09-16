@@ -10,30 +10,23 @@ jobs:
     strategy:
       matrix:
         include:
-          - platform: windows
-            os: windows-latest
+          - os: windows-latest
             url: "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_windows64_minimal.tar.bz2"
-            archive_name: cef_windows64.tar.bz2
             artifact_name: cef-windows-x86_64
+            extract_cmd: "7z x"
             compress_cmd: "7z a -tzip"
-            mkdir_cmd: "mkdir"
             
-          - platform: macos
-            os: macos-latest
+          - os: macos-latest
             url: "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_macosarm64_minimal.tar.bz2"
-            archive_name: cef_macosarm64.tar.bz2
             artifact_name: cef-macos-arm64
+            extract_cmd: "tar -xjf"
             compress_cmd: "zip -r"
-            mkdir_cmd: "mkdir -p"
-            curl_opts: "--http1.1 --retry 3 --retry-delay 10 --connect-timeout 60 --max-time 3600"
             
-          - platform: linux
-            os: ubuntu-latest
+          - os: ubuntu-latest
             url: "https://cef-builds.spotifycdn.com/cef_binary_132.3.2%2Bg4997b2f%2Bchromium-132.0.6834.161_linux64_minimal.tar.bz2"
-            archive_name: cef_linux64.tar.bz2
             artifact_name: cef-linux-x86_64
+            extract_cmd: "tar -xjf"
             compress_cmd: "zip -r"
-            mkdir_cmd: "mkdir -p"
             
     runs-on: ${{ matrix.os }}
     steps:
@@ -41,16 +34,17 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Create artifacts directory
-      run: ${{ matrix.mkdir_cmd }} ./artifacts
+      run: mkdir artifacts
       
     - name: Download CEF build
       run: |
-        curl -L ${{ matrix.curl_opts }} "${{ matrix.url }}" -o ./artifacts/${{ matrix.archive_name }}
+        curl -L --http1.1 "${{ matrix.url }}" -o ./artifacts/cef.tar.bz2
           
     - name: Extract archive
       run: |
         cd ./artifacts
-        tar -xjf ${{ matrix.archive_name }}
+        ${{ matrix.extract_cmd }} cef.tar.bz2
+        ${{ matrix.extract_cmd }} *.tar
         mv cef_binary_*/* .
         ls ../artifacts
         
