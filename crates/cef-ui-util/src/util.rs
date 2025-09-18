@@ -50,6 +50,11 @@ pub fn download_file(url: &str, path: &Path) -> Result<()> {
     Ok(())
 }
 
+pub fn download(url: &str) -> Result<Vec<u8>> {
+    let response = get(url)?;
+    Ok(response.bytes()?.to_vec())
+}
+
 /// Extract a tar gzipped file.
 pub fn extract_tar_gz(file: &Path, dir: &Path) -> Result<()> {
     let file = File::open(file)?;
@@ -61,10 +66,8 @@ pub fn extract_tar_gz(file: &Path, dir: &Path) -> Result<()> {
     Ok(())
 }
 
-pub fn extract_zip(file: &Path, dir: &Path) -> Result<()> {
-    let file = File::open(file)?;
-    let mut archive = zip::ZipArchive::new(file)?;
-
+pub fn extract_zip(data: &[u8], dir: &Path) -> Result<()> {
+    let mut archive = zip::ZipArchive::new(Cursor::new(data))?;
     archive.extract(dir)?;
 
     Ok(())

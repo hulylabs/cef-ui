@@ -16,7 +16,7 @@ fn main() -> Result<()> {
         println!("cargo:rustc-link-lib=dylib=cef");
     }
 
-    // Linker flags on arm64 macOS.
+    // Linker flags on macOS.
     #[cfg(target_os = "macos")]
     {
         // Link dynamically to the CEF framework.

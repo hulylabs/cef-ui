@@ -1,4 +1,4 @@
-use crate::{download_file, extract_zip};
+use crate::{download, extract_zip};
 use anyhow::Result;
 use std::{fs::create_dir_all, path::Path};
 
@@ -11,7 +11,7 @@ const CEF_URL: &str =
     "https://github.com/hulylabs/cef-ui/releases/latest/download/cef-linux-x86_64.zip";
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 const CEF_URL: &str =
-    "https://github.com/hulylabs/cef-ui/releases/latest/download/cef-macos-x86_64.zip";
+    "https://github.com/hulylabs/cef-ui/releases/latest/download/cef-macos-arm64.zip";
 #[cfg(all(target_os = "macos", target_arch = "x86_64"))]
 const CEF_URL: &str =
     "https://github.com/hulylabs/cef-ui/releases/latest/download/cef-macos-x86_64.zip";
@@ -29,10 +29,8 @@ pub fn download_and_extract_cef(dir: &Path) -> Result<()> {
     // Create the new directory.
     create_dir_all(dir)?;
 
-    let path = dir.join("cef.zip");
-
-    download_file(&CEF_URL, &path)?;
-    extract_zip(&path, dir)?;
+    let data = download(&CEF_URL)?;
+    extract_zip(&data, dir)?;
 
     Ok(())
 }
