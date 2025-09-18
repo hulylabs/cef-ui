@@ -61,6 +61,15 @@ pub fn extract_tar_gz(file: &Path, dir: &Path) -> Result<()> {
     Ok(())
 }
 
+pub fn extract_zip(file: &Path, dir: &Path) -> Result<()> {
+    let file = File::open(file)?;
+    let mut archive = zip::ZipArchive::new(file)?;
+
+    archive.extract(dir)?;
+
+    Ok(())
+}
+
 /// Extract a bzip2 file.
 pub fn extract_bz2(file: &Path, dir: &Path) -> Result<()> {
     let file = File::open(file)?;

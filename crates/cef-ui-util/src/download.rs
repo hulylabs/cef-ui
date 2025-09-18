@@ -1,27 +1,27 @@
-use crate::{download_file, extract_tar_gz};
+use crate::{download_file, extract_zip};
 use anyhow::Result;
-use std::{
-    env::consts::{ARCH, OS},
-    fs::create_dir_all,
-    path::Path
-};
+use std::{fs::create_dir_all, path::Path};
 
 /// The current CEF version.
 pub const CEF_VERSION: &str = "v0.1.0";
 
 /// Returns the platform-specific CEF artifacts url.
-pub fn get_cef_url() -> String {
-    format!(
-        "https://github.com/hytopiagg/cef-ui/releases/download/cef-artifacts-{}/cef-{}-{}.tgz",
-        CEF_VERSION, OS, ARCH
-    )
-}
+#[cfg(target_os = "linux")]
+const CEF_URL: &str =
+    "https://github.com/hulylabs/cef-ui/releases/latest/download/cef-linux-x86_64.zip";
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+const CEF_URL: &str =
+    "https://github.com/hulylabs/cef-ui/releases/latest/download/cef-macos-x86_64.zip";
+#[cfg(all(target_os = "macos", target_arch = "x86_64"))]
+const CEF_URL: &str =
+    "https://github.com/hulylabs/cef-ui/releases/latest/download/cef-macos-x86_64.zip";
+#[cfg(target_os = "windows")]
+const CEF_URL: &str =
+    "https://github.com/hulylabs/cef-ui/releases/latest/download/cef-windows-x86_64.zip";
 
 /// Downloads the tarball, untars it, and decompresses it. If the
 /// target directory exists, then this function does nothing.
 pub fn download_and_extract_cef(dir: &Path) -> Result<()> {
-    let url = get_cef_url();
-
     if dir.exists() {
         return Ok(());
     }
@@ -29,10 +29,10 @@ pub fn download_and_extract_cef(dir: &Path) -> Result<()> {
     // Create the new directory.
     create_dir_all(dir)?;
 
-    let path = dir.join("cef.tgz");
+    let path = dir.join("cef.zip");
 
-    download_file(&url, &path)?;
-    extract_tar_gz(&path, dir)?;
+    download_file(&CEF_URL, &path)?;
+    extract_zip(&path, dir)?;
 
     Ok(())
 }

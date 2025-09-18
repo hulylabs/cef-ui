@@ -1,6 +1,10 @@
 use anyhow::Result;
+use cef_ui_util::{download_and_extract_cef, get_cef_artifacts_dir};
 
 fn main() -> Result<()> {
+    let artifacts_dir = get_cef_artifacts_dir()?;
+    download_and_extract_cef(&artifacts_dir)?;
+
     if std::env::var("CARGO_FEATURE_NO_CEF_LINK").is_ok() {
         return Ok(());
     }
@@ -13,7 +17,7 @@ fn main() -> Result<()> {
     }
 
     // Linker flags on arm64 macOS.
-    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    #[cfg(target_os = "macos")]
     {
         // Link dynamically to the CEF framework.
         println!("cargo:rustc-link-lib=framework=Chromium Embedded Framework");
