@@ -22,7 +22,7 @@ pub fn link_cef() -> Result<()> {
     }
 
     // Linker flags on arm64 macOS.
-    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    #[cfg(target_os = "macos")]
     {
         // This tells Rust where to find the CEF framework at compile time.
         println!(
