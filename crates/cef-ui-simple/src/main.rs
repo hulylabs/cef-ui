@@ -1,11 +1,13 @@
 use anyhow::Result;
 use cef_ui::{
-    App, AppCallbacks, Browser, BrowserHost, BrowserProcessHandler, BrowserSettings, Client,
-    ClientCallbacks, CommandLine, Context, ContextMenuHandler, ContextMenuHandlerCallbacks,
-    ContextMenuParams, DictionaryValue, EventFlags, Frame, KeyboardHandler, LifeSpanHandler,
-    LifeSpanHandlerCallbacks, LogSeverity, MainArgs, MenuCommandId, MenuModel, Point,
-    PopupFeatures, QuickMenuEditStateFlags, RenderHandler, RunContextMenuCallback,
-    RunQuickMenuCallback, Settings, Size, WindowInfo, WindowOpenDisposition
+    App, AppCallbacks, BeforeDownloadCallback, Browser, BrowserHost, BrowserProcessHandler,
+    BrowserSettings, Client, ClientCallbacks, CommandLine, Context, ContextMenuHandler,
+    ContextMenuHandlerCallbacks, ContextMenuParams, DictionaryValue, DownloadHandler,
+    DownloadHandlerCallbacks, DownloadItem, DownloadItemCallback, EventFlags, Frame,
+    KeyboardHandler, LifeSpanHandler, LifeSpanHandlerCallbacks, LogSeverity, MainArgs,
+    MenuCommandId, MenuModel, Point, PopupFeatures, QuickMenuEditStateFlags, RenderHandler,
+    RunContextMenuCallback, RunQuickMenuCallback, Settings, Size, WindowInfo,
+    WindowOpenDisposition
 };
 use cef_ui_sys::cef_quit_message_loop;
 use std::{fs::create_dir_all, path::PathBuf, process::exit};
@@ -130,6 +132,69 @@ impl LifeSpanHandlerCallbacks for MyLifeSpanHandlerCallbacks {
     }
 }
 
+pub struct MyDownloadHandlerCallbacks;
+impl DownloadHandlerCallbacks for MyDownloadHandlerCallbacks {
+    fn on_before_download(
+        &mut self,
+        _browser: Browser,
+        _download_item: DownloadItem,
+        suggested_name: &str,
+        callback: BeforeDownloadCallback
+    ) -> bool {
+        info!("Starting download of {}", suggested_name);
+        let download_dir = dirs::download_dir().expect("failed to get download directory");
+        let download_path = download_dir.join(suggested_name);
+        let download_path = download_path
+            .to_str()
+            .expect("failed to convert path to str");
+        _ = callback.continue_download(Some(download_path), false);
+        true
+    }
+
+    fn on_download_updated(
+        &mut self,
+        _: Browser,
+        download_item: DownloadItem,
+        _: DownloadItemCallback
+    ) {
+        let path = PathBuf::from(
+            download_item
+                .get_full_path()
+                .unwrap()
+        );
+
+        let name = path
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or_default();
+
+        // let name = "a";
+        let received = download_item
+            .get_received_bytes()
+            .unwrap();
+        let total = download_item
+            .get_total_bytes()
+            .unwrap();
+        let speed = download_item
+            .get_current_speed()
+            .unwrap();
+
+        if speed == 0 {
+            info!("Downloading {}: {}/{}", name, received, total);
+            return;
+        }
+        let remaining_time = (total - received) / speed;
+        info!(
+            "Downloading {}: {}/{}. Remaining time: {} seconds",
+            name, received, total, remaining_time
+        );
+    }
+
+    fn can_download(&mut self, _browser: Browser, _url: &str, _request_method: &str) -> bool {
+        true
+    }
+}
+
 /// Client callbacks.
 pub struct MyClientCallbacks;
 
@@ -156,6 +221,10 @@ impl ClientCallbacks for MyClientCallbacks {
 
     fn get_load_handler(&mut self) -> Option<cef_ui::LoadHandler> {
         None
+    }
+
+    fn get_download_handler(&mut self) -> Option<cef_ui::DownloadHandler> {
+        Some(DownloadHandler::new(MyDownloadHandlerCallbacks {}))
     }
 
     fn on_process_message_received(
@@ -256,7 +325,7 @@ fn try_main() -> Result<()> {
     // Create the window.
     let window_info = WindowInfo::new()
         .window_name(&String::from("cef-ui-simple"))
-        .runtime_style(cef_ui::RuntimeStyle::Default);
+        .runtime_style(cef_ui::RuntimeStyle::Alloy);
 
     // Create the browser settings.
     let browser_settings = BrowserSettings::new();
@@ -268,7 +337,7 @@ fn try_main() -> Result<()> {
     BrowserHost::create_browser_sync(
         &window_info,
         client,
-        "https://www.google.com/",
+        "https://github.com/hulylabs/cef-ui/releases/tag/v132",
         &browser_settings,
         None,
         None
