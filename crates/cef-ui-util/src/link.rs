@@ -50,8 +50,9 @@ fn copy_cef_linux() -> Result<()> {
     use crate::CEF_DIRECTORY;
 
     let profile = var("PROFILE")?;
+    let target = var("TARGET")?;
     let src = get_cef_artifacts_dir()?;
-    let dst = get_cef_target_dir(&profile)?.join(CEF_DIRECTORY);
+    let dst = get_cef_target_dir(&profile, &target)?.join(CEF_DIRECTORY);
 
     // Copy the CEF binaries.
     copy_files(&src, &dst)?;
@@ -63,8 +64,9 @@ fn copy_cef_linux() -> Result<()> {
 #[allow(dead_code)]
 fn copy_cef_windows() -> Result<()> {
     let profile = var("PROFILE")?;
+    let target = var("TARGET")?;
     let src = get_cef_artifacts_dir()?;
-    let dst = get_cef_target_dir(&profile)?;
+    let dst = get_cef_target_dir(&profile, &target)?;
 
     // Copy the CEF binaries.
     copy_files(&src, &dst)?;

@@ -144,9 +144,9 @@ fn copy_recursive(src: &Path, dst: &Path) -> Result<()> {
 }
 
 /// Build a specific executable, optionally for a target triple.
-pub fn build_exe(name: &str, profile: &str, target: Option<&str>) -> Result<()> {
+pub fn build_exe(name: &str, profile: &str, target: &str) -> Result<()> {
     let mut args = vec!["build", "--bin", name, "--profile", profile];
-    if let Some(target) = target {
+    if !target.is_empty() {
         args.push("--target");
         args.push(target);
     }

@@ -12,6 +12,9 @@ pub struct AppBundleSettings {
     /// The profile to use.
     pub profile: String,
 
+    /// The target to use.
+    pub target: String,
+
     /// The artifacts directory.
     pub artifacts_dir: PathBuf,
 
@@ -38,7 +41,7 @@ impl AppBundleSettings {
     pub fn run(&self) -> Result<()> {
         info!("Building app bundle {} ..", self.app_name);
 
-        let target_dir = get_cef_target_dir(&self.profile)?;
+        let target_dir = get_cef_target_dir(&self.profile, &self.target)?;
         let app_dir = target_dir.join(format!("{}.app", self.app_name));
 
         // Remove any existing app.
