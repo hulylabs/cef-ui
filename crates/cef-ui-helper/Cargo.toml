@@ -8,4 +8,8 @@ anyhow = { workspace = true }
 tracing = { workspace = true }
 tracing-log = { workspace = true }
 tracing-subscriber = { workspace = true }
+
 libloading = "0.8"
+parking_lot = "0.12"
+
+cef-ui-sys = { path = "../cef-ui-sys" }

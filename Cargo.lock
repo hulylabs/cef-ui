@@ -396,7 +396,9 @@ name = "cef-ui-helper"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "cef-ui-sys",
  "libloading",
+ "parking_lot",
  "tracing",
  "tracing-log",
  "tracing-subscriber",

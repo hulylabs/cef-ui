@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::{
     env::args,
-    ffi::{c_char, c_int, CString}
+    ffi::{CString, c_char, c_int}
 };
 
 /// This is lifted from the bindgen output.
@@ -44,7 +44,7 @@ impl MainArgs {
     }
 
     /// Converts to the raw cef type.
-    pub fn as_raw(&self) -> &cef_main_args_t {
+    pub fn as_raw(&self) -> *const cef_main_args_t {
         &self.cef
     }
 }
