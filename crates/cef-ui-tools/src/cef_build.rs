@@ -1,7 +1,7 @@
 use anyhow::Result;
-use cef_ui_util::{get_cef_artifacts_dir, get_cef_workspace_dir, AppBundleSettings, BuildCommand};
+use cef_ui_util::{AppBundleSettings, BuildCommand, get_cef_artifacts_dir, get_cef_workspace_dir};
 use clap::Parser;
-use tracing::{level_filters::LevelFilter, subscriber::set_global_default, Level};
+use tracing::{Level, level_filters::LevelFilter, subscriber::set_global_default};
 use tracing_log::LogTracer;
 use tracing_subscriber::FmtSubscriber;
 
@@ -30,7 +30,8 @@ fn main() -> Result<()> {
     // Build the main executable.
     BuildCommand {
         binary:  String::from("cef-ui-simple"),
-        profile: args.profile.to_string()
+        profile: args.profile.to_string(),
+        target:  None
     }
     .run()?;
 
@@ -39,7 +40,8 @@ fn main() -> Result<()> {
         // Build the helper executable.
         BuildCommand {
             binary:  String::from("cef-ui-simple-helper"),
-            profile: args.profile.to_string()
+            profile: args.profile.to_string(),
+            target:  None
         }
         .run()?;
 

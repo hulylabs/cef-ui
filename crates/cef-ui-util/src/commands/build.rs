@@ -8,14 +8,17 @@ pub struct BuildCommand {
     pub binary: String,
 
     /// The profile to use.
-    pub profile: String
+    pub profile: String,
+
+    /// The target to build for (optional).
+    pub target: Option<String>
 }
 
 impl BuildCommand {
     pub fn run(&self) -> Result<()> {
         info!("Building {} ..", self.binary);
 
-        build_exe(&self.binary, &self.profile)?;
+        build_exe(&self.binary, &self.profile, self.target.as_deref())?;
 
         info!("Done!");
 
