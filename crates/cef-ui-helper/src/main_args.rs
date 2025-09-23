@@ -1,17 +1,9 @@
 use anyhow::Result;
+use cef_ui_sys::cef_main_args_t;
 use std::{
     env::args,
-    ffi::{CString, c_char, c_int}
+    ffi::{CString, c_char}
 };
-
-/// This is lifted from the bindgen output.
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-#[allow(non_camel_case_types)]
-pub struct cef_main_args_t {
-    pub argc: c_int,
-    pub argv: *mut *mut c_char
-}
 
 /// Structure representing CefExecuteProcess arguments.
 #[derive(Debug)]

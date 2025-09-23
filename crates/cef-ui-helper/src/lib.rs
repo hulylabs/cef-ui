@@ -16,7 +16,7 @@ pub use sandbox::*;
 pub use scheme::*;
 pub use string::*;
 
-pub fn execute_process(args: MainArgs, app: Option<App>) {
+pub fn execute_process(args: MainArgs, app: Option<App>) -> i32 {
     unsafe {
         let lib = &CEFLIB;
         (lib.cef_execute_process)(
@@ -24,6 +24,6 @@ pub fn execute_process(args: MainArgs, app: Option<App>) {
             app.map(|a| a.as_ptr())
                 .unwrap_or(std::ptr::null_mut()),
             std::ptr::null_mut()
-        );
+        )
     }
 }

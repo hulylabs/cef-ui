@@ -3,8 +3,8 @@ use std::{
     ffi::c_int,
     mem::{forget, size_of},
     ops::{Deref, DerefMut},
-    ptr::{null_mut, NonNull},
-    sync::atomic::{fence, AtomicUsize, Ordering}
+    ptr::{NonNull, null_mut},
+    sync::atomic::{AtomicUsize, Ordering, fence}
 };
 
 /// A reference counted CEF objects must conform to this and be
