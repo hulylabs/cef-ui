@@ -54,9 +54,8 @@ fn copy_cef_linux() -> Result<()> {
     use crate::CEF_DIRECTORY;
 
     let profile = var("PROFILE")?;
-    let target = var("TARGET")?;
     let src = get_cef_artifacts_dir()?;
-    let dst = get_cef_target_dir(&profile, &target)?.join(CEF_DIRECTORY);
+    let dst = get_cef_target_dir(&profile, "")?.join(CEF_DIRECTORY);
 
     println!(
         "cargo:warning=Copying CEF files from {} to {}",

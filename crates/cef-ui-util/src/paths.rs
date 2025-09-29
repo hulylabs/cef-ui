@@ -23,6 +23,13 @@ pub fn get_cef_target_dir(profile: &str, target: &str) -> Result<PathBuf> {
         false => profile
     };
 
+    let workspace_dir = get_cef_workspace_dir()?;
+    if target == "" {
+        return Ok(workspace_dir
+            .join("target")
+            .join(profile));
+    }
+
     Ok(get_cef_workspace_dir()?
         .join("target")
         .join(target)
