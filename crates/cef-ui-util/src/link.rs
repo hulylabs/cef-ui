@@ -7,6 +7,10 @@ use anyhow::Result;
 /// file to properly link against CEF.
 pub fn link_cef() -> Result<()> {
     let artifacts_dir = get_cef_artifacts_dir()?;
+    println!(
+        "cargo:warning=Artifacts directory: {}",
+        artifacts_dir.display()
+    );
 
     // Linker flags on x86_64 Linux.
     #[cfg(all(target_os = "linux", target_arch = "x86_64"))]
@@ -53,6 +57,12 @@ fn copy_cef_linux() -> Result<()> {
     let target = var("TARGET")?;
     let src = get_cef_artifacts_dir()?;
     let dst = get_cef_target_dir(&profile, &target)?.join(CEF_DIRECTORY);
+
+    println!(
+        "cargo:warning=Copying CEF files from {} to {}",
+        src.display(),
+        dst.display()
+    );
 
     // Copy the CEF binaries.
     copy_files(&src, &dst)?;
