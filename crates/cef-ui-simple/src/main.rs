@@ -2,12 +2,12 @@ use anyhow::Result;
 use cef_ui::{
     App, AppCallbacks, BeforeDownloadCallback, Browser, BrowserHost, BrowserProcessHandler,
     BrowserSettings, Client, ClientCallbacks, CommandLine, Context, ContextMenuHandler,
-    ContextMenuHandlerCallbacks, ContextMenuParams, DictionaryValue, DownloadHandler,
-    DownloadHandlerCallbacks, DownloadItem, DownloadItemCallback, EventFlags, Frame,
-    KeyboardHandler, LifeSpanHandler, LifeSpanHandlerCallbacks, LogSeverity, MainArgs,
-    MenuCommandId, MenuModel, Point, PopupFeatures, QuickMenuEditStateFlags, RenderHandler,
-    RunContextMenuCallback, RunQuickMenuCallback, Settings, Size, WindowInfo,
-    WindowOpenDisposition
+    ContextMenuHandlerCallbacks, ContextMenuParams, DialogHandler, DialogHandlerCallbacks,
+    DictionaryValue, DownloadHandler, DownloadHandlerCallbacks, DownloadItem, DownloadItemCallback,
+    EventFlags, FileDialogCallback, FileDialogMode, Frame, KeyboardHandler, LifeSpanHandler,
+    LifeSpanHandlerCallbacks, LogSeverity, MainArgs, MenuCommandId, MenuModel, Point,
+    PopupFeatures, QuickMenuEditStateFlags, RenderHandler, RunContextMenuCallback,
+    RunQuickMenuCallback, Settings, Size, WindowInfo, WindowOpenDisposition
 };
 use cef_ui_sys::cef_quit_message_loop;
 use std::{fs::create_dir_all, path::PathBuf, process::exit};
@@ -132,6 +132,33 @@ impl LifeSpanHandlerCallbacks for MyLifeSpanHandlerCallbacks {
     }
 }
 
+pub struct MyDialogHandlerCallbacks;
+impl DialogHandlerCallbacks for MyDialogHandlerCallbacks {
+    fn on_file_dialog(
+        &mut self,
+        _browser: Browser,
+        mode: FileDialogMode,
+        title: String,
+        default_file_path: String,
+        accept_filters: Vec<String>,
+        accept_extensions: Vec<String>,
+        accept_descriptions: Vec<String>,
+        _callback: FileDialogCallback
+    ) -> bool {
+        info!(
+            "File dialog requested: mode={:?}, title={}, default_path={}",
+            mode, title, default_file_path
+        );
+        info!("Accept filters: {:?}", accept_filters);
+        info!("Accept extensions: {:?}", accept_extensions);
+        info!("Accept descriptions: {:?}", accept_descriptions);
+
+        // For demonstration, we'll use the default dialog by returning false
+        // In a real implementation, you could show a custom dialog and call callback.continue_dialog()
+        false
+    }
+}
+
 pub struct MyDownloadHandlerCallbacks;
 impl DownloadHandlerCallbacks for MyDownloadHandlerCallbacks {
     fn on_before_download(
@@ -201,6 +228,10 @@ pub struct MyClientCallbacks;
 impl ClientCallbacks for MyClientCallbacks {
     fn get_context_menu_handler(&mut self) -> Option<ContextMenuHandler> {
         Some(ContextMenuHandler::new(MyContextMenuHandler {}))
+    }
+
+    fn get_dialog_handler(&mut self) -> Option<DialogHandler> {
+        Some(DialogHandler::new(MyDialogHandlerCallbacks {}))
     }
 
     fn get_keyboard_handler(&mut self) -> Option<KeyboardHandler> {

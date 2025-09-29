@@ -1,5 +1,5 @@
 use crate::{
-    Browser, ContextMenuHandler, DisplayHandler, DownloadHandler, Frame, LifeSpanHandler,
+    Browser, ContextMenuHandler, DialogHandler, DisplayHandler, DownloadHandler, Frame, LifeSpanHandler,
     LoadHandler, ProcessId, ProcessMessage, RefCountedPtr, RenderHandler, RequestHandler,
     Wrappable, Wrapped, keyboard_handler::KeyboardHandler, ref_counted_ptr
 };
@@ -32,10 +32,11 @@ pub trait ClientCallbacks: Send + Sync + 'static {
         None
     }
 
-    // /// Return the handler for dialogs. If no handler is provided the default
-    // /// implementation will be used.
-    // struct _cef_dialog_handler_t*(CEF_CALLBACK* get_dialog_handler)(
-    // struct _cef_client_t* self);
+    /// Return the handler for dialogs. If no handler is provided the default
+    /// implementation will be used.
+    fn get_dialog_handler(&mut self) -> Option<DialogHandler> {
+        None
+    }
 
     /// Return the handler for browser display state events.
     fn get_display_handler(&mut self) -> Option<DisplayHandler> {
@@ -171,7 +172,12 @@ impl ClientWrapper {
     unsafe extern "C" fn c_get_dialog_handler(
         this: *mut cef_client_t
     ) -> *mut cef_dialog_handler_t {
-        todo!()
+        let this: &mut Self = Wrapped::wrappable(this);
+
+        this.0
+            .get_dialog_handler()
+            .map(|handler| handler.into_raw())
+            .unwrap_or(null_mut())
     }
 
     /// Return the handler for browser display state events.
@@ -337,7 +343,7 @@ impl Wrappable for ClientWrapper {
                 get_audio_handler:           None,
                 get_command_handler:         None,
                 get_context_menu_handler:    Some(Self::c_get_context_menu_handler),
-                get_dialog_handler:          None,
+                get_dialog_handler:          Some(Self::c_get_dialog_handler),
                 get_display_handler:         Some(Self::c_get_display_handler),
                 get_download_handler:        Some(Self::c_get_download_handler),
                 get_drag_handler:            None,
