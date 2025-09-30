@@ -138,15 +138,15 @@ impl DialogHandlerCallbacks for MyDialogHandlerCallbacks {
         &mut self,
         _browser: Browser,
         mode: FileDialogMode,
-        title: String,
-        default_file_path: String,
+        title: Option<String>,
+        default_file_path: Option<String>,
         accept_filters: Vec<String>,
         accept_extensions: Vec<String>,
         accept_descriptions: Vec<String>,
         _callback: FileDialogCallback
     ) -> bool {
         info!(
-            "File dialog requested: mode={:?}, title={}, default_path={}",
+            "File dialog requested: mode={:?}, title={:?}, default_path={:?}",
             mode, title, default_file_path
         );
         info!("Accept filters: {:?}", accept_filters);
