@@ -98,8 +98,8 @@ pub trait DialogHandlerCallbacks: Send + Sync + 'static {
         &mut self,
         _browser: Browser,
         _mode: FileDialogMode,
-        _title: String,
-        _default_file_path: String,
+        _title: Option<String>,
+        _default_file_path: Option<String>,
         _accept_filters: Vec<String>,
         _accept_extensions: Vec<String>,
         _accept_descriptions: Vec<String>,
@@ -140,13 +140,13 @@ impl DialogHandlerWrapper {
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
         let mode = FileDialogMode::from(mode);
-        let title: String = CefString::from_ptr_unchecked(title).into();
-        let default_file_path: String = CefString::from_ptr_unchecked(default_file_path).into();
+        let title: Option<String> = CefString::from_ptr(title).map(|s| s.into());
+        let default_file_path: Option<String> =
+            CefString::from_ptr(default_file_path).map(|s| s.into());
 
-        // Convert string lists to Vec<String>
-        let accept_filters = CefStringList::from_ptr_unchecked(accept_filters);
-        let accept_extensions = CefStringList::from_ptr_unchecked(accept_extensions);
-        let accept_descriptions = CefStringList::from_ptr_unchecked(accept_descriptions);
+        let accept_filters = string_list_to_vec(accept_filters);
+        let accept_extensions = string_list_to_vec(accept_extensions);
+        let accept_descriptions = string_list_to_vec(accept_descriptions);
 
         let callback = FileDialogCallback::from_ptr_unchecked(callback);
 
@@ -155,9 +155,9 @@ impl DialogHandlerWrapper {
             mode,
             title,
             default_file_path,
-            accept_filters.into(),
-            accept_extensions.into(),
-            accept_descriptions.into(),
+            accept_filters,
+            accept_extensions,
+            accept_descriptions,
             callback
         ) as ::std::os::raw::c_int
     }
@@ -175,4 +175,15 @@ impl Wrappable for DialogHandlerWrapper {
             self
         )
     }
+}
+
+unsafe fn string_list_to_vec(list: cef_string_list_t) -> Vec<String> {
+    let mut vec = Vec::new();
+    let len = cef_ui_sys::cef_string_list_size(list);
+    for i in 0..len {
+        let mut s = CefString::new("");
+        cef_ui_sys::cef_string_list_value(list, i, s.as_mut_ptr());
+        vec.push(s.into());
+    }
+    vec
 }
