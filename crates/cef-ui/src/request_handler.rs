@@ -46,12 +46,14 @@ pub trait RequestHandlerCallbacks: Send + Sync + 'static {
     /// DomContentLoaded event).
     fn on_before_browse(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        request: Request,
-        user_gesture: bool,
-        is_redirect: bool
-    ) -> bool;
+        _browser: Browser,
+        _frame: Frame,
+        _request: Request,
+        _user_gesture: bool,
+        _is_redirect: bool
+    ) -> bool {
+        false
+    }
 
     /// Called on the UI thread before OnBeforeBrowse in certain limited cases
     /// where navigating a new or different browser might be desirable. This
@@ -69,12 +71,14 @@ pub trait RequestHandlerCallbacks: Send + Sync + 'static {
     /// proceed in the source browser's top-level frame.
     fn on_open_urlfrom_tab(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        target_url: &str,
-        target_disposition: WindowOpenDisposition,
-        user_gesture: bool
-    ) -> bool;
+        _browser: Browser,
+        _frame: Frame,
+        _target_url: &str,
+        _target_disposition: WindowOpenDisposition,
+        _user_gesture: bool
+    ) -> bool {
+        false
+    }
 
     /// Called on the browser process IO thread before a resource request is
     /// initiated. The |browser| and |frame| values represent the source of the
@@ -92,14 +96,16 @@ pub trait RequestHandlerCallbacks: Send + Sync + 'static {
     /// cef_request_context_handler_t, if any.
     fn get_resource_request_handler(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        request: Request,
-        is_navigation: bool,
-        is_download: bool,
-        request_initiator: &str,
-        disable_default_handling: &mut bool
-    ) -> Option<ResourceRequestHandler>;
+        _browser: Browser,
+        _frame: Frame,
+        _request: Request,
+        _is_navigation: bool,
+        _is_download: bool,
+        _request_initiator: &str,
+        _disable_default_handling: &mut bool
+    ) -> Option<ResourceRequestHandler> {
+        None
+    }
 
     /// Called on the IO thread when the browser needs credentials from the user.
     /// |origin_url| is the origin making this authentication request. |isProxy|
@@ -113,15 +119,17 @@ pub trait RequestHandlerCallbacks: Send + Sync + 'static {
     /// cancel the request immediately.
     fn get_auth_credentials(
         &mut self,
-        browser: Browser,
-        origin_url: &str,
-        is_proxy: bool,
-        host: &str,
-        port: u16,
-        realm: Option<&str>,
-        scheme: Option<&str>,
-        callback: AuthCallback
-    ) -> bool;
+        _browser: Browser,
+        _origin_url: &str,
+        _is_proxy: bool,
+        _host: &str,
+        _port: u16,
+        _realm: Option<&str>,
+        _scheme: Option<&str>,
+        _callback: AuthCallback
+    ) -> bool {
+        false
+    }
 
     /// Called on the UI thread to handle requests for URLs with an invalid SSL
     /// certificate. Return true (1) and call cef_callback_t functions either in
@@ -131,12 +139,14 @@ pub trait RequestHandlerCallbacks: Send + Sync + 'static {
     /// will be accepted without calling this function.
     fn on_certificate_error(
         &mut self,
-        browser: Browser,
-        cert_error: ErrorCode,
-        request_url: &str,
-        ssl_info: SslInfo,
-        callback: Callback
-    ) -> bool;
+        _browser: Browser,
+        _cert_error: ErrorCode,
+        _request_url: &str,
+        _ssl_info: SslInfo,
+        _callback: Callback
+    ) -> bool {
+        false
+    }
 
     /// Called on the UI thread when a client certificate is being requested for
     /// authentication. Return false (0) to use the default behavior and
@@ -151,32 +161,35 @@ pub trait RequestHandlerCallbacks: Send + Sync + 'static {
     /// issuers that the server trusts.
     fn on_select_client_certificate(
         &mut self,
-        browser: Browser,
-        is_proxy: bool,
-        host: &str,
-        port: u16,
-        certificates: &[X509Certificate],
-        callback: SelectClientCertificateCallback
-    ) -> bool;
+        _browser: Browser,
+        _is_proxy: bool,
+        _host: &str,
+        _port: u16,
+        _certificates: &[X509Certificate],
+        _callback: SelectClientCertificateCallback
+    ) -> bool {
+        false
+    }
 
     /// Called on the browser process UI thread when the render view associated
     /// with |browser| is ready to receive/handle IPC messages in the render
     /// process.
-    fn on_render_view_ready(&mut self, browser: Browser);
+    fn on_render_view_ready(&mut self, _browser: Browser) {}
 
     /// Called on the browser process UI thread when the render process terminates
     /// unexpectedly. |status| indicates how the process terminated.
     fn on_render_process_terminated(
         &mut self,
-        browser: Browser,
-        status: TerminationStatus,
-        error_code: i32,
-        error_string: Option<String>
-    );
+        _browser: Browser,
+        _status: TerminationStatus,
+        _error_code: i32,
+        _error_string: Option<String>
+    ) {
+    }
 
     /// Called on the browser process UI thread when the window.document object of
     /// the main frame has been created.
-    fn on_document_available_in_main_frame(&mut self, browser: Browser);
+    fn on_document_available_in_main_frame(&mut self, _browser: Browser) {}
 }
 
 // Implement this structure to handle events related to browser requests. The
