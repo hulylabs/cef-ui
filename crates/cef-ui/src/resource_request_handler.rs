@@ -20,11 +20,12 @@ pub trait ResourceRequestHandlerCallbacks: Send + Sync + 'static {
     /// ANALYSIS BEFORE ALLOWING OS EXECUTION.
     fn on_protocol_execution(
         &mut self,
-        browser: Option<Browser>,
-        frame: Option<Frame>,
-        request: Request,
-        allow_os_execution: &mut bool
-    );
+        _browser: Option<Browser>,
+        _frame: Option<Frame>,
+        _request: Request
+    ) -> bool {
+        false
+    }
 
     // TODO: Fix this!
 
@@ -340,12 +341,11 @@ impl ResourceRequestHandlerWrapper {
             Some(Frame::from_ptr_unchecked(frame))
         };
         let request = Request::from_ptr_unchecked(request);
-        let mut local_allow_os_execution = *allow_os_execution != 0;
+        let result = this
+            .0
+            .on_protocol_execution(browser, frame, request);
 
-        this.0
-            .on_protocol_execution(browser, frame, request, &mut local_allow_os_execution);
-
-        *allow_os_execution = local_allow_os_execution as c_int;
+        *allow_os_execution = 1;
     }
 }
 
