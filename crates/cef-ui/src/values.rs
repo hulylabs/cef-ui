@@ -1,4 +1,4 @@
-use crate::{ref_counted_ptr, try_c, CefString, CefStringList};
+use crate::{CefString, CefStringList, ref_counted_ptr, try_c};
 use anyhow::Result;
 use cef_ui_sys::{
     cef_binary_value_create, cef_binary_value_t, cef_dictionary_value_create,
@@ -32,7 +32,10 @@ impl From<cef_value_type_t> for ValueType {
             cef_value_type_t::VTYPE_STRING => Self::String,
             cef_value_type_t::VTYPE_BINARY => Self::Binary,
             cef_value_type_t::VTYPE_DICTIONARY => Self::Dictionary,
-            cef_value_type_t::VTYPE_LIST => Self::List
+            cef_value_type_t::VTYPE_LIST => Self::List,
+            cef_value_type_t::VTYPE_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid ValueType variant")
+            },
         }
     }
 }

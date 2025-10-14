@@ -32,6 +32,9 @@ impl From<&cef_preferences_type_t> for PreferencesType {
             cef_preferences_type_t::CEF_PREFERENCES_TYPE_REQUEST_CONTEXT => {
                 PreferencesType::RequestContext
             },
+            cef_preferences_type_t::CEF_PREFERENCES_TYPE_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid PreferencesType variant")
+            }
         }
     }
 }

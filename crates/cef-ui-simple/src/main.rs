@@ -1,21 +1,16 @@
 use anyhow::Result;
 use cef_ui::{
-    App, AppCallbacks, BeforeDownloadCallback, Browser, BrowserHost, BrowserProcessHandler,
-    BrowserSettings, Client, ClientCallbacks, CommandLine, Context, ContextMenuHandler,
-    ContextMenuHandlerCallbacks, ContextMenuParams, DialogHandler, DialogHandlerCallbacks,
-    DictionaryValue, DownloadHandler, DownloadHandlerCallbacks, DownloadItem, DownloadItemCallback,
-    EventFlags, FileDialogCallback, FileDialogMode, Frame, KeyboardHandler, LifeSpanHandler,
-    LifeSpanHandlerCallbacks, LogSeverity, MainArgs, MenuCommandId, MenuModel, Point,
-    PopupFeatures, QuickMenuEditStateFlags, RenderHandler, RunContextMenuCallback,
-    RunQuickMenuCallback, Settings, Size, WindowInfo, WindowOpenDisposition
+    App, AppCallbacks, Browser, BrowserHost, BrowserProcessHandler, BrowserSettings, Client,
+    ClientCallbacks, CommandLine, Context, ContextMenuHandler, ContextMenuHandlerCallbacks,
+    ContextMenuParams, Frame, LifeSpanHandler, LifeSpanHandlerCallbacks, LogSeverity, MainArgs,
+    MenuModel, Settings, WindowInfo
 };
-use cef_ui_sys::cef_quit_message_loop;
+use cef_ui_sys::{CEF_API_VERSION_13800, cef_api_hash, cef_quit_message_loop};
 use std::{fs::create_dir_all, path::PathBuf, process::exit};
-use tracing::{Level, error, info, level_filters::LevelFilter, subscriber::set_global_default};
+use tracing::{Level, error, level_filters::LevelFilter, subscriber::set_global_default};
 use tracing_log::LogTracer;
 use tracing_subscriber::FmtSubscriber;
 
-/// Context menu callbacks.
 pub struct MyContextMenuHandler;
 
 #[allow(unused_variables)]
@@ -27,26 +22,21 @@ impl ContextMenuHandlerCallbacks for MyContextMenuHandler {
         params: ContextMenuParams,
         model: MenuModel
     ) {
-        // Prevent popups from spawning.
         if let Err(e) = model.clear() {
             error!("{}", e);
         }
     }
 }
 
-/// Life span callbacks.
 pub struct MyLifeSpanHandlerCallbacks;
-
-#[allow(unused_variables)]
 impl LifeSpanHandlerCallbacks for MyLifeSpanHandlerCallbacks {
-    fn on_before_close(&mut self, browser: Browser) {
+    fn on_before_close(&mut self, _browser: Browser) {
         unsafe {
             cef_quit_message_loop();
         }
     }
 }
 
-/// Client callbacks.
 pub struct MyClientCallbacks;
 
 impl ClientCallbacks for MyClientCallbacks {
@@ -59,7 +49,6 @@ impl ClientCallbacks for MyClientCallbacks {
     }
 }
 
-/// Application callbacks.
 pub struct MyAppCallbacks;
 
 #[allow(unused_variables)]
@@ -69,10 +58,7 @@ impl AppCallbacks for MyAppCallbacks {
         process_type: Option<&str>,
         command_line: Option<CommandLine>
     ) {
-        info!("Setting CEF command line switches.");
-
-        // This is to disable scary warnings on macOS.
-        #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+        #[cfg(all(target_os = "macos"))]
         if let Some(command_line) = command_line {
             if process_type.is_none() {
                 if let Err(e) = command_line.append_switch("--use-mock-keychain") {
@@ -96,57 +82,42 @@ fn main() {
 }
 
 fn try_main() -> Result<()> {
-    // This routes log macros through tracing.
     LogTracer::init()?;
 
-    // Setup the tracing subscriber globally.
     let subscriber = FmtSubscriber::builder()
-        .with_max_level(LevelFilter::from_level(Level::DEBUG))
+        .with_max_level(LevelFilter::from_level(Level::TRACE))
         .finish();
 
     set_global_default(subscriber)?;
 
-    // Ensure the root cache directory exists.
-    let root_cache_dir = get_root_cache_dir()?;
+    unsafe {
+        cef_api_hash(CEF_API_VERSION_13800 as i32, 0);
+    }
 
-    // The command line arguments.
+    let root_cache_dir = get_root_cache_dir()?;
     let main_args = MainArgs::new()?;
 
-    // Prepare the outermost CEF settings. We will drive the
-    // event loop ourselves and use offscreen rendering.
     let settings = Settings::new()
-        .log_severity(LogSeverity::Info)
+        .log_severity(LogSeverity::Verbose)
         .root_cache_path(&root_cache_dir)?
         .no_sandbox(false);
 
-    // Create the outermost CEF application.
     let app = App::new(MyAppCallbacks {});
-
-    // Create the CEF context which is the outermost way we interact
-    // with CEF, mainly for booting it up and shutting it down.
     let context = Context::new(main_args, settings, Some(app));
 
-    // If this is a CEF subprocess, let it run and then
-    // emit the proper exit code so CEF can clean up.
     if let Some(code) = context.is_cef_subprocess() {
         exit(code);
     }
 
-    // Initialize CEF.
     context.initialize()?;
 
-    // Create the window.
     let window_info = WindowInfo::new()
         .window_name(&String::from("cef-ui-simple"))
         .runtime_style(cef_ui::RuntimeStyle::Alloy);
 
-    // Create the browser settings.
     let browser_settings = BrowserSettings::new();
-
-    // The browser-specific client.
     let client = Client::new(MyClientCallbacks);
 
-    // Create a new browser.
     BrowserHost::create_browser_sync(
         &window_info,
         client,
@@ -156,22 +127,12 @@ fn try_main() -> Result<()> {
         None
     );
 
-    info!("Running CEF message loop.");
-
-    // Run the message loop.
     context.run_message_loop();
-
-    info!("Shutting down CEF.");
-
-    // Shutdown CEF.
     context.shutdown();
 
     Ok(())
 }
 
-// TODO: Make this platform-specific!
-
-/// Ensure the root cache directory exists.
 pub fn get_root_cache_dir() -> Result<PathBuf> {
     let path = std::env::temp_dir().join("cef-ui-simple");
     if !path.exists() {

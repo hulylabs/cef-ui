@@ -1,15 +1,15 @@
 use crate::{
-    ref_counted_ptr, try_c, AuthCallback, CefString, ErrorCode, RefCountedPtr, Request,
-    RequestContext, Response, Wrappable, Wrapped
+    AuthCallback, CefString, ErrorCode, RefCountedPtr, Request, RequestContext, Response,
+    Wrappable, Wrapped, ref_counted_ptr, try_c
 };
 use anyhow::Result;
 use bitflags::bitflags;
 use cef_ui_sys::{
     cef_auth_callback_t, cef_string_t, cef_urlrequest_client_t, cef_urlrequest_create,
     cef_urlrequest_flags_t, cef_urlrequest_flags_t_UR_FLAG_ALLOW_STORED_CREDENTIALS,
-    cef_urlrequest_flags_t_UR_FLAG_DISABLE_CACHE, cef_urlrequest_flags_t_UR_FLAG_NONE,
-    cef_urlrequest_flags_t_UR_FLAG_NO_DOWNLOAD_DATA,
-    cef_urlrequest_flags_t_UR_FLAG_NO_RETRY_ON_5XX, cef_urlrequest_flags_t_UR_FLAG_ONLY_FROM_CACHE,
+    cef_urlrequest_flags_t_UR_FLAG_DISABLE_CACHE, cef_urlrequest_flags_t_UR_FLAG_NO_DOWNLOAD_DATA,
+    cef_urlrequest_flags_t_UR_FLAG_NO_RETRY_ON_5XX, cef_urlrequest_flags_t_UR_FLAG_NONE,
+    cef_urlrequest_flags_t_UR_FLAG_ONLY_FROM_CACHE,
     cef_urlrequest_flags_t_UR_FLAG_REPORT_UPLOAD_PROGRESS,
     cef_urlrequest_flags_t_UR_FLAG_SKIP_CACHE, cef_urlrequest_flags_t_UR_FLAG_STOP_ON_REDIRECT,
     cef_urlrequest_status_t, cef_urlrequest_t
@@ -124,7 +124,10 @@ impl From<&cef_urlrequest_status_t> for UrlRequestStatus {
             cef_urlrequest_status_t::UR_SUCCESS => Self::Success,
             cef_urlrequest_status_t::UR_IO_PENDING => Self::IoPending,
             cef_urlrequest_status_t::UR_CANCELED => Self::Canceled,
-            cef_urlrequest_status_t::UR_FAILED => Self::Failed
+            cef_urlrequest_status_t::UR_FAILED => Self::Failed,
+            cef_urlrequest_status_t::UR_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid UrlRequestStatus variant")
+            },
         }
     }
 }

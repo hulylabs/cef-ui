@@ -1,7 +1,7 @@
 use bitflags::bitflags;
 use cef_ui_sys::{
-    cef_event_flags_t, cef_event_flags_t_EVENTFLAG_ALTGR_DOWN,
-    cef_event_flags_t_EVENTFLAG_ALT_DOWN, cef_event_flags_t_EVENTFLAG_CAPS_LOCK_ON,
+    cef_event_flags_t, cef_event_flags_t_EVENTFLAG_ALT_DOWN,
+    cef_event_flags_t_EVENTFLAG_ALTGR_DOWN, cef_event_flags_t_EVENTFLAG_CAPS_LOCK_ON,
     cef_event_flags_t_EVENTFLAG_COMMAND_DOWN, cef_event_flags_t_EVENTFLAG_CONTROL_DOWN,
     cef_event_flags_t_EVENTFLAG_IS_KEY_PAD, cef_event_flags_t_EVENTFLAG_IS_LEFT,
     cef_event_flags_t_EVENTFLAG_IS_REPEAT, cef_event_flags_t_EVENTFLAG_IS_RIGHT,
@@ -413,6 +413,7 @@ impl From<KeyEvent> for cef_key_event_t {
 impl From<&KeyEvent> for cef_key_event_t {
     fn from(value: &KeyEvent) -> Self {
         Self {
+            size:                    std::mem::size_of::<cef_key_event_t>(),
             type_:                   value.event_type.into(),
             modifiers:               value.modifiers.into(),
             windows_key_code:        value.windows_key_code.0 as c_int,

@@ -1,6 +1,6 @@
 use crate::{
-    Browser, CefString, CursorHandle, CursorInfo, CursorType, Frame, LogSeverity, RefCountedPtr,
-    Size, Wrappable, Wrapped, ref_counted_ptr
+    Browser, CefString, CursorInfo, CursorType, Frame, LogSeverity, RefCountedPtr, Size, Wrappable,
+    Wrapped, ref_counted_ptr
 };
 use cef_ui_sys::{
     cef_browser_t, cef_cursor_handle_t, cef_cursor_info_t, cef_cursor_type_t,
@@ -70,7 +70,6 @@ pub trait DisplayHandlerCallbacks: Send + Sync + 'static {
     fn on_cursor_change(
         &mut self,
         browser: Browser,
-        cursor: CursorHandle,
         cursor_type: CursorType,
         custom_cursor_info: Option<CursorInfo>
     ) -> bool;
@@ -257,7 +256,7 @@ impl DisplayHandlerWrapper {
     unsafe extern "C" fn c_on_cursor_change(
         this: *mut cef_display_handler_t,
         browser: *mut cef_browser_t,
-        cursor: cef_cursor_handle_t,
+        _cursor: cef_cursor_handle_t,
         cursor_type: cef_cursor_type_t,
         custom_cursor_info: *const cef_cursor_info_t
     ) -> ::std::os::raw::c_int {
@@ -271,7 +270,7 @@ impl DisplayHandlerWrapper {
         };
 
         this.0
-            .on_cursor_change(browser, cursor.into(), cursor_type, custom_cursor_info)
+            .on_cursor_change(browser, cursor_type, custom_cursor_info)
             as ::std::os::raw::c_int
     }
 
@@ -297,18 +296,20 @@ impl Wrappable for DisplayHandlerWrapper {
     fn wrap(self) -> RefCountedPtr<cef_display_handler_t> {
         RefCountedPtr::wrap(
             cef_display_handler_t {
-                base:                       unsafe { zeroed() },
-                on_address_change:          Some(Self::c_on_address_change),
-                on_title_change:            Some(Self::c_on_title_change),
-                on_favicon_urlchange:       Some(Self::c_on_favicon_urlchange),
-                on_fullscreen_mode_change:  Some(Self::c_on_fullscreen_mode_change),
-                on_tooltip:                 Some(Self::c_on_tooltip),
-                on_status_message:          Some(Self::c_on_status_message),
-                on_console_message:         Some(Self::c_on_console_message),
-                on_auto_resize:             Some(Self::c_on_auto_resize),
-                on_loading_progress_change: Some(Self::c_on_loading_progress_change),
-                on_cursor_change:           Some(Self::c_on_cursor_change),
-                on_media_access_change:     Some(Self::c_on_media_access_change)
+                base:                        unsafe { zeroed() },
+                on_address_change:           Some(Self::c_on_address_change),
+                on_title_change:             Some(Self::c_on_title_change),
+                on_favicon_urlchange:        Some(Self::c_on_favicon_urlchange),
+                on_fullscreen_mode_change:   Some(Self::c_on_fullscreen_mode_change),
+                on_tooltip:                  Some(Self::c_on_tooltip),
+                on_status_message:           Some(Self::c_on_status_message),
+                on_console_message:          Some(Self::c_on_console_message),
+                on_auto_resize:              Some(Self::c_on_auto_resize),
+                on_loading_progress_change:  Some(Self::c_on_loading_progress_change),
+                on_cursor_change:            Some(Self::c_on_cursor_change),
+                on_media_access_change:      Some(Self::c_on_media_access_change),
+                on_contents_bounds_change:   None,
+                get_root_window_screen_rect: None
             },
             self
         )

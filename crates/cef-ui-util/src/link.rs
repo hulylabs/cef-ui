@@ -85,12 +85,6 @@ fn copy_cef_windows() -> Result<()> {
 /// Call this in your binary helper crate's build.rs file to
 /// properly link against the CEF sandbox static library.
 pub fn link_cef_helper() -> Result<()> {
-    let artifacts_dir = get_cef_artifacts_dir()?;
-
-    // Link against the CEF sandbox static library.
-    println!("cargo:rustc-link-search=native={}", artifacts_dir.display());
-    println!("cargo:rustc-link-lib=static=cef_sandbox");
-
     // We must also link against the macOS sandbox libary.
     println!("cargo:rustc-link-lib=sandbox");
 

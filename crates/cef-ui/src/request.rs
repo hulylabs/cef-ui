@@ -1,6 +1,6 @@
 use crate::{
-    ref_counted_ptr, try_c, CefString, CefStringMultiMap, ReferrerPolicy, ResourceType,
-    UrlRequestFlags
+    CefString, CefStringMultiMap, ReferrerPolicy, ResourceType, UrlRequestFlags, ref_counted_ptr,
+    try_c
 };
 use anyhow::Result;
 use cef_ui_sys::{
@@ -32,7 +32,10 @@ impl From<&cef_postdataelement_type_t> for PostDataElementType {
         match value {
             cef_postdataelement_type_t::PDE_TYPE_EMPTY => Self::Empty,
             cef_postdataelement_type_t::PDE_TYPE_BYTES => Self::Bytes,
-            cef_postdataelement_type_t::PDE_TYPE_FILE => Self::File
+            cef_postdataelement_type_t::PDE_TYPE_FILE => Self::File,
+            cef_postdataelement_type_t::PDE_TYPE_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid PostDataElementType variant")
+            },
         }
     }
 }

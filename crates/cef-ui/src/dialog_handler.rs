@@ -53,7 +53,10 @@ impl From<cef_file_dialog_mode_t> for FileDialogMode {
             cef_ui_sys::cef_file_dialog_mode_t::FILE_DIALOG_OPEN_FOLDER => {
                 FileDialogMode::OpenFolder
             },
-            cef_ui_sys::cef_file_dialog_mode_t::FILE_DIALOG_SAVE => FileDialogMode::Save
+            cef_ui_sys::cef_file_dialog_mode_t::FILE_DIALOG_SAVE => FileDialogMode::Save,
+            cef_ui_sys::cef_file_dialog_mode_t::FILE_DIALOG_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid FileDialogMode variant")
+            },
         }
     }
 }

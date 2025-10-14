@@ -270,7 +270,10 @@ impl From<&cef_context_menu_media_type_t> for ContextMenuMediaType {
             cef_context_menu_media_type_t::CM_MEDIATYPE_AUDIO => Self::Audio,
             cef_context_menu_media_type_t::CM_MEDIATYPE_CANVAS => Self::Canvas,
             cef_context_menu_media_type_t::CM_MEDIATYPE_FILE => Self::File,
-            cef_context_menu_media_type_t::CM_MEDIATYPE_PLUGIN => Self::Plugin
+            cef_context_menu_media_type_t::CM_MEDIATYPE_PLUGIN => Self::Plugin,
+            cef_context_menu_media_type_t::CM_MEDIATYPE_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid ContextMenuMediaType variant")
+            }
         }
     }
 }
@@ -534,8 +537,7 @@ pub enum MenuColorType {
     TextAccelerator,
     TextAcceleratorHovered,
     Background,
-    BackgroundHovered,
-    Count
+    BackgroundHovered
 }
 
 impl From<cef_menu_color_type_t> for MenuColorType {
@@ -555,7 +557,9 @@ impl From<&cef_menu_color_type_t> for MenuColorType {
             },
             cef_menu_color_type_t::CEF_MENU_COLOR_BACKGROUND => Self::Background,
             cef_menu_color_type_t::CEF_MENU_COLOR_BACKGROUND_HOVERED => Self::BackgroundHovered,
-            cef_menu_color_type_t::CEF_MENU_COLOR_COUNT => Self::Count
+            cef_menu_color_type_t::CEF_MENU_COLOR_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid MenuColorType variant")
+            }
         }
     }
 }
@@ -581,7 +585,6 @@ impl From<&MenuColorType> for cef_menu_color_type_t {
             MenuColorType::BackgroundHovered => {
                 cef_menu_color_type_t::CEF_MENU_COLOR_BACKGROUND_HOVERED
             },
-            MenuColorType::Count => cef_menu_color_type_t::CEF_MENU_COLOR_COUNT
         }
     }
 }

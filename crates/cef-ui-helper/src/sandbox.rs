@@ -1,21 +1,11 @@
-use anyhow::{anyhow, Result};
+use crate::lib_loader::CEF_SANDBOX_LIB;
+use anyhow::{Result, anyhow};
 use std::{
     env::args,
-    ffi::{c_char, c_int, CString},
+    ffi::{CString, c_char, c_int},
     os::raw::c_void
 };
 use tracing::info;
-
-// The external sandbox functions that we want to
-// load from our static library. We have to define
-// them to be able to link against them correctly.
-extern "C" {
-    pub fn cef_sandbox_initialize(argc: c_int, argv: *mut *mut c_char) -> *mut c_void;
-}
-
-extern "C" {
-    pub fn cef_sandbox_destroy(context: *mut c_void);
-}
 
 /// Declaring this will initialize the sandbox and
 /// keep it active until the object is dropped.
@@ -36,7 +26,10 @@ impl ScopedSandbox {
             .collect::<Vec<*const c_char>>();
 
         let context = unsafe {
-            cef_sandbox_initialize(argv.len() as c_int, argv.as_ptr() as *mut *mut c_char)
+            (CEF_SANDBOX_LIB.cef_sandbox_initialize)(
+                argv.len() as c_int,
+                argv.as_ptr() as *mut *mut c_char
+            )
         };
 
         match context.is_null() {
@@ -52,7 +45,7 @@ impl ScopedSandbox {
 
 impl Drop for ScopedSandbox {
     fn drop(&mut self) {
-        unsafe { cef_sandbox_destroy(self.context) };
+        unsafe { (CEF_SANDBOX_LIB.cef_sandbox_destroy)(self.context) };
 
         info!("Sandbox destroyed!");
     }

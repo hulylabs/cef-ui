@@ -1,5 +1,6 @@
 use crate::{CEFLIB, MainArgs, sandbox::ScopedSandbox};
 use anyhow::Result;
+use cef_ui_sys::CEF_API_VERSION_13800;
 use std::{process::exit, ptr::null_mut};
 use tracing::{Level, error, info, level_filters::LevelFilter, subscriber::set_global_default};
 use tracing_log::LogTracer;
@@ -38,22 +39,10 @@ fn try_run(sandbox: bool) -> Result<i32> {
 
     // Manually load CEF and execute the subprocess.
     let ret = unsafe {
-        // Load our main args.
         let main_args = MainArgs::new()?;
-
-        info!("Main args: {:?}", main_args);
-
-        // Manually load the CEF framework.
         let lib = &CEFLIB;
-
-        info!("Executing CEF subprocess ..");
-
-        // Execute the CEF subprocess.
-        let ret = (lib.cef_execute_process)(main_args.as_raw(), null_mut(), null_mut()) as i32;
-
-        info!("CEF exited with code: {}", ret);
-
-        ret
+        (lib.cef_api_hash)(CEF_API_VERSION_13800 as i32, 0);
+        (lib.cef_execute_process)(main_args.as_raw(), null_mut(), null_mut()) as i32
     };
 
     Ok(ret)

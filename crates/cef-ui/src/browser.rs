@@ -215,13 +215,6 @@ impl BrowserSettings {
         self
     }
 
-    /// Controls whether databases can be used. Also configurable using the
-    /// "disable-databases" command-line switch.
-    pub fn databases(mut self, databases: State) -> Self {
-        self.0.databases = databases.into();
-        self
-    }
-
     /// Controls whether WebGL can be used. Note that WebGL requires hardware
     /// support and may not work on all systems even when enabled. Also
     /// configurable using the "disable-webgl" command-line switch.

@@ -69,6 +69,7 @@ impl From<PopupFeatures> for cef_popup_features_t {
 impl From<&PopupFeatures> for cef_popup_features_t {
     fn from(value: &PopupFeatures) -> Self {
         cef_popup_features_t {
+            size:      std::mem::size_of::<cef_popup_features_t>(),
             x:         value.x.unwrap_or(0),
             xSet:      value.x.is_some() as c_int,
             y:         value.y.unwrap_or(0),
@@ -154,16 +155,13 @@ pub trait LifeSpanHandlerCallbacks: Send + Sync + 'static {
         _extra_info: &mut Option<DictionaryValue>,
         _use_default_window: &mut bool
     ) {
-        // Default implementation - do nothing
     }
 
     /// Called after a new browser is created. It is now safe to begin performing
     /// actions with |browser|. cef_frame_handler_t callbacks related to initial
     /// main frame creation will arrive before this callback. See
     /// cef_frame_handler_t documentation for additional usage information.
-    fn on_after_created(&mut self, _browser: Browser) {
-        // Default implementation - do nothing
-    }
+    fn on_after_created(&mut self, _browser: Browser) {}
 
     /// Called when a browser has received a request to close. This may result
     /// directly from a call to cef_browser_host_t::*close_browser() or indirectly
@@ -267,9 +265,7 @@ pub trait LifeSpanHandlerCallbacks: Send + Sync + 'static {
     /// and cef_resource_request_handler_t callbacks related to those requests may
     /// still arrive on the IO thread after this callback. See cef_frame_handler_t
     /// and do_close() documentation for additional usage information.
-    fn on_before_close(&mut self, _browser: Browser) {
-        // Default implementation - do nothing
-    }
+    fn on_before_close(&mut self, _browser: Browser) {}
 }
 
 // Implement this structure to handle events related to browser life span. The

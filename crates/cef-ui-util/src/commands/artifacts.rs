@@ -3,7 +3,7 @@ use anyhow::Result;
 use bindgen::{EnumVariation, builder};
 use std::{
     env::consts::{ARCH, OS},
-    fs::{self, canonicalize, rename},
+    fs::{self, canonicalize},
     path::Path,
     process::{Command, Stdio}
 };
@@ -188,10 +188,6 @@ impl ArtifactsCommand {
         // Copy files for macOS.
         if cfg!(target_os = "macos") {
             copy_files(&extracted_dir.join("Release"), &cef_dir)?;
-            rename(
-                &cef_dir.join("cef_sandbox.a"),
-                &cef_dir.join("libcef_sandbox.a")
-            )?;
         }
 
         // Copy files for Windows.

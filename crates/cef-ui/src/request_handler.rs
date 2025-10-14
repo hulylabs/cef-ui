@@ -8,7 +8,7 @@ use cef_ui_sys::{
     cef_auth_callback_t, cef_browser_t, cef_callback_t, cef_errorcode_t, cef_frame_t,
     cef_request_handler_t, cef_request_t, cef_resource_request_handler_t,
     cef_select_client_certificate_callback_t, cef_sslinfo_t, cef_string_t,
-    cef_termination_status_t, cef_window_open_disposition_t, cef_x509certificate_t
+    cef_termination_status_t, cef_window_open_disposition_t, cef_x509_certificate_t
 };
 use std::{ffi::c_int, mem::zeroed, ptr::null_mut, slice::from_raw_parts};
 
@@ -409,7 +409,7 @@ impl RequestHandlerWrapper {
         host: *const cef_string_t,
         port: c_int,
         certificates_count: usize,
-        certificates: *const *mut cef_x509certificate_t,
+        certificates: *const *mut cef_x509_certificate_t,
         callback: *mut cef_select_client_certificate_callback_t
     ) -> c_int {
         let this: &mut Self = Wrapped::wrappable(this);

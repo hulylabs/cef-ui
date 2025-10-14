@@ -1,10 +1,10 @@
-use crate::{ref_counted_ptr, try_c, BinaryValue, CefString, CefStringList, CefTime};
+use crate::{BinaryValue, CefString, CefStringList, CefTime, ref_counted_ptr, try_c};
 use anyhow::Result;
-use cef_ui_sys::{cef_x509cert_principal_t, cef_x509certificate_t};
+use cef_ui_sys::{cef_x509_cert_principal_t, cef_x509_certificate_t};
 use chrono::{DateTime, Utc};
 
 // Structure representing the issuer or subject field of an X.509 certificate.
-ref_counted_ptr!(X509CertPrincipal, cef_x509cert_principal_t);
+ref_counted_ptr!(X509CertPrincipal, cef_x509_cert_principal_t);
 
 impl X509CertPrincipal {
     /// Returns a name that can be used to represent the issuer. It tries in this
@@ -71,7 +71,7 @@ impl X509CertPrincipal {
 }
 
 // Structure representing a X.509 certificate.
-ref_counted_ptr!(X509Certificate, cef_x509certificate_t);
+ref_counted_ptr!(X509Certificate, cef_x509_certificate_t);
 
 impl X509Certificate {
     /// Returns the subject of the X.509 certificate. For HTTPS server

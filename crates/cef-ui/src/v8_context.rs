@@ -3,10 +3,11 @@ use std::{mem::zeroed, ptr::null_mut};
 use anyhow::Result;
 
 use cef_ui_sys::{
-    cef_register_extension, cef_string_t, cef_v8_propertyattribute_t,
-    cef_v8context_get_current_context, cef_v8context_get_entered_context, cef_v8context_in_context,
-    cef_v8context_t, cef_v8handler_t, cef_v8value_create_function, cef_v8value_create_int,
-    cef_v8value_create_object, cef_v8value_create_string, cef_v8value_t
+    cef_register_extension, cef_string_t, cef_v8_context_get_current_context,
+    cef_v8_context_get_entered_context, cef_v8_context_in_context, cef_v8_context_t,
+    cef_v8_handler_t, cef_v8_propertyattribute_t, cef_v8_value_create_function,
+    cef_v8_value_create_int, cef_v8_value_create_object, cef_v8_value_create_string,
+    cef_v8_value_t
 };
 
 use crate::{Browser, CefString, Frame, RefCountedPtr, Wrappable, Wrapped, ref_counted_ptr, try_c};
@@ -30,7 +31,7 @@ pub fn register_extension(
         Ok(result != 0)
     }
 }
-ref_counted_ptr!(V8Context, cef_v8context_t);
+ref_counted_ptr!(V8Context, cef_v8_context_t);
 
 /// Structure representing a V8 context handle. V8 handles can only be accessed
 /// from the thread on which they are created. Valid threads for creating a V8
@@ -135,7 +136,7 @@ impl V8Context {
     pub fn get_current_context() -> Result<Self> {
         unsafe {
             Ok(V8Context::from_ptr_unchecked(
-                cef_v8context_get_current_context()
+                cef_v8_context_get_current_context()
             ))
         }
     }
@@ -144,14 +145,14 @@ impl V8Context {
     pub fn get_entered_context() -> Result<Self> {
         unsafe {
             Ok(V8Context::from_ptr_unchecked(
-                cef_v8context_get_entered_context()
+                cef_v8_context_get_entered_context()
             ))
         }
     }
 
     /// Returns true (1) if V8 is currently inside a context.
     pub fn in_context() -> Result<bool> {
-        unsafe { Ok(cef_v8context_in_context() != 0) }
+        unsafe { Ok(cef_v8_context_in_context() != 0) }
     }
 }
 
@@ -177,7 +178,7 @@ pub trait V8HandlerCallbacks: Send + Sync + 'static {
 // Structure that should be implemented to handle V8 function calls. The
 // functions of this structure will be called on the thread associated with the
 // V8 function.
-ref_counted_ptr!(V8Handler, cef_v8handler_t);
+ref_counted_ptr!(V8Handler, cef_v8_handler_t);
 
 impl V8Handler {
     pub fn new<C: V8HandlerCallbacks>(delegate: C) -> Self {
@@ -200,12 +201,12 @@ impl V8HandlerWrapper {
     /// the function return value. If execution fails set |exception| to the
     /// exception that will be thrown. Return true (1) if execution was handled.
     unsafe extern "C" fn execute(
-        this: *mut cef_v8handler_t,
+        this: *mut cef_v8_handler_t,
         name: *const cef_string_t,
-        object: *mut cef_v8value_t,
+        object: *mut cef_v8_value_t,
         arguments_count: usize,
-        arguments: *const *mut cef_v8value_t,
-        _retval: *mut *mut cef_v8value_t,
+        arguments: *const *mut cef_v8_value_t,
+        _retval: *mut *mut cef_v8_value_t,
         _exception: *mut cef_string_t
     ) -> std::os::raw::c_int {
         let this: &mut Self = Wrapped::wrappable(this);
@@ -227,12 +228,12 @@ impl V8HandlerWrapper {
 }
 
 impl Wrappable for V8HandlerWrapper {
-    type Cef = cef_v8handler_t;
+    type Cef = cef_v8_handler_t;
 
     /// Converts this to a smart pointer.
-    fn wrap(self) -> RefCountedPtr<cef_v8handler_t> {
+    fn wrap(self) -> RefCountedPtr<cef_v8_handler_t> {
         RefCountedPtr::wrap(
-            cef_v8handler_t {
+            cef_v8_handler_t {
                 base:    unsafe { zeroed() },
                 execute: Some(Self::execute)
             },
@@ -245,8 +246,8 @@ impl Wrappable for V8HandlerWrapper {
 // from the thread on which they are created. Valid threads for creating a V8
 // handle include the render process main thread (TID_RENDERER) and WebWorker
 // threads. A task runner for posting tasks on the associated thread can be
-// retrieved via the cef_v8context_t::get_task_runner() function.
-ref_counted_ptr!(V8Value, cef_v8value_t);
+// retrieved via the cef_v8_context_t::get_task_runner() function.
+ref_counted_ptr!(V8Value, cef_v8_value_t);
 
 impl V8Value {
     /// Returns true (1) if the underlying handle is valid and it can be accessed
@@ -502,11 +503,11 @@ impl V8Value {
     }
 
     // /// Registers an identifier and returns true (1) on success. Access to the
-    // /// identifier will be forwarded to the cef_v8accessor_t instance passed to
-    // /// cef_v8value_t::cef_v8value_create_object(). Returns false (0) if this
+    // /// identifier will be forwarded to the cef_v8_accessor_t instance passed to
+    // /// cef_v8_value_t::cef_v8_value_create_object(). Returns false (0) if this
     // /// function is called incorrectly or an exception is thrown. For read-only
     // /// values this function will return true (1) even though assignment failed.
-    // int(CEF_CALLBACK* set_value_byaccessor)(struct _cef_v8value_t* self,
+    // int(CEF_CALLBACK* set_value_byaccessor)(struct _cef_v8_value_t* self,
     //     const cef_string_t* key,
     //     cef_v8_accesscontrol_t settings,
     //     cef_v8_propertyattribute_t attribute);
@@ -514,35 +515,35 @@ impl V8Value {
     // ///
     // /// Read the keys for the object's values into the specified vector. Integer-
     // /// based keys will also be returned as strings.
-    // int(CEF_CALLBACK* get_keys)(struct _cef_v8value_t* self,
+    // int(CEF_CALLBACK* get_keys)(struct _cef_v8_value_t* self,
     //     cef_string_list_t keys);
 
     /// Sets the user data for this object and returns true (1) on success.
     /// Returns false (0) if this function is called incorrectly. This function
     /// can only be called on user created objects.
-    // int(CEF_CALLBACK* set_user_data)(struct _cef_v8value_t* self,
+    // int(CEF_CALLBACK* set_user_data)(struct _cef_v8_value_t* self,
     //     struct _cef_base_ref_counted_t* user_data);
 
     // /// Returns the user data, if any, assigned to this object.
     // struct _cef_base_ref_counted_t*(CEF_CALLBACK* get_user_data)(
-    //     struct _cef_v8value_t* self);
+    //     struct _cef_v8_value_t* self);
 
     // /// Returns the amount of externally allocated memory registered for the
     // /// object.
     // int(CEF_CALLBACK* get_externally_allocated_memory)(
-    //     struct _cef_v8value_t* self);
+    //     struct _cef_v8_value_t* self);
 
     // /// Adjusts the amount of registered external memory for the object. Used to
     // /// give V8 an indication of the amount of externally allocated memory that is
     // /// kept alive by JavaScript objects. V8 uses this information to decide when
-    // /// to perform global garbage collection. Each cef_v8value_t tracks the amount
+    // /// to perform global garbage collection. Each cef_v8_value_t tracks the amount
     // /// of external memory associated with it and automatically decreases the
     // /// global total by the appropriate amount on its destruction.
     // /// |change_in_bytes| specifies the number of bytes to adjust by. This
     // /// function returns the number of bytes associated with the object after the
     // /// adjustment. This function can only be called on user created objects.
     // int(CEF_CALLBACK* adjust_externally_allocated_memory)(
-    //     struct _cef_v8value_t* self,
+    //     struct _cef_v8_value_t* self,
     //     int change_in_bytes);
 
     /// Returns the number of elements in the array.
@@ -554,29 +555,29 @@ impl V8Value {
 
     // /// Returns the ReleaseCallback object associated with the ArrayBuffer or NULL
     // /// if the ArrayBuffer was not created with CreateArrayBuffer.
-    // struct _cef_v8array_buffer_release_callback_t*(
+    // struct _cef_v8_array_buffer_release_callback_t*(
     //     CEF_CALLBACK* get_array_buffer_release_callback)(
-    //     struct _cef_v8value_t* self);
+    //     struct _cef_v8_value_t* self);
 
     // /// Prevent the ArrayBuffer from using it's memory block by setting the length
     // /// to zero. This operation cannot be undone. If the ArrayBuffer was created
     // /// with CreateArrayBuffer then
-    // /// cef_v8array_buffer_release_callback_t::ReleaseBuffer will be called to
+    // /// cef_v8_array_buffer_release_callback_t::ReleaseBuffer will be called to
     // /// release the underlying buffer.
-    // int(CEF_CALLBACK* neuter_array_buffer)(struct _cef_v8value_t* self);
+    // int(CEF_CALLBACK* neuter_array_buffer)(struct _cef_v8_value_t* self);
 
     // /// Returns the length (in bytes) of the ArrayBuffer.
     // size_t(CEF_CALLBACK* get_array_buffer_byte_length)(
-    //     struct _cef_v8value_t* self);
+    //     struct _cef_v8_value_t* self);
 
     // /// Returns a pointer to the beginning of the memory block for this
     // /// ArrayBuffer backing store. The returned pointer is valid as long as the
-    // /// cef_v8value_t is alive.
-    // void*(CEF_CALLBACK* get_array_buffer_data)(struct _cef_v8value_t* self);
+    // /// cef_v8_value_t is alive.
+    // void*(CEF_CALLBACK* get_array_buffer_data)(struct _cef_v8_value_t* self);
 
     // /// Returns the function name.
     // cef_string_userfree_t(CEF_CALLBACK* get_function_name)(
-    //     struct _cef_v8value_t* self);
+    //     struct _cef_v8_value_t* self);
 
     // /// Returns the function handler or NULL if not a CEF-created function.
     // struct _cef_v8handler_t*(CEF_CALLBACK* get_function_handler)(
@@ -638,7 +639,7 @@ impl V8Value {
 
     /// Create a new cef_v8value_t object of type int.
     pub fn create_int(i: i32) -> Self {
-        unsafe { V8Value::from_ptr_unchecked(cef_v8value_create_int(i)) }
+        unsafe { V8Value::from_ptr_unchecked(cef_v8_value_create_int(i)) }
     }
 
     // /// Create a new cef_v8value_t object of type unsigned int.
@@ -655,7 +656,7 @@ impl V8Value {
 
     pub fn create_string(s: &str) -> Self {
         unsafe {
-            V8Value::from_ptr_unchecked(cef_v8value_create_string(CefString::new(s).as_ptr()))
+            V8Value::from_ptr_unchecked(cef_v8_value_create_string(CefString::new(s).as_ptr()))
         }
     }
 
@@ -666,7 +667,7 @@ impl V8Value {
     /// cef_v8context_t reference.
     /// TODO: add accessor and interceptor parameters
     pub fn create_object() -> Self {
-        unsafe { V8Value::from_ptr_unchecked(cef_v8value_create_object(null_mut(), null_mut())) }
+        unsafe { V8Value::from_ptr_unchecked(cef_v8_value_create_object(null_mut(), null_mut())) }
     }
 
     // /// Create a new cef_v8value_t object of type array with the specified |length|.
@@ -696,7 +697,7 @@ impl V8Value {
     /// enter() and exit() on a stored cef_v8context_t reference.
     pub fn create_function(name: &str, handler: V8Handler) -> Result<V8Value> {
         unsafe {
-            Ok(V8Value::from_ptr_unchecked(cef_v8value_create_function(
+            Ok(V8Value::from_ptr_unchecked(cef_v8_value_create_function(
                 CefString::new(name).as_ptr(),
                 handler.as_ptr()
             )))

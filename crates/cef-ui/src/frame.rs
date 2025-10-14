@@ -174,9 +174,9 @@ impl Frame {
 
     /// Get the V8 context associated with the frame. This function can only be
     /// called from the render process.
-    pub fn get_v8context(&self) -> Result<V8Context> {
-        try_c!(self, get_v8context, {
-            Ok(V8Context::from_ptr_unchecked(get_v8context(self.as_ptr())))
+    pub fn get_v8_context(&self) -> Result<V8Context> {
+        try_c!(self, get_v8_context, {
+            Ok(V8Context::from_ptr_unchecked(get_v8_context(self.as_ptr())))
         })
     }
 

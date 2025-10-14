@@ -23,7 +23,10 @@ impl From<&cef_composition_underline_style_t> for CompositionUnderlineStyle {
             cef_composition_underline_style_t::CEF_CUS_SOLID => CompositionUnderlineStyle::Solid,
             cef_composition_underline_style_t::CEF_CUS_DOT => CompositionUnderlineStyle::Dot,
             cef_composition_underline_style_t::CEF_CUS_DASH => CompositionUnderlineStyle::Dash,
-            cef_composition_underline_style_t::CEF_CUS_NONE => CompositionUnderlineStyle::None
+            cef_composition_underline_style_t::CEF_CUS_NONE => CompositionUnderlineStyle::None,
+            cef_composition_underline_style_t::CEF_CUS_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid CompositionUnderlineStyle variant")
+            }
         }
     }
 }
@@ -92,6 +95,7 @@ impl From<CompositionUnderline> for cef_composition_underline_t {
 impl From<&CompositionUnderline> for cef_composition_underline_t {
     fn from(value: &CompositionUnderline) -> Self {
         cef_composition_underline_t {
+            size:             std::mem::size_of::<cef_composition_underline_t>(),
             range:            value.range.into(),
             color:            value.color.into(),
             background_color: value.background_color.into(),

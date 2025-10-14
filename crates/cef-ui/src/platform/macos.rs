@@ -6,7 +6,7 @@ use cef_ui_sys::{
 use std::{
     env::args,
     ffi::{CString, c_char, c_int},
-    mem::zeroed
+    mem::{size_of, zeroed}
 };
 
 /// Structure representing CefExecuteProcess arguments.
@@ -94,7 +94,10 @@ pub struct WindowInfo(cef_window_info_t);
 
 impl WindowInfo {
     pub fn new() -> Self {
-        Self(unsafe { zeroed() })
+        let mut cef: cef_window_info_t = unsafe { zeroed() };
+        cef.size = size_of::<cef_window_info_t>();
+
+        Self(cef)
     }
 
     /// Convert to a reference.

@@ -1,12 +1,11 @@
 use bitflags::bitflags;
 use cef_ui_sys::{
-    cef_cursor_handle_t, cef_cursor_info_t, cef_cursor_type_t, cef_dom_document_type_t,
-    cef_dom_form_control_type_t, cef_dom_node_type_t, cef_errorcode_t, cef_horizontal_alignment_t,
-    cef_insets_t, cef_log_items_t, cef_log_severity_t, cef_paint_element_type_t, cef_point_t,
-    cef_range_t, cef_rect_t, cef_referrer_policy_t, cef_resource_type_t, cef_runtime_style_t,
-    cef_screen_info_t, cef_size_t, cef_state_t, cef_termination_status_t, cef_text_input_mode_t,
-    cef_thread_id_t, cef_touch_handle_state_flags_t,
-    cef_touch_handle_state_flags_t_CEF_THS_FLAG_ALPHA,
+    cef_cursor_info_t, cef_cursor_type_t, cef_dom_document_type_t, cef_dom_form_control_type_t,
+    cef_dom_node_type_t, cef_errorcode_t, cef_horizontal_alignment_t, cef_insets_t,
+    cef_log_items_t, cef_log_severity_t, cef_paint_element_type_t, cef_point_t, cef_range_t,
+    cef_rect_t, cef_referrer_policy_t, cef_resource_type_t, cef_runtime_style_t, cef_screen_info_t,
+    cef_size_t, cef_state_t, cef_termination_status_t, cef_text_input_mode_t, cef_thread_id_t,
+    cef_touch_handle_state_flags_t, cef_touch_handle_state_flags_t_CEF_THS_FLAG_ALPHA,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ENABLED,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_NONE,
     cef_touch_handle_state_flags_t_CEF_THS_FLAG_ORIENTATION,
@@ -953,10 +952,6 @@ pub enum ErrorCode {
     /// did not provide CT information that complied with the policy.
     CertificateTransparencyRequired,
 
-    /// The certificate chained to a legacy Symantec root that is no longer trusted.
-    /// https:///g.co/chrome/symantecpkicerts
-    CertSymantecLegacy,
-
     /// -216 was QUIC_CERT_ROOT_NOT_KNOWN which has been renumbered to not be in the
     /// certificate error range.
 
@@ -1415,10 +1410,40 @@ pub enum ErrorCode {
     ZstdWindowSizeTooBig,
 
     /// The server sent an incorrect content dictionary header.
-    UnxpectedContentDictionaryHeader,
+    UnexpectedContentDictionaryHeader,
 
     /// DNS received an invalid probe record.
-    DnsSecureProbeRecordInvalid
+    DnsSecureProbeRecordInvalid,
+
+    /// Request was blocked by fingerprinting protection.
+    BlockedByFingerprintingProtection,
+
+    /// Certificate is self-signed on local network.
+    CertSelfSignedLocalNetwork,
+
+    /// Proxy is required for this request.
+    ProxyRequired,
+
+    /// Blob invalid construction arguments.
+    BlobInvalidConstructionArguments,
+
+    /// Blob out of memory.
+    BlobOutOfMemory,
+
+    /// Blob file write failed.
+    BlobFileWriteFailed,
+
+    /// Blob source died in transit.
+    BlobSourceDiedInTransit,
+
+    /// Blob dereferenced while building.
+    BlobDereferencedWhileBuilding,
+
+    /// Blob referenced blob broken.
+    BlobReferencedBlobBroken,
+
+    /// Blob referenced file unavailable.
+    BlobReferencedFileUnavailable
 }
 
 impl From<cef_errorcode_t> for ErrorCode {
@@ -1547,7 +1572,6 @@ impl From<&cef_errorcode_t> for ErrorCode {
             cef_errorcode_t::ERR_CERT_NAME_CONSTRAINT_VIOLATION => ErrorCode::CertNameConstraintViolation,
             cef_errorcode_t::ERR_CERT_VALIDITY_TOO_LONG => ErrorCode::CertValidityTooLong,
             cef_errorcode_t::ERR_CERTIFICATE_TRANSPARENCY_REQUIRED => ErrorCode::CertificateTransparencyRequired,
-            cef_errorcode_t::ERR_CERT_SYMANTEC_LEGACY => ErrorCode::CertSymantecLegacy,
             cef_errorcode_t::ERR_CERT_KNOWN_INTERCEPTION_BLOCKED => ErrorCode::CertKnownInterceptionBlocked,
             cef_errorcode_t::ERR_CERT_END => ErrorCode::CertEnd,
             cef_errorcode_t::ERR_INVALID_URL => ErrorCode::InvalidUrl,
@@ -1626,45 +1650,55 @@ impl From<&cef_errorcode_t> for ErrorCode {
             cef_errorcode_t::ERR_CACHE_AUTH_FAILURE_AFTER_READ => ErrorCode::CacheAuthFailureAfterRead,
             cef_errorcode_t::ERR_CACHE_ENTRY_NOT_SUITABLE => ErrorCode::CacheEntryNotSuitable,
             cef_errorcode_t::ERR_CACHE_DOOM_FAILURE => ErrorCode::CacheDoomFailure,
-    cef_errorcode_t::ERR_CACHE_OPEN_OR_CREATE_FAILURE => ErrorCode::CacheOpenOrCreateFailure,
-    cef_errorcode_t::ERR_INSECURE_RESPONSE => ErrorCode::InsecureResponse,
-    cef_errorcode_t::ERR_NO_PRIVATE_KEY_FOR_CERT => ErrorCode::NoPrivateKeyForCert,
-    cef_errorcode_t::ERR_ADD_USER_CERT_FAILED => ErrorCode::AddUserCertFailed,
-    cef_errorcode_t::ERR_INVALID_SIGNED_EXCHANGE => ErrorCode::InvalidSignedExchange,
-    cef_errorcode_t::ERR_INVALID_WEB_BUNDLE => ErrorCode::InvalidWebBundle,
-    cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_FAILED => ErrorCode::TrustTokenOperationFailed,
-    cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_SUCCESS_WITHOUT_SENDING_REQUEST => ErrorCode::TrustTokenOperationSuccessWithoutSendingRequest,
-    cef_errorcode_t::ERR_PKCS12_IMPORT_BAD_PASSWORD => ErrorCode::Pkcs12ImportBadPassword,
-    cef_errorcode_t::ERR_PKCS12_IMPORT_FAILED => ErrorCode::Pkcs12ImportFailed,
-    cef_errorcode_t::ERR_IMPORT_CA_CERT_NOT_CA => ErrorCode::ImportCaCertNotCa,
-    cef_errorcode_t::ERR_IMPORT_CERT_ALREADY_EXISTS => ErrorCode::ImportCertAlreadyExists,
-    cef_errorcode_t::ERR_IMPORT_CA_CERT_FAILED => ErrorCode::ImportCaCertFailed,
-    cef_errorcode_t::ERR_IMPORT_SERVER_CERT_FAILED => ErrorCode::ImportServerCertFailed,
-    cef_errorcode_t::ERR_PKCS12_IMPORT_INVALID_MAC => ErrorCode::Pkcs12ImportInvalidMac,
-    cef_errorcode_t::ERR_PKCS12_IMPORT_INVALID_FILE => ErrorCode::Pkcs12ImportInvalidFile,
-    cef_errorcode_t::ERR_PKCS12_IMPORT_UNSUPPORTED => ErrorCode::Pkcs12ImportUnsupported,
-    cef_errorcode_t::ERR_KEY_GENERATION_FAILED => ErrorCode::KeyGenerationFailed,
-    cef_errorcode_t::ERR_PRIVATE_KEY_EXPORT_FAILED => ErrorCode::PrivateKeyExportFailed,
-    cef_errorcode_t::ERR_SELF_SIGNED_CERT_GENERATION_FAILED => ErrorCode::SelfSignedCertGenerationFailed,
-    cef_errorcode_t::ERR_CERT_DATABASE_CHANGED => ErrorCode::CertDatabaseChanged,
-    cef_errorcode_t::ERR_CERT_VERIFIER_CHANGED => ErrorCode::CertVerifierChanged,
-    cef_errorcode_t::ERR_DNS_MALFORMED_RESPONSE => ErrorCode::DnsMalformedResponse,
-    cef_errorcode_t::ERR_DNS_SERVER_REQUIRES_TCP => ErrorCode::DnsServerRequiresTcp,
-    cef_errorcode_t::ERR_DNS_SERVER_FAILED => ErrorCode::DnsServerFailed,
-    cef_errorcode_t::ERR_DNS_TIMED_OUT => ErrorCode::DnsTimedOut,
-    cef_errorcode_t::ERR_DNS_CACHE_MISS => ErrorCode::DnsCacheMiss,
-    cef_errorcode_t::ERR_DNS_SEARCH_EMPTY => ErrorCode::DnsSearchEmpty,
-    cef_errorcode_t::ERR_DNS_SORT_ERROR => ErrorCode::DnsSortError,
-    cef_errorcode_t::ERR_DNS_SECURE_RESOLVER_HOSTNAME_RESOLUTION_FAILED => ErrorCode::DnsSecureResolverHostnameResolutionFailed,
-    cef_errorcode_t::ERR_DNS_NAME_HTTPS_ONLY => ErrorCode::DnsNameHttpsOnly,
-    cef_errorcode_t::ERR_DNS_REQUEST_CANCELLED => ErrorCode::DnsRequestCancelled,
-    cef_errorcode_t::ERR_DNS_NO_MATCHING_SUPPORTED_ALPN => ErrorCode::DnsNoMatchingSupportedAlpn,
-    cef_errorcode_t::ERR_DICTIONARY_LOAD_FAILED => ErrorCode::DictionaryLoadFailed,
-    cef_errorcode_t::ERR_NETWORK_ACCESS_REVOKED => ErrorCode::NetworkAccessRevoked,
-    cef_errorcode_t::ERR_ZSTD_WINDOW_SIZE_TOO_BIG => ErrorCode::ZstdWindowSizeTooBig,
-    cef_errorcode_t::ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER => ErrorCode::UnxpectedContentDictionaryHeader,
-    cef_errorcode_t::ERR_DNS_SECURE_PROBE_RECORD_INVALID => ErrorCode::DnsSecureProbeRecordInvalid,
-}
+            cef_errorcode_t::ERR_CACHE_OPEN_OR_CREATE_FAILURE => ErrorCode::CacheOpenOrCreateFailure,
+            cef_errorcode_t::ERR_INSECURE_RESPONSE => ErrorCode::InsecureResponse,
+            cef_errorcode_t::ERR_NO_PRIVATE_KEY_FOR_CERT => ErrorCode::NoPrivateKeyForCert,
+            cef_errorcode_t::ERR_ADD_USER_CERT_FAILED => ErrorCode::AddUserCertFailed,
+            cef_errorcode_t::ERR_INVALID_SIGNED_EXCHANGE => ErrorCode::InvalidSignedExchange,
+            cef_errorcode_t::ERR_INVALID_WEB_BUNDLE => ErrorCode::InvalidWebBundle,
+            cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_FAILED => ErrorCode::TrustTokenOperationFailed,
+            cef_errorcode_t::ERR_TRUST_TOKEN_OPERATION_SUCCESS_WITHOUT_SENDING_REQUEST => ErrorCode::TrustTokenOperationSuccessWithoutSendingRequest,
+            cef_errorcode_t::ERR_PKCS12_IMPORT_BAD_PASSWORD => ErrorCode::Pkcs12ImportBadPassword,
+            cef_errorcode_t::ERR_PKCS12_IMPORT_FAILED => ErrorCode::Pkcs12ImportFailed,
+            cef_errorcode_t::ERR_IMPORT_CA_CERT_NOT_CA => ErrorCode::ImportCaCertNotCa,
+            cef_errorcode_t::ERR_IMPORT_CERT_ALREADY_EXISTS => ErrorCode::ImportCertAlreadyExists,
+            cef_errorcode_t::ERR_IMPORT_CA_CERT_FAILED => ErrorCode::ImportCaCertFailed,
+            cef_errorcode_t::ERR_IMPORT_SERVER_CERT_FAILED => ErrorCode::ImportServerCertFailed,
+            cef_errorcode_t::ERR_PKCS12_IMPORT_INVALID_MAC => ErrorCode::Pkcs12ImportInvalidMac,
+            cef_errorcode_t::ERR_PKCS12_IMPORT_INVALID_FILE => ErrorCode::Pkcs12ImportInvalidFile,
+            cef_errorcode_t::ERR_PKCS12_IMPORT_UNSUPPORTED => ErrorCode::Pkcs12ImportUnsupported,
+            cef_errorcode_t::ERR_KEY_GENERATION_FAILED => ErrorCode::KeyGenerationFailed,
+            cef_errorcode_t::ERR_PRIVATE_KEY_EXPORT_FAILED => ErrorCode::PrivateKeyExportFailed,
+            cef_errorcode_t::ERR_SELF_SIGNED_CERT_GENERATION_FAILED => ErrorCode::SelfSignedCertGenerationFailed,
+            cef_errorcode_t::ERR_CERT_DATABASE_CHANGED => ErrorCode::CertDatabaseChanged,
+            cef_errorcode_t::ERR_CERT_VERIFIER_CHANGED => ErrorCode::CertVerifierChanged,
+            cef_errorcode_t::ERR_DNS_MALFORMED_RESPONSE => ErrorCode::DnsMalformedResponse,
+            cef_errorcode_t::ERR_DNS_SERVER_REQUIRES_TCP => ErrorCode::DnsServerRequiresTcp,
+            cef_errorcode_t::ERR_DNS_SERVER_FAILED => ErrorCode::DnsServerFailed,
+            cef_errorcode_t::ERR_DNS_TIMED_OUT => ErrorCode::DnsTimedOut,
+            cef_errorcode_t::ERR_DNS_CACHE_MISS => ErrorCode::DnsCacheMiss,
+            cef_errorcode_t::ERR_DNS_SEARCH_EMPTY => ErrorCode::DnsSearchEmpty,
+            cef_errorcode_t::ERR_DNS_SORT_ERROR => ErrorCode::DnsSortError,
+            cef_errorcode_t::ERR_DNS_SECURE_RESOLVER_HOSTNAME_RESOLUTION_FAILED => ErrorCode::DnsSecureResolverHostnameResolutionFailed,
+            cef_errorcode_t::ERR_DNS_NAME_HTTPS_ONLY => ErrorCode::DnsNameHttpsOnly,
+            cef_errorcode_t::ERR_DNS_REQUEST_CANCELLED => ErrorCode::DnsRequestCancelled,
+            cef_errorcode_t::ERR_DNS_NO_MATCHING_SUPPORTED_ALPN => ErrorCode::DnsNoMatchingSupportedAlpn,
+            cef_errorcode_t::ERR_DICTIONARY_LOAD_FAILED => ErrorCode::DictionaryLoadFailed,
+            cef_errorcode_t::ERR_NETWORK_ACCESS_REVOKED => ErrorCode::NetworkAccessRevoked,
+            cef_errorcode_t::ERR_ZSTD_WINDOW_SIZE_TOO_BIG => ErrorCode::ZstdWindowSizeTooBig,
+            cef_errorcode_t::ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER => ErrorCode::UnexpectedContentDictionaryHeader,
+            cef_errorcode_t::ERR_DNS_SECURE_PROBE_RECORD_INVALID => ErrorCode::DnsSecureProbeRecordInvalid,
+            cef_errorcode_t::ERR_BLOCKED_BY_FINGERPRINTING_PROTECTION => ErrorCode::BlockedByFingerprintingProtection,
+            cef_errorcode_t::ERR_CERT_SELF_SIGNED_LOCAL_NETWORK => ErrorCode::CertSelfSignedLocalNetwork,
+            cef_errorcode_t::ERR_PROXY_REQUIRED => ErrorCode::ProxyRequired,
+            cef_errorcode_t::ERR_BLOB_INVALID_CONSTRUCTION_ARGUMENTS => ErrorCode::BlobInvalidConstructionArguments,
+            cef_errorcode_t::ERR_BLOB_OUT_OF_MEMORY => ErrorCode::BlobOutOfMemory,
+            cef_errorcode_t::ERR_BLOB_FILE_WRITE_FAILED => ErrorCode::BlobFileWriteFailed,
+            cef_errorcode_t::ERR_BLOB_SOURCE_DIED_IN_TRANSIT => ErrorCode::BlobSourceDiedInTransit,
+            cef_errorcode_t::ERR_BLOB_DEREFERENCED_WHILE_BUILDING => ErrorCode::BlobDereferencedWhileBuilding,
+            cef_errorcode_t::ERR_BLOB_REFERENCED_BLOB_BROKEN => ErrorCode::BlobReferencedBlobBroken,
+            cef_errorcode_t::ERR_BLOB_REFERENCED_FILE_UNAVAILABLE => ErrorCode::BlobReferencedFileUnavailable,
+        }
     }
 }
 
@@ -1794,7 +1828,6 @@ impl From<&ErrorCode> for cef_errorcode_t {
             ErrorCode::CertNameConstraintViolation => cef_errorcode_t::ERR_CERT_NAME_CONSTRAINT_VIOLATION,
             ErrorCode::CertValidityTooLong => cef_errorcode_t::ERR_CERT_VALIDITY_TOO_LONG,
             ErrorCode::CertificateTransparencyRequired => cef_errorcode_t::ERR_CERTIFICATE_TRANSPARENCY_REQUIRED,
-            ErrorCode::CertSymantecLegacy => cef_errorcode_t::ERR_CERT_SYMANTEC_LEGACY,
             ErrorCode::CertKnownInterceptionBlocked => cef_errorcode_t::ERR_CERT_KNOWN_INTERCEPTION_BLOCKED,
             ErrorCode::CertEnd => cef_errorcode_t::ERR_CERT_END,
             ErrorCode::InvalidUrl => cef_errorcode_t::ERR_INVALID_URL,
@@ -1909,8 +1942,18 @@ impl From<&ErrorCode> for cef_errorcode_t {
             ErrorCode::DictionaryLoadFailed => cef_errorcode_t::ERR_DICTIONARY_LOAD_FAILED,
             ErrorCode::NetworkAccessRevoked => cef_errorcode_t::ERR_NETWORK_ACCESS_REVOKED,
             ErrorCode::ZstdWindowSizeTooBig => cef_errorcode_t::ERR_ZSTD_WINDOW_SIZE_TOO_BIG,
-            ErrorCode::UnxpectedContentDictionaryHeader => cef_errorcode_t::ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER,
+            ErrorCode::UnexpectedContentDictionaryHeader => cef_errorcode_t::ERR_UNEXPECTED_CONTENT_DICTIONARY_HEADER,
             ErrorCode::DnsSecureProbeRecordInvalid => cef_errorcode_t::ERR_DNS_SECURE_PROBE_RECORD_INVALID,
+            ErrorCode::BlockedByFingerprintingProtection => cef_errorcode_t::ERR_BLOCKED_BY_FINGERPRINTING_PROTECTION,
+            ErrorCode::CertSelfSignedLocalNetwork => cef_errorcode_t::ERR_CERT_SELF_SIGNED_LOCAL_NETWORK,
+            ErrorCode::ProxyRequired => cef_errorcode_t::ERR_PROXY_REQUIRED,
+            ErrorCode::BlobInvalidConstructionArguments => cef_errorcode_t::ERR_BLOB_INVALID_CONSTRUCTION_ARGUMENTS,
+            ErrorCode::BlobOutOfMemory => cef_errorcode_t::ERR_BLOB_OUT_OF_MEMORY,
+            ErrorCode::BlobFileWriteFailed => cef_errorcode_t::ERR_BLOB_FILE_WRITE_FAILED,
+            ErrorCode::BlobSourceDiedInTransit => cef_errorcode_t::ERR_BLOB_SOURCE_DIED_IN_TRANSIT,
+            ErrorCode::BlobDereferencedWhileBuilding => cef_errorcode_t::ERR_BLOB_DEREFERENCED_WHILE_BUILDING,
+            ErrorCode::BlobReferencedBlobBroken => cef_errorcode_t::ERR_BLOB_REFERENCED_BLOB_BROKEN,
+            ErrorCode::BlobReferencedFileUnavailable => cef_errorcode_t::ERR_BLOB_REFERENCED_FILE_UNAVAILABLE,
         }
     }
 }
@@ -2271,7 +2314,10 @@ impl From<&cef_text_input_mode_t> for TextInputMode {
             cef_text_input_mode_t::CEF_TEXT_INPUT_MODE_EMAIL => TextInputMode::Email,
             cef_text_input_mode_t::CEF_TEXT_INPUT_MODE_NUMERIC => TextInputMode::Numeric,
             cef_text_input_mode_t::CEF_TEXT_INPUT_MODE_DECIMAL => TextInputMode::Decimal,
-            cef_text_input_mode_t::CEF_TEXT_INPUT_MODE_SEARCH => TextInputMode::Search
+            cef_text_input_mode_t::CEF_TEXT_INPUT_MODE_SEARCH => TextInputMode::Search,
+            cef_text_input_mode_t::CEF_TEXT_INPUT_MODE_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid TextInputMode variant")
+            }
         }
     }
 }
@@ -2354,6 +2400,9 @@ impl From<&cef_window_open_disposition_t> for WindowOpenDisposition {
             cef_window_open_disposition_t::CEF_WOD_NEW_PICTURE_IN_PICTURE => {
                 WindowOpenDisposition::NewPictureInPicture
             },
+            cef_window_open_disposition_t::CEF_WOD_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid WindowOpenDisposition variant")
+            }
         }
     }
 }
@@ -2437,7 +2486,10 @@ impl From<&cef_termination_status_t> for TerminationStatus {
             cef_termination_status_t::TS_PROCESS_CRASHED => TerminationStatus::ProcessCrashed,
             cef_termination_status_t::TS_PROCESS_OOM => TerminationStatus::ProcessOom,
             cef_termination_status_t::TS_LAUNCH_FAILED => TerminationStatus::LauchFailed,
-            cef_termination_status_t::TS_INTEGRITY_FAILURE => TerminationStatus::IntegrityFailure
+            cef_termination_status_t::TS_INTEGRITY_FAILURE => TerminationStatus::IntegrityFailure,
+            cef_termination_status_t::TS_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid TerminationStatus variant")
+            }
         }
     }
 }
@@ -2518,25 +2570,26 @@ impl From<&cef_referrer_policy_t> for ReferrerPolicy {
     fn from(value: &cef_referrer_policy_t) -> Self {
         match value {
             cef_referrer_policy_t::REFERRER_POLICY_CLEAR_REFERRER_ON_TRANSITION_FROM_SECURE_TO_INSECURE => {
-                ReferrerPolicy::ClearReferrerOnTransitionFromSecureToInsecure
-            },
+                        ReferrerPolicy::ClearReferrerOnTransitionFromSecureToInsecure
+                    },
             cef_referrer_policy_t::REFERRER_POLICY_REDUCE_REFERRER_GRANULARITY_ON_TRANSITION_CROSS_ORIGIN => {
-                ReferrerPolicy::ReduceReferrerGranularityOnTransitionCrossOrigin
-            },
+                        ReferrerPolicy::ReduceReferrerGranularityOnTransitionCrossOrigin
+                    },
             cef_referrer_policy_t::REFERRER_POLICY_ORIGIN_ONLY_ON_TRANSITION_CROSS_ORIGIN => {
-                ReferrerPolicy::OriginOnlyOnTransitionCrossOrigin
-            },
+                        ReferrerPolicy::OriginOnlyOnTransitionCrossOrigin
+                    },
             cef_referrer_policy_t::REFERRER_POLICY_NEVER_CLEAR_REFERRER => {
-                ReferrerPolicy::NeverClearReferrer
-            },
+                        ReferrerPolicy::NeverClearReferrer
+                    },
             cef_referrer_policy_t::REFERRER_POLICY_ORIGIN => ReferrerPolicy::Origin,
             cef_referrer_policy_t::REFERRER_POLICY_CLEAR_REFERRER_ON_TRANSITION_CROSS_ORIGIN => {
-                ReferrerPolicy::ClearReferrerOnTransitionCrossOrigin
-            },
+                        ReferrerPolicy::ClearReferrerOnTransitionCrossOrigin
+                    },
             cef_referrer_policy_t::REFERRER_POLICY_ORIGIN_CLEAR_ON_TRANSITION_FROM_SECURE_TO_INSECURE => {
-                ReferrerPolicy::OriginClearOnTransitionFromSecureToInsecure
-            },
-            cef_referrer_policy_t::REFERRER_POLICY_NO_REFERRER => ReferrerPolicy::NoReferrer
+                        ReferrerPolicy::OriginClearOnTransitionFromSecureToInsecure
+                    },
+            cef_referrer_policy_t::REFERRER_POLICY_NO_REFERRER => ReferrerPolicy::NoReferrer,
+            cef_referrer_policy_t::REFERRER_POLICY_NUM_VALUES => panic!("NUM_VALUES is not a valid ReferrerPolicy variant"),
         }
     }
 }
@@ -2673,6 +2726,9 @@ impl From<&cef_resource_type_t> for ResourceType {
             cef_resource_type_t::RT_NAVIGATION_PRELOAD_SUB_FRAME => {
                 ResourceType::NavigationPreloadSubFrame
             },
+            cef_resource_type_t::RT_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid ResourceType variant")
+            }
         }
     }
 }
@@ -2967,6 +3023,7 @@ impl From<ScreenInfo> for cef_screen_info_t {
 impl From<&ScreenInfo> for cef_screen_info_t {
     fn from(value: &ScreenInfo) -> Self {
         Self {
+            size:                std::mem::size_of::<cef_screen_info_t>(),
             device_scale_factor: value.device_scale_factor,
             depth:               value.depth as c_int,
             depth_per_component: value.depth_per_component as c_int,
@@ -3090,6 +3147,7 @@ impl From<TouchHandleState> for cef_touch_handle_state_t {
 impl From<&TouchHandleState> for cef_touch_handle_state_t {
     fn from(value: &TouchHandleState) -> Self {
         Self {
+            size:              std::mem::size_of::<cef_touch_handle_state_t>(),
             touch_handle_id:   value.touch_handle_id as c_int,
             flags:             value.flags.into(),
             enabled:           value.enabled as c_int,
@@ -3173,7 +3231,8 @@ impl From<&cef_thread_id_t> for ThreadId {
             cef_thread_id_t::TID_FILE_USER_BLOCKING => Self::FileUserBlocking,
             cef_thread_id_t::TID_PROCESS_LAUNCHER => Self::ProcessLauncher,
             cef_thread_id_t::TID_IO => Self::IO,
-            cef_thread_id_t::TID_RENDERER => Self::Renderer
+            cef_thread_id_t::TID_RENDERER => Self::Renderer,
+            cef_thread_id_t::TID_NUM_VALUES => panic!("NUM_VALUES is not a valid ThreadId variant")
         }
     }
 }
@@ -3342,7 +3401,10 @@ impl From<cef_transition_type_t> for TransitionType {
             cef_transition_type_t::TT_CLIENT_REDIRECT_FLAG => Self::ClientRedirectFlag,
             cef_transition_type_t::TT_SERVER_REDIRECT_FLAG => Self::ServerRedirectFlag,
             cef_transition_type_t::TT_IS_REDIRECT_MASK => Self::IsRedirectMask,
-            cef_transition_type_t::TT_QUALIFIER_MASK => Self::QualifierMask
+            cef_transition_type_t::TT_QUALIFIER_MASK => Self::QualifierMask,
+            cef_transition_type_t::TT_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid TransitionType variant")
+            }
         }
     }
 }
@@ -3485,7 +3547,10 @@ impl From<cef_cursor_type_t> for CursorType {
             cef_cursor_type_t::CT_DND_NONE => Self::DndNone,
             cef_cursor_type_t::CT_DND_MOVE => Self::DndMove,
             cef_cursor_type_t::CT_DND_COPY => Self::DndCopy,
-            cef_cursor_type_t::CT_DND_LINK => Self::DndLink
+            cef_cursor_type_t::CT_DND_LINK => Self::DndLink,
+            cef_cursor_type_t::CT_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid CursorType variant")
+            }
         }
     }
 }
@@ -3544,15 +3609,6 @@ impl From<CursorType> for cef_cursor_type_t {
             CursorType::DndCopy => Self::CT_DND_COPY,
             CursorType::DndLink => Self::CT_DND_LINK
         }
-    }
-}
-
-// TODO: I don't understand how to handle CursorHandle since it's different on Windows, Linux and MacOS.
-pub struct CursorHandle;
-
-impl From<cef_cursor_handle_t> for CursorHandle {
-    fn from(_value: cef_cursor_handle_t) -> Self {
-        Self
     }
 }
 
@@ -3639,7 +3695,10 @@ impl From<cef_dom_document_type_t> for DOMDocumentType {
             cef_dom_document_type_t::DOM_DOCUMENT_TYPE_UNKNOWN => Self::Unknown,
             cef_dom_document_type_t::DOM_DOCUMENT_TYPE_HTML => Self::Html,
             cef_dom_document_type_t::DOM_DOCUMENT_TYPE_XHTML => Self::Xhtml,
-            cef_dom_document_type_t::DOM_DOCUMENT_TYPE_PLUGIN => Self::Plugin
+            cef_dom_document_type_t::DOM_DOCUMENT_TYPE_PLUGIN => Self::Plugin,
+            cef_dom_document_type_t::DOM_DOCUMENT_TYPE_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid DOMDocumentType variant")
+            }
         }
     }
 }
@@ -3685,7 +3744,10 @@ impl From<cef_dom_node_type_t> for DOMNodeType {
             cef_dom_node_type_t::DOM_NODE_TYPE_COMMENT => Self::Comment,
             cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT => Self::Document,
             cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT_TYPE => Self::DocumentType,
-            cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT_FRAGMENT => Self::DocumentFragment
+            cef_dom_node_type_t::DOM_NODE_TYPE_DOCUMENT_FRAGMENT => Self::DocumentFragment,
+            cef_dom_node_type_t::DOM_NODE_TYPE_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid DOMNodeType variant")
+            }
         }
     }
 }
@@ -3792,7 +3854,10 @@ impl From<cef_dom_form_control_type_t> for DOMFormControlType {
             cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_SELECT_MULTIPLE => {
                 Self::SelectMultiple
             },
-            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_TEXT_AREA => Self::TextArea
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_TEXT_AREA => Self::TextArea,
+            cef_dom_form_control_type_t::DOM_FORM_CONTROL_TYPE_NUM_VALUES => {
+                panic!("NUM_VALUES is not a valid DOMFormControlType variant")
+            }
         }
     }
 }
