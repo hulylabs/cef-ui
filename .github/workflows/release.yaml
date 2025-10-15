@@ -65,6 +65,7 @@ jobs:
           ${{ matrix.extract_cmd }} *.tar
         fi
         mv cef_binary_*/* .
+        ls .
         
     - name: Process CEF artifacts
       run: |

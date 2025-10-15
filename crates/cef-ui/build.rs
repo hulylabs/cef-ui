@@ -26,10 +26,6 @@ fn main() -> Result<()> {
 
         let artifacts_dir = get_cef_artifacts_dir()?;
 
-        // Link statically to the CEF sandbox.
-        println!("cargo:rustc-link-search=native={}", artifacts_dir.display());
-        println!("cargo:rustc-link-lib=static=cef_sandbox");
-
         // Link dynamically to CEF.
         println!("cargo:rustc-link-lib=dylib=libcef");
 
