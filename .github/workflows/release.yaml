@@ -69,7 +69,14 @@ jobs:
       run: cargo cef-artifacts
 
     - name: Build CEF Simple
-      run: CEF_ARTIFACTS_DIR=artifacts/cef cargo cef-build-debug
+      run: |
+        echo "Searching for cef_window_handle_t in platform-specific files:"
+        echo "Linux x86_64 files:"
+        grep -n "cef_window_handle_t" crates/cef-ui-sys/src/linux_x86_64/bindings.rs || echo "No matches in linux_x86_64/bindings.rs"
+        echo "Windows x86_64 files:"
+        grep -n "cef_window_handle_t" crates/cef-ui-sys/src/windows_x86_64/bindings.rs || echo "No matches in windows_x86_64/bindings.rs"
+        
+        CEF_ARTIFACTS_DIR=artifacts/cef cargo cef-build-debug
         
     - name: Create artifact
       run: |
