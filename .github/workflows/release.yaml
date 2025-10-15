@@ -66,10 +66,10 @@ jobs:
         mv cef_binary_*/* .
         
     - name: Process CEF artifacts
-      run: CEF_ARTIFACTS_DIR=artifacts/cef cargo cef-artifacts
+      run: cargo cef-artifacts
 
     - name: Build CEF Simple
-      run: cargo cef-build-debug
+      run: CEF_ARTIFACTS_DIR=artifacts/cef cargo cef-build-debug
         
     - name: Create artifact
       run: |
