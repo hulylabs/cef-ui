@@ -30,6 +30,15 @@ pub use string::*;
 pub use v8_context::*;
 pub use values::*;
 
+use cef_ui_sys::CEF_API_VERSION_13800;
+
+pub fn cef_api_hash() {
+    unsafe {
+        let lib = &CEFLIB;
+        (lib.cef_api_hash)(CEF_API_VERSION_13800 as i32, 0);
+    }
+}
+
 pub fn execute_process(args: MainArgs, app: Option<App>) -> i32 {
     unsafe {
         let lib = &CEFLIB;
