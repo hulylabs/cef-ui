@@ -22,6 +22,12 @@ const CEF_URL: &str =
 /// Downloads the tarball, untars it, and decompresses it. If the
 /// target directory exists, then this function does nothing.
 pub fn download_and_extract_cef(dir: &Path) -> Result<()> {
+    println!("cargo:warning=Downloading CEF artifacts from {}", CEF_URL);
+    println!(
+        "cargo:warning=Downloading CEF artifacts to {}",
+        dir.canonicalize()?.display()
+    );
+
     if dir.exists() {
         return Ok(());
     }
