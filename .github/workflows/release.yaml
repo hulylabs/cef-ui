@@ -77,7 +77,7 @@ jobs:
         grep -n "cef_cursor_handle_t" crates/cef-ui-sys/src/windows_x86_64/bindings.rs || echo "No matches in windows_x86_64/bindings.rs"
         grep -n "cef_event_handle_t" crates/cef-ui-sys/src/windows_x86_64/bindings.rs || echo "No matches in windows_x86_64/bindings.rs"
         
-        export CEF_ARTIFACTS_DIR=artifacts/cef
+        export CEF_ARTIFACTS_DIR=$(pwd)/artifacts/cef
         cargo cef-build-debug
         
     - name: Create artifact
