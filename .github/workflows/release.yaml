@@ -70,16 +70,15 @@ jobs:
 
     - name: Build CEF Simple
       run: |
-        echo "Linux x86_64 files:"
-        grep -n "cef_window_handle_t" crates/cef-ui-sys/src/linux_x86_64/bindings.rs || echo "No matches in linux_x86_64/bindings.rs"
-        grep -n "cef_cursor_handle_t" crates/cef-ui-sys/src/linux_x86_64/bindings.rs || echo "No matches in linux_x86_64/bindings.rs"
-        grep -n "cef_event_handle_t" crates/cef-ui-sys/src/linux_x86_64/bindings.rs || echo "No matches in linux_x86_64/bindings.rs"
+        ls artifacts/cef
+
         echo "Windows x86_64 files:"
         grep -n "cef_window_handle_t" crates/cef-ui-sys/src/windows_x86_64/bindings.rs || echo "No matches in windows_x86_64/bindings.rs"
         grep -n "cef_cursor_handle_t" crates/cef-ui-sys/src/windows_x86_64/bindings.rs || echo "No matches in windows_x86_64/bindings.rs"
         grep -n "cef_event_handle_t" crates/cef-ui-sys/src/windows_x86_64/bindings.rs || echo "No matches in windows_x86_64/bindings.rs"
         
-        CEF_ARTIFACTS_DIR=artifacts/cef cargo cef-build-debug
+        export CEF_ARTIFACTS_DIR=artifacts/cef
+        cargo cef-build-debug
         
     - name: Create artifact
       run: |
