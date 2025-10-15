@@ -70,7 +70,6 @@ jobs:
 
     - name: Build CEF Simple
       run: |
-        echo "Searching for cef_window_handle_t in platform-specific files:"
         echo "Linux x86_64 files:"
         grep -n "cef_window_handle_t" crates/cef-ui-sys/src/linux_x86_64/bindings.rs || echo "No matches in linux_x86_64/bindings.rs"
         grep -n "cef_cursor_handle_t" crates/cef-ui-sys/src/linux_x86_64/bindings.rs || echo "No matches in linux_x86_64/bindings.rs"
