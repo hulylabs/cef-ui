@@ -96,9 +96,9 @@ fn copy_cef_windows() -> Result<()> {
 }
 
 /// Call this in your binary helper crate's build.rs file to
-/// properly link against the CEF sandbox static library.
+/// properly link against the sandbox library.
 pub fn link_cef_helper() -> Result<()> {
-    // We must also link against the macOS sandbox libary.
+    // We must link against the macOS sandbox library.
     println!("cargo:rustc-link-lib=sandbox");
 
     Ok(())
