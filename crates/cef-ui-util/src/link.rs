@@ -63,8 +63,21 @@ fn copy_cef_linux() -> Result<()> {
         dst.display()
     );
 
-    // Copy the CEF binaries.
+    if src.exists() {
+        println!("cargo:warning=Source directory exists");
+    } else {
+        println!("cargo:warning=Source directory does not exist");
+    }
+
+    if dst.exists() {
+        println!("cargo:warning=Destination directory exists");
+    } else {
+        println!("cargo:warning=Destination directory does not exist");
+    }
+
     copy_files(&src, &dst)?;
+
+    println!("cargo:warning=Finished copying CEF files");
 
     Ok(())
 }
