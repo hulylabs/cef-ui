@@ -10,7 +10,11 @@ use tracing_subscriber::FmtSubscriber;
 struct BuildArgs {
     /// Whether this is a release build.
     #[arg(long, default_value_t = String::from("dev"))]
-    pub profile: String
+    pub profile: String,
+
+    /// The target triple to build for.
+    #[arg(long, default_value_t = String::from(""))]
+    pub target: String
 }
 
 fn main() -> Result<()> {
@@ -31,7 +35,7 @@ fn main() -> Result<()> {
     BuildCommand {
         binary:  String::from("cef-ui-simple"),
         profile: args.profile.to_string(),
-        target:  "".to_string()
+        target:  args.target.to_string()
     }
     .run()?;
 
@@ -41,7 +45,7 @@ fn main() -> Result<()> {
         BuildCommand {
             binary:  String::from("cef-ui-simple-helper"),
             profile: args.profile.to_string(),
-            target:  "".to_string()
+            target:  args.target.to_string()
         }
         .run()?;
 

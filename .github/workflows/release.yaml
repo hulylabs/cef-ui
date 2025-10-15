@@ -37,6 +37,7 @@ jobs:
             artifact_name: cef-macos-x86_64
             extract_cmd: "tar -xjf"
             compress_cmd: "zip -r"
+            flags: "--target x86_64-apple-darwin"
             
           - os: ubuntu-latest
             url: "https://cef-builds.spotifycdn.com/cef_binary_138.0.51%2Bg41d93d2%2Bchromium-138.0.7204.293_linux64_minimal.tar.bz2"
@@ -70,15 +71,8 @@ jobs:
 
     - name: Build CEF Simple
       run: |
-        ls artifacts/cef
-
-        echo "Windows x86_64 files:"
-        grep -n "cef_window_handle_t" crates/cef-ui-sys/src/windows_x86_64/bindings.rs || echo "No matches in windows_x86_64/bindings.rs"
-        grep -n "cef_cursor_handle_t" crates/cef-ui-sys/src/windows_x86_64/bindings.rs || echo "No matches in windows_x86_64/bindings.rs"
-        grep -n "cef_event_handle_t" crates/cef-ui-sys/src/windows_x86_64/bindings.rs || echo "No matches in windows_x86_64/bindings.rs"
-        
         export CEF_ARTIFACTS_DIR=$(pwd)/artifacts/cef
-        cargo cef-build-debug
+        cargo run --bin cef-build --release ${{ matrix.flags }} -- --profile release ${{ matrix.flags }}
         
     - name: Create artifact
       run: |
