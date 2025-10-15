@@ -67,11 +67,13 @@ jobs:
         mv cef_binary_*/* .
         
     - name: Process CEF artifacts
-      run: cargo cef-artifacts
+      run: |
+        rustup target add x86_64-apple-darwin
+        cargo run --bin cef-artifacts --release ${{ matrix.flags }}
+        cargo cef-artifacts
 
     - name: Build CEF Simple
       run: |
-        rustup target add x86_64-apple-darwin
         export CEF_ARTIFACTS_DIR=$(pwd)/artifacts/cef
         cargo run --bin cef-build --release ${{ matrix.flags }} -- --profile release ${{ matrix.flags }}
         
