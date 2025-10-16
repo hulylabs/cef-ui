@@ -1,4 +1,4 @@
-use crate::{Browser, Frame, RefCountedPtr, Request, Wrappable, Wrapped, ref_counted_ptr};
+use crate::{RefCountedPtr, Wrappable, ref_counted_ptr};
 use cef_ui_sys::{
     cef_browser_t, cef_callback_t, cef_cookie_access_filter_t, cef_frame_t, cef_request_t,
     cef_resource_handler_t, cef_resource_request_handler_t, cef_response_filter_t, cef_response_t,
@@ -10,22 +10,22 @@ use std::{ffi::c_int, mem::zeroed};
 /// functions of this structure will be called on the IO thread unless otherwise
 /// indicated.
 pub trait ResourceRequestHandlerCallbacks: Send + Sync + 'static {
-    /// Called on the IO thread to handle requests for URLs with an unknown
-    /// protocol component. The |browser| and |frame| values represent the source
-    /// of the request, and may be NULL for requests originating from service
-    /// workers or cef_urlrequest_t. |request| cannot be modified in this
-    /// callback. Set |allow_os_execution| to true (1) to attempt execution via
-    /// the registered OS protocol handler, if any. SECURITY WARNING: YOU SHOULD
-    /// USE THIS METHOD TO ENFORCE RESTRICTIONS BASED ON SCHEME, HOST OR OTHER URL
-    /// ANALYSIS BEFORE ALLOWING OS EXECUTION.
-    fn on_protocol_execution(
-        &mut self,
-        _browser: Option<Browser>,
-        _frame: Option<Frame>,
-        _request: Request
-    ) -> bool {
-        false
-    }
+    // /// Called on the IO thread to handle requests for URLs with an unknown
+    // /// protocol component. The |browser| and |frame| values represent the source
+    // /// of the request, and may be NULL for requests originating from service
+    // /// workers or cef_urlrequest_t. |request| cannot be modified in this
+    // /// callback. Set |allow_os_execution| to true (1) to attempt execution via
+    // /// the registered OS protocol handler, if any. SECURITY WARNING: YOU SHOULD
+    // /// USE THIS METHOD TO ENFORCE RESTRICTIONS BASED ON SCHEME, HOST OR OTHER URL
+    // /// ANALYSIS BEFORE ALLOWING OS EXECUTION.
+    // fn on_protocol_execution(
+    //     &mut self,
+    //     _browser: Option<Browser>,
+    //     _frame: Option<Frame>,
+    //     _request: Request
+    // ) -> bool {
+    //     false
+    // }
 
     // TODO: Fix this!
 
@@ -329,23 +329,7 @@ impl ResourceRequestHandlerWrapper {
         request: *mut cef_request_t,
         allow_os_execution: *mut c_int
     ) {
-        let this: &mut Self = Wrapped::wrappable(this);
-        let browser = if browser.is_null() {
-            None
-        } else {
-            Some(Browser::from_ptr_unchecked(browser))
-        };
-        let frame = if frame.is_null() {
-            None
-        } else {
-            Some(Frame::from_ptr_unchecked(frame))
-        };
-        let request = Request::from_ptr_unchecked(request);
-        let result = this
-            .0
-            .on_protocol_execution(browser, frame, request);
-
-        *allow_os_execution = 1;
+        todo!();
     }
 }
 
@@ -365,7 +349,7 @@ impl Wrappable for ResourceRequestHandlerWrapper {
                 on_resource_response:         None,
                 get_resource_response_filter: None,
                 on_resource_load_complete:    None,
-                on_protocol_execution:        Some(Self::c_on_protocol_execution)
+                on_protocol_execution:        None
             },
             self
         )
