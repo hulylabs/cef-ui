@@ -1,19 +1,17 @@
-use crate::{RefCountedPtr, SchemeRegistrar, Wrappable, Wrapped, ref_counted_ptr};
-use cef_ui_sys::{cef_app_t, cef_scheme_registrar_t};
-use std::mem::zeroed;
+use crate::{
+    RefCountedPtr, RenderProcessHandler, SchemeRegistrar, Wrappable, Wrapped, ref_counted_ptr
+};
+use cef_ui_sys::{cef_app_t, cef_render_process_handler_t, cef_scheme_registrar_t};
+use std::{mem::zeroed, ptr::null_mut};
 
-/// Implement this structure to provide handler implementations. Methods will be
-/// called by the process and/or thread indicated.
 pub trait AppCallbacks: Send + Sync + 'static {
-    /// Provides an opportunity to register custom schemes. Do not keep a
-    /// reference to the |registrar| object. This function is called on the main
-    /// thread for each process and the registered schemes should be the same
-    /// across all processes.
     fn on_register_custom_schemes(&mut self, _registrar: SchemeRegistrar) {}
+
+    fn get_render_process_handler(&mut self) -> Option<RenderProcessHandler> {
+        None
+    }
 }
 
-// Implement this structure to provide handler implementations. Methods will be
-// called by the process and/or thread indicated.
 ref_counted_ptr!(App, cef_app_t);
 
 impl App {
@@ -22,22 +20,13 @@ impl App {
     }
 }
 
-/// Translates CEF -> Rust callbacks.
 struct AppWrapper(Box<dyn AppCallbacks>);
 
-// TODO: Remove this!
-
-#[allow(dead_code)]
-#[allow(unused_variables)]
 impl AppWrapper {
     pub fn new<C: AppCallbacks>(delegate: C) -> Self {
         Self(Box::new(delegate))
     }
 
-    /// Provides an opportunity to register custom schemes. Do not keep a
-    /// reference to the |registrar| object. This function is called on the main
-    /// thread for each process and the registered schemes should be the same
-    /// across all processes.
     unsafe extern "C" fn c_on_register_custom_schemes(
         this: *mut cef_app_t,
         registrar: *mut cef_scheme_registrar_t
@@ -47,12 +36,22 @@ impl AppWrapper {
         this.0
             .on_register_custom_schemes(registrar);
     }
+
+    unsafe extern "C" fn c_get_render_process_handler(
+        this: *mut cef_app_t
+    ) -> *mut cef_render_process_handler_t {
+        let this: &mut Self = Wrapped::wrappable(this);
+
+        this.0
+            .get_render_process_handler()
+            .map(|handler| handler.into_raw())
+            .unwrap_or_else(null_mut)
+    }
 }
 
 impl Wrappable for AppWrapper {
     type Cef = cef_app_t;
 
-    /// Converts this to a smart pointer.
     fn wrap(self) -> RefCountedPtr<cef_app_t> {
         RefCountedPtr::wrap(
             cef_app_t {
@@ -62,7 +61,7 @@ impl Wrappable for AppWrapper {
                 on_register_custom_schemes:        Some(Self::c_on_register_custom_schemes),
                 get_resource_bundle_handler:       None,
                 get_browser_process_handler:       None,
-                get_render_process_handler:        None
+                get_render_process_handler:        Some(Self::c_get_render_process_handler)
             },
             self
         )
