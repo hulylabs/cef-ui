@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::mem::zeroed;
 
-use crate::{CEFLIB, CefString, RefCountedPtr, Wrappable, Wrapped, ref_counted_ptr};
+use crate::{CEFLIB, CefString, RefCountedPtr, Wrappable, Wrapped, ref_counted_ptr, try_c};
 use cef_ui_sys::{
     cef_string_t, cef_v8_propertyattribute_t, cef_v8context_t, cef_v8handler_t, cef_v8value_t
 };
@@ -9,16 +9,10 @@ use cef_ui_sys::{
 ref_counted_ptr!(V8Context, cef_v8context_t);
 
 impl V8Context {
-    pub fn get_global(&self) -> Result<V8Value, ()> {
-        unsafe {
-            let lib = &CEFLIB;
-            let global_ptr = (lib.cef_v8context_get_global)(self.as_ptr());
-            if global_ptr.is_null() {
-                Err(())
-            } else {
-                Ok(V8Value::from_ptr_unchecked(global_ptr))
-            }
-        }
+    pub fn get_global(&self) -> Result<V8Value> {
+        try_c!(self, get_global, {
+            Ok(V8Value::from_ptr_unchecked(get_global(self.as_ptr())))
+        })
     }
 }
 
@@ -92,38 +86,34 @@ ref_counted_ptr!(V8Value, cef_v8value_t);
 
 impl V8Value {
     pub fn get_value_by_key(&self, key: &str) -> Result<Self> {
-        unsafe {
-            let lib = &CEFLIB;
-            let value =
-                (lib.cef_v8value_get_value_by_key)(self.as_ptr(), CefString::new(key).as_ptr());
-            Ok(V8Value::from_ptr_unchecked(value))
-        }
+        try_c!(self, get_value_bykey, {
+            Ok(V8Value::from_ptr_unchecked(get_value_bykey(
+                self.as_ptr(),
+                CefString::new(key).as_ptr()
+            )))
+        })
     }
 
     pub fn get_string_value(&self) -> Result<String> {
-        unsafe {
-            let lib = &CEFLIB;
-            let s = (lib.cef_v8value_get_string_value)(self.as_ptr());
+        try_c!(self, get_string_value, {
+            let s = get_string_value(self.as_ptr());
             let result = match CefString::from_userfree_ptr(s) {
                 Some(str) => str.into(),
                 None => Err(anyhow::anyhow!("string is empty"))?
             };
             Ok(result)
-        }
+        })
     }
 
     pub fn set_value_by_key(&self, key: &str, value: Self) -> Result<bool> {
-        unsafe {
-            let lib = &CEFLIB;
-            let result = (lib.cef_v8value_set_value_by_key)(
+        try_c!(self, set_value_bykey, {
+            Ok(set_value_bykey(
                 self.as_ptr(),
                 CefString::new(key).as_ptr(),
-                value.as_ptr(),
-                cef_v8_propertyattribute_t::V8_PROPERTY_ATTRIBUTE_NONE as i32
-            );
-
-            Ok(result != 0)
-        }
+                value.into_raw(),
+                cef_v8_propertyattribute_t::V8_PROPERTY_ATTRIBUTE_NONE
+            ) != 0)
+        })
     }
 
     pub fn create_function(name: &str, handler: V8Handler) -> Result<V8Value> {

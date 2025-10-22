@@ -1,4 +1,4 @@
-use crate::{CEFLIB, CefString, ListValue, ref_counted_ptr};
+use crate::{CEFLIB, CefString, ListValue, ref_counted_ptr, try_c};
 use anyhow::Result;
 use cef_ui_sys::{cef_process_id_t, cef_process_message_t};
 
@@ -51,10 +51,8 @@ impl ProcessMessage {
     }
 
     pub fn get_argument_list(&self) -> Result<Option<ListValue>> {
-        unsafe {
-            let lib = &CEFLIB;
-            let list = (lib.cef_process_message_get_argument_list)(self.as_ptr());
-            Ok(ListValue::from_ptr(list))
-        }
+        try_c!(self, get_argument_list, {
+            Ok(ListValue::from_ptr(get_argument_list(self.as_ptr())))
+        })
     }
 }
