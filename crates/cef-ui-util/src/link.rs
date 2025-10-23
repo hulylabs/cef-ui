@@ -73,9 +73,8 @@ fn copy_cef_linux() -> Result<()> {
 #[allow(dead_code)]
 fn copy_cef_windows() -> Result<()> {
     let profile = var("PROFILE")?;
-    let target = var("TARGET")?;
     let src = get_cef_artifacts_dir()?;
-    let dst = get_cef_target_dir(&profile, &target)?;
+    let dst = get_cef_target_dir(&profile, "")?;
 
     // Copy the CEF binaries.
     copy_files(&src, &dst)?;

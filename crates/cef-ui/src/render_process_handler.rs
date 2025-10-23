@@ -39,13 +39,9 @@ pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
     /// cef_v8context_t::get_task_runner() function.
     fn on_context_created(&mut self, _browser: Browser, _frame: Frame, _context: V8Context) {}
 
-    // /// Called immediately before the V8 context for a frame is released. No
-    // /// references to the context should be kept after this function is called.
-    // void(CEF_CALLBACK* on_context_released)(
-    //     struct _cef_render_process_handler_t* self,
-    //     struct _cef_browser_t* browser,
-    //     struct _cef_frame_t* frame,
-    //     struct _cef_v8context_t* context);
+    /// Called immediately before the V8 context for a frame is released. No
+    /// references to the context should be kept after this function is called.
+    fn on_context_released(&mut self, _browser: Browser, _frame: Frame, _context: V8Context) {}
 
     // /// Called for global uncaught exceptions in a frame. Execution of this
     // /// callback is disabled by default. To enable set
@@ -79,7 +75,9 @@ pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
         _frame: Frame,
         _source_process: ProcessId,
         _message: &mut ProcessMessage
-    ) -> bool { false }
+    ) -> bool {
+        false
+    }
 }
 // Structure used to implement render process callbacks. The functions of this
 // structure will be called on the render process main thread (TID_RENDERER)
@@ -134,6 +132,21 @@ impl RenderProcessHandlerWrapper {
             .on_context_created(browser, frame, context);
     }
 
+    unsafe extern "C" fn on_context_released(
+        this: *mut cef_render_process_handler_t,
+        browser: *mut cef_browser_t,
+        frame: *mut cef_frame_t,
+        context: *mut cef_v8context_t
+    ) {
+        let this: &mut Self = Wrapped::wrappable(this);
+        let browser = Browser::from_ptr_unchecked(browser);
+        let frame = Frame::from_ptr_unchecked(frame);
+        let context = V8Context::from_ptr_unchecked(context);
+
+        this.0
+            .on_context_released(browser, frame, context);
+    }
+
     unsafe extern "C" fn on_process_message_received(
         this: *mut cef_render_process_handler_t,
         browser: *mut cef_browser_t,
@@ -168,7 +181,7 @@ impl Wrappable for RenderProcessHandlerWrapper {
                 on_browser_destroyed:        None,
                 get_load_handler:            None,
                 on_context_created:          Some(Self::on_context_created),
-                on_context_released:         None,
+                on_context_released:         Some(Self::on_context_released),
                 on_uncaught_exception:       None,
                 on_focused_node_changed:     None,
                 on_process_message_received: Some(Self::on_process_message_received)
