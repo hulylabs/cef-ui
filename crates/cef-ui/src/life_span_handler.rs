@@ -111,20 +111,22 @@ pub trait LifeSpanHandlerCallbacks: Send + Sync + 'static {
     /// cef_render_process_handler_t::on_browser_created() in the render process.
     unsafe fn on_before_popup(
         &mut self,
-        browser: Browser,
-        frame: Frame,
-        popup_id: i32,
-        target_url: Option<String>,
-        target_frame_name: Option<String>,
-        target_disposition: WindowOpenDisposition,
-        user_gesture: bool,
-        popup_features: PopupFeatures,
-        window_info: &mut WindowInfo,
-        client: &mut Option<Client>,
-        settings: &mut BrowserSettings,
-        extra_info: &mut Option<DictionaryValue>,
-        no_javascript_access: &mut bool
-    ) -> bool;
+        _browser: Browser,
+        _frame: Frame,
+        _popup_id: i32,
+        _target_url: Option<String>,
+        _target_frame_name: Option<String>,
+        _target_disposition: WindowOpenDisposition,
+        _user_gesture: bool,
+        _popup_features: PopupFeatures,
+        _window_info: &mut WindowInfo,
+        _client: &mut Option<Client>,
+        _settings: &mut BrowserSettings,
+        _extra_info: &mut Option<DictionaryValue>,
+        _no_javascript_access: &mut bool
+    ) -> bool {
+        true
+    }
 
     /// Called on the UI thread before a new DevTools popup browser is created.
     /// The |browser| value represents the source of the popup request. Optionally
@@ -145,19 +147,23 @@ pub trait LifeSpanHandlerCallbacks: Send + Sync + 'static {
     /// for IDC_DEV_TOOLS. Only used with the Chrome runtime.
     fn on_before_dev_tools_popup(
         &mut self,
-        browser: Browser,
-        window_info: &mut WindowInfo,
-        client: &mut Option<Client>,
-        settings: &mut BrowserSettings,
-        extra_info: &mut Option<DictionaryValue>,
-        use_default_window: &mut bool
-    );
+        _browser: Browser,
+        _window_info: &mut WindowInfo,
+        _client: &mut Option<Client>,
+        _settings: &mut BrowserSettings,
+        _extra_info: &mut Option<DictionaryValue>,
+        _use_default_window: &mut bool
+    ) {
+        // Default implementation - do nothing
+    }
 
     /// Called after a new browser is created. It is now safe to begin performing
     /// actions with |browser|. cef_frame_handler_t callbacks related to initial
     /// main frame creation will arrive before this callback. See
     /// cef_frame_handler_t documentation for additional usage information.
-    fn on_after_created(&mut self, browser: Browser);
+    fn on_after_created(&mut self, _browser: Browser) {
+        // Default implementation - do nothing
+    }
 
     /// Called when a browser has received a request to close. This may result
     /// directly from a call to cef_browser_host_t::*close_browser() or indirectly
@@ -246,7 +252,10 @@ pub trait LifeSpanHandlerCallbacks: Send + Sync + 'static {
     ///     is destroyed.
     /// 11. Application exits by calling cef_quit_message_loop() if no other
     /// browsers exist.
-    fn do_close(&mut self, browser: Browser) -> bool;
+    fn do_close(&mut self, _browser: Browser) -> bool {
+        // Default implementation - allow the close
+        false
+    }
 
     /// Called just before a browser is destroyed. Release all references to the
     /// browser object and do not attempt to execute any functions on the browser
@@ -258,7 +267,9 @@ pub trait LifeSpanHandlerCallbacks: Send + Sync + 'static {
     /// and cef_resource_request_handler_t callbacks related to those requests may
     /// still arrive on the IO thread after this callback. See cef_frame_handler_t
     /// and do_close() documentation for additional usage information.
-    fn on_before_close(&mut self, browser: Browser);
+    fn on_before_close(&mut self, _browser: Browser) {
+        // Default implementation - do nothing
+    }
 }
 
 // Implement this structure to handle events related to browser life span. The

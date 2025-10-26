@@ -32,54 +32,6 @@ impl ContextMenuHandlerCallbacks for MyContextMenuHandler {
             error!("{}", e);
         }
     }
-
-    fn run_context_menu(
-        &mut self,
-        browser: Browser,
-        frame: Frame,
-        params: ContextMenuParams,
-        model: MenuModel,
-        callback: RunContextMenuCallback
-    ) -> bool {
-        false
-    }
-
-    fn on_context_menu_command(
-        &mut self,
-        browser: Browser,
-        frame: Frame,
-        params: ContextMenuParams,
-        command_id: MenuCommandId,
-        event_flags: EventFlags
-    ) -> bool {
-        false
-    }
-
-    fn on_context_menu_dismissed(&mut self, browser: Browser, frame: Frame) {}
-
-    fn run_quick_menu(
-        &mut self,
-        browser: Browser,
-        frame: Frame,
-        location: &Point,
-        size: &Size,
-        edit_state_flags: QuickMenuEditStateFlags,
-        callback: RunQuickMenuCallback
-    ) -> bool {
-        false
-    }
-
-    fn on_quick_menu_command(
-        &mut self,
-        browser: Browser,
-        frame: Frame,
-        command_id: MenuCommandId,
-        event_flags: EventFlags
-    ) -> bool {
-        false
-    }
-
-    fn on_quick_menu_dismissed(&mut self, browser: Browser, frame: Frame) {}
 }
 
 /// Life span callbacks.
@@ -87,138 +39,10 @@ pub struct MyLifeSpanHandlerCallbacks;
 
 #[allow(unused_variables)]
 impl LifeSpanHandlerCallbacks for MyLifeSpanHandlerCallbacks {
-    unsafe fn on_before_popup(
-        &mut self,
-        browser: Browser,
-        frame: Frame,
-        popup_id: i32,
-        target_url: Option<String>,
-        target_frame_name: Option<String>,
-        target_disposition: WindowOpenDisposition,
-        user_gesture: bool,
-        popup_features: PopupFeatures,
-        window_info: &mut WindowInfo,
-        client: &mut Option<Client>,
-        settings: &mut BrowserSettings,
-        extra_info: &mut Option<DictionaryValue>,
-        no_javascript_access: &mut bool
-    ) -> bool {
-        true
-    }
-
-    fn on_before_dev_tools_popup(
-        &mut self,
-        browser: Browser,
-        window_info: &mut WindowInfo,
-        client: &mut Option<Client>,
-        settings: &mut BrowserSettings,
-        extra_info: &mut Option<DictionaryValue>,
-        use_default_window: &mut bool
-    ) {
-    }
-
-    fn on_after_created(&mut self, browser: Browser) {}
-
-    fn do_close(&mut self, browser: Browser) -> bool {
-        false
-    }
-
     fn on_before_close(&mut self, browser: Browser) {
-        // If you have more than one browser open, you want to only
-        // call this when the number of open browsers reaches zero.
         unsafe {
             cef_quit_message_loop();
         }
-    }
-}
-
-pub struct MyDialogHandlerCallbacks;
-impl DialogHandlerCallbacks for MyDialogHandlerCallbacks {
-    fn on_file_dialog(
-        &mut self,
-        _browser: Browser,
-        mode: FileDialogMode,
-        title: Option<String>,
-        default_file_path: Option<String>,
-        accept_filters: Vec<String>,
-        accept_extensions: Vec<String>,
-        accept_descriptions: Vec<String>,
-        _callback: FileDialogCallback
-    ) -> bool {
-        info!(
-            "File dialog requested: mode={:?}, title={:?}, default_path={:?}",
-            mode, title, default_file_path
-        );
-        info!("Accept filters: {:?}", accept_filters);
-        info!("Accept extensions: {:?}", accept_extensions);
-        info!("Accept descriptions: {:?}", accept_descriptions);
-
-        // For demonstration, we'll use the default dialog by returning false
-        // In a real implementation, you could show a custom dialog and call callback.continue_dialog()
-        false
-    }
-}
-
-pub struct MyDownloadHandlerCallbacks;
-impl DownloadHandlerCallbacks for MyDownloadHandlerCallbacks {
-    fn on_before_download(
-        &mut self,
-        _browser: Browser,
-        _download_item: DownloadItem,
-        suggested_name: &str,
-        callback: BeforeDownloadCallback
-    ) -> bool {
-        info!("Starting download of {}", suggested_name);
-        let download_dir = dirs::download_dir().expect("failed to get download directory");
-        let download_path = download_dir.join(suggested_name);
-        let download_path = download_path
-            .to_str()
-            .expect("failed to convert path to str");
-        _ = callback.continue_download(Some(download_path), false);
-        true
-    }
-
-    fn on_download_updated(
-        &mut self,
-        _: Browser,
-        download_item: DownloadItem,
-        _: DownloadItemCallback
-    ) {
-        let path = PathBuf::from(
-            download_item
-                .get_full_path()
-                .unwrap()
-        );
-
-        let name = path
-            .file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or_default();
-
-        // let name = "a";
-        let received = download_item
-            .get_received_bytes()
-            .unwrap();
-        let total = download_item
-            .get_total_bytes()
-            .unwrap();
-        let speed = download_item
-            .get_current_speed()
-            .unwrap();
-
-        if speed == 0 {
-            info!("Downloading {}: {}/{}", name, received, total);
-            return;
-        }
-        let remaining_time = (total - received) / speed;
-        info!(
-            "Downloading {}: {}/{}. Remaining time: {} seconds",
-            name, received, total, remaining_time
-        );
-    }
-
-    fn can_download(&mut self, _browser: Browser, _url: &str, _request_method: &str) -> bool {
-        true
     }
 }
 
@@ -230,46 +54,8 @@ impl ClientCallbacks for MyClientCallbacks {
         Some(ContextMenuHandler::new(MyContextMenuHandler {}))
     }
 
-    fn get_dialog_handler(&mut self) -> Option<DialogHandler> {
-        Some(DialogHandler::new(MyDialogHandlerCallbacks {}))
-    }
-
-    fn get_keyboard_handler(&mut self) -> Option<KeyboardHandler> {
-        None
-    }
-
     fn get_life_span_handler(&mut self) -> Option<LifeSpanHandler> {
         Some(LifeSpanHandler::new(MyLifeSpanHandlerCallbacks {}))
-    }
-
-    fn get_render_handler(&mut self) -> Option<RenderHandler> {
-        None
-    }
-
-    fn get_display_handler(&mut self) -> Option<cef_ui::DisplayHandler> {
-        None
-    }
-
-    fn get_load_handler(&mut self) -> Option<cef_ui::LoadHandler> {
-        None
-    }
-
-    fn get_download_handler(&mut self) -> Option<cef_ui::DownloadHandler> {
-        Some(DownloadHandler::new(MyDownloadHandlerCallbacks {}))
-    }
-
-    fn on_process_message_received(
-        &mut self,
-        _browser: Browser,
-        _frame: Frame,
-        _source_process: cef_ui::ProcessId,
-        _message: cef_ui::ProcessMessage
-    ) -> bool {
-        true
-    }
-
-    fn get_request_handler(&mut self) -> Option<cef_ui::RequestHandler> {
-        None
     }
 }
 
@@ -294,10 +80,6 @@ impl AppCallbacks for MyAppCallbacks {
                 }
             }
         }
-    }
-
-    fn get_browser_process_handler(&mut self) -> Option<BrowserProcessHandler> {
-        None
     }
 
     fn get_render_process_handler(&mut self) -> Option<cef_ui::RenderProcessHandler> {
@@ -368,7 +150,7 @@ fn try_main() -> Result<()> {
     BrowserHost::create_browser_sync(
         &window_info,
         client,
-        "https://github.com/hulylabs/cef-ui/releases/tag/v132",
+        "https://doc.rust-lang.org/book/",
         &browser_settings,
         None,
         None
@@ -391,7 +173,7 @@ fn try_main() -> Result<()> {
 
 /// Ensure the root cache directory exists.
 pub fn get_root_cache_dir() -> Result<PathBuf> {
-    let path = PathBuf::from("/tmp/cef-ui-simple");
+    let path = std::env::temp_dir().join("cef-ui-simple");
     if !path.exists() {
         create_dir_all(&path)?;
     }
