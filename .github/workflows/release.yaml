@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 env:
-  CEF_VERSION: v138
+  CEF_VERSION: v139
 
 jobs:
   build:
@@ -21,26 +21,26 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            url: "https://cef-builds.spotifycdn.com/cef_binary_138.0.49%2Bg5ae25f5%2Bchromium-138.0.7204.261_windows64_minimal.tar.bz2"
+            url: "https://cef-builds.spotifycdn.com/cef_binary_139.0.40%2Bg465474a%2Bchromium-139.0.7258.139_windows64_minimal.tar.bz2"
             artifact_name: cef-windows-x86_64
             extract_cmd: "7z x"
             compress_cmd: "7z a -tzip"
             
           - os: macos-latest
-            url: "https://cef-builds.spotifycdn.com/cef_binary_138.0.51%2Bg41d93d2%2Bchromium-138.0.7204.293_macosarm64_minimal.tar.bz2"
+            url: "https://cef-builds.spotifycdn.com/cef_binary_139.0.40%2Bg465474a%2Bchromium-139.0.7258.139_macosarm64_minimal.tar.bz2"
             artifact_name: cef-macos-arm64
             extract_cmd: "tar -xjf"
             compress_cmd: "zip -r"
 
           - os: macos-latest
-            url: "https://cef-builds.spotifycdn.com/cef_binary_138.0.51%2Bg41d93d2%2Bchromium-138.0.7204.293_macosx64_minimal.tar.bz2"
+            url: "https://cef-builds.spotifycdn.com/cef_binary_139.0.40%2Bg465474a%2Bchromium-139.0.7258.139_macosx64_minimal.tar.bz2"
             artifact_name: cef-macos-x86_64
             extract_cmd: "tar -xjf"
             compress_cmd: "zip -r"
             flags: "--target x86_64-apple-darwin"
             
           - os: ubuntu-latest
-            url: "https://cef-builds.spotifycdn.com/cef_binary_138.0.51%2Bg41d93d2%2Bchromium-138.0.7204.293_linux64_minimal.tar.bz2"
+            url: "https://cef-builds.spotifycdn.com/cef_binary_139.0.40%2Bg465474a%2Bchromium-139.0.7258.139_linux64_minimal.tar.bz2"
             artifact_name: cef-linux-x86_64
             extract_cmd: "tar -xjf"
             compress_cmd: "zip -r"
