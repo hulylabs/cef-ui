@@ -44,18 +44,18 @@ impl AppBundleSettings {
         let target_dir = get_cef_target_dir(&self.profile, &self.target)?;
         let app_dir = target_dir.join(format!("{}.app", self.app_name));
 
-        // Remove any existing app.
+        info!("Remove any existing app");
         if app_dir.exists() {
             remove_dir_all(&app_dir)?;
         }
 
-        // Create main bundle folders.
+        info!("Create main bundle folders");
         create_dir_all(app_dir.clone())?;
         create_dir_all(app_dir.join("Contents/Frameworks"))?;
         create_dir_all(app_dir.join("Contents/MacOS"))?;
         create_dir_all(app_dir.join("Contents/Resources"))?;
 
-        // Create the main plist.
+        info!("Create the main plist");
         {
             let org_name = format!("org.{}.{}", self.org_name, self.app_name);
 
@@ -69,13 +69,13 @@ impl AppBundleSettings {
             )?;
         }
 
-        // Copy the main icon.
+        info!("Copy the main icon");
         copy(
             self.resources_dir.join("Icon.icns"),
             app_dir.join("Contents/Resources/Icon.icns")
         )?;
 
-        // Copy the English localization.
+        info!("Copy the English localization");
         copy_files(
             &self
                 .resources_dir
@@ -83,7 +83,7 @@ impl AppBundleSettings {
             &app_dir.join("Contents/Resources/English.lproj")
         )?;
 
-        // Copy the main executable.
+        info!("Copy the main executable");
         copy(
             target_dir.join(&self.main_exe_name),
             app_dir
@@ -91,7 +91,7 @@ impl AppBundleSettings {
                 .join(&self.app_name)
         )?;
 
-        // Copy the CEF framework.
+        info!("Copy the CEF framework");
         copy_files(
             &self
                 .artifacts_dir
@@ -99,7 +99,7 @@ impl AppBundleSettings {
             &app_dir.join("Contents/Frameworks/Chromium Embedded Framework.framework")
         )?;
 
-        // Function to create helper app bundles.
+        info!("Function to create helper app bundles");
         let create_helper = |name: Option<&str>| -> Result<()> {
             let org_name = match name {
                 Some(name) => {
@@ -117,11 +117,11 @@ impl AppBundleSettings {
 
             let app_dir = app_dir.join(format!("Contents/Frameworks/{}.app", app_name));
 
-            // Create helper bundle folders.
+            info!("Create helper bundle folders");
             create_dir_all(app_dir.clone())?;
             create_dir_all(app_dir.join("Contents/MacOS"))?;
 
-            // Create the helper plist.
+            info!("Create the helper plist");
             Self::create_plist(
                 &self
                     .resources_dir
@@ -141,7 +141,7 @@ impl AppBundleSettings {
             Ok(())
         };
 
-        // Create the helper bundles.
+        info!("Create the helper bundles");
         create_helper(None)?;
         create_helper(Some("Alerts"))?;
         create_helper(Some("GPU"))?;
