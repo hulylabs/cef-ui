@@ -22,10 +22,6 @@ fn main() -> Result<()> {
     // Linker flags on x86_64 Windows.
     #[cfg(all(target_os = "windows", target_arch = "x86_64"))]
     {
-        use cef_ui_util::get_cef_artifacts_dir;
-
-        let artifacts_dir = get_cef_artifacts_dir()?;
-
         // Link dynamically to CEF.
         println!("cargo:rustc-link-lib=dylib=libcef");
 
