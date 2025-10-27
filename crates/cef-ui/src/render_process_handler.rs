@@ -136,7 +136,7 @@ impl RenderProcessHandlerWrapper {
         this: *mut cef_render_process_handler_t,
         browser: *mut cef_browser_t,
         frame: *mut cef_frame_t,
-        context: *mut cef_v8context_t
+        context: *mut cef_v8_context_t
     ) {
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);

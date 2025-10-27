@@ -1,9 +1,9 @@
 use anyhow::Result;
 use cef_ui::{
-    App, AppCallbacks, Browser, BrowserHost, BrowserProcessHandler, BrowserSettings, Client,
-    ClientCallbacks, CommandLine, Context, ContextMenuHandler, ContextMenuHandlerCallbacks,
-    ContextMenuParams, Frame, LifeSpanHandler, LifeSpanHandlerCallbacks, LogSeverity, MainArgs,
-    MenuModel, Settings, WindowInfo
+    App, AppCallbacks, Browser, BrowserHost, BrowserSettings, Client, ClientCallbacks, CommandLine,
+    Context, ContextMenuHandler, ContextMenuHandlerCallbacks, ContextMenuParams, Frame,
+    LifeSpanHandler, LifeSpanHandlerCallbacks, LogSeverity, MainArgs, MenuModel, Settings,
+    WindowInfo
 };
 use cef_ui_sys::{CEF_API_VERSION_13800, cef_api_hash, cef_quit_message_loop};
 use std::{fs::create_dir_all, path::PathBuf, process::exit};

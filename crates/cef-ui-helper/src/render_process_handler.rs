@@ -2,7 +2,7 @@ use crate::{
     Browser, RefCountedPtr, Wrappable, Wrapped, frame::Frame, ref_counted_ptr,
     v8_context::V8Context
 };
-use cef_ui_sys::{cef_browser_t, cef_frame_t, cef_render_process_handler_t, cef_v8context_t};
+use cef_ui_sys::{cef_browser_t, cef_frame_t, cef_render_process_handler_t, cef_v8_context_t};
 use std::mem::zeroed;
 
 pub trait RenderProcessHandlerCallbacks: Send + Sync + 'static {
@@ -37,7 +37,7 @@ impl RenderProcessHandlerWrapper {
         this: *mut cef_render_process_handler_t,
         browser: *mut cef_browser_t,
         frame: *mut cef_frame_t,
-        context: *mut cef_v8context_t
+        context: *mut cef_v8_context_t
     ) {
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
@@ -52,7 +52,7 @@ impl RenderProcessHandlerWrapper {
         this: *mut cef_render_process_handler_t,
         browser: *mut cef_browser_t,
         frame: *mut cef_frame_t,
-        context: *mut cef_v8context_t
+        context: *mut cef_v8_context_t
     ) {
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);

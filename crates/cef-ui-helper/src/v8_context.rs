@@ -3,10 +3,10 @@ use std::mem::zeroed;
 
 use crate::{CEFLIB, CefString, RefCountedPtr, Wrappable, Wrapped, ref_counted_ptr, try_c};
 use cef_ui_sys::{
-    cef_string_t, cef_v8_propertyattribute_t, cef_v8context_t, cef_v8handler_t, cef_v8value_t
+    cef_string_t, cef_v8_context_t, cef_v8_handler_t, cef_v8_propertyattribute_t, cef_v8_value_t
 };
 
-ref_counted_ptr!(V8Context, cef_v8context_t);
+ref_counted_ptr!(V8Context, cef_v8_context_t);
 
 impl V8Context {
     pub fn get_global(&self) -> Result<V8Value> {
@@ -26,7 +26,7 @@ pub trait V8HandlerCallbacks: Send + Sync + 'static {
     ) -> Result<i32>;
 }
 
-ref_counted_ptr!(V8Handler, cef_v8handler_t);
+ref_counted_ptr!(V8Handler, cef_v8_handler_t);
 
 impl V8Handler {
     pub fn new<C: V8HandlerCallbacks>(delegate: C) -> Self {
@@ -42,12 +42,12 @@ impl V8HandlerWrapper {
     }
 
     unsafe extern "C" fn execute(
-        this: *mut cef_v8handler_t,
+        this: *mut cef_v8_handler_t,
         name: *const cef_string_t,
-        object: *mut cef_v8value_t,
+        object: *mut cef_v8_value_t,
         arguments_count: usize,
-        arguments: *const *mut cef_v8value_t,
-        _retval: *mut *mut cef_v8value_t,
+        arguments: *const *mut cef_v8_value_t,
+        _retval: *mut *mut cef_v8_value_t,
         _exception: *mut cef_string_t
     ) -> std::os::raw::c_int {
         let this: &mut Self = Wrapped::wrappable(this);
@@ -69,11 +69,11 @@ impl V8HandlerWrapper {
 }
 
 impl Wrappable for V8HandlerWrapper {
-    type Cef = cef_v8handler_t;
+    type Cef = cef_v8_handler_t;
 
-    fn wrap(self) -> RefCountedPtr<cef_v8handler_t> {
+    fn wrap(self) -> RefCountedPtr<cef_v8_handler_t> {
         RefCountedPtr::wrap(
-            cef_v8handler_t {
+            cef_v8_handler_t {
                 base:    unsafe { zeroed() },
                 execute: Some(Self::execute)
             },
@@ -82,7 +82,7 @@ impl Wrappable for V8HandlerWrapper {
     }
 }
 
-ref_counted_ptr!(V8Value, cef_v8value_t);
+ref_counted_ptr!(V8Value, cef_v8_value_t);
 
 impl V8Value {
     pub fn get_value_by_key(&self, key: &str) -> Result<Self> {
@@ -120,7 +120,7 @@ impl V8Value {
         unsafe {
             let lib = &CEFLIB;
             let func =
-                (lib.cef_v8value_create_function)(CefString::new(name).as_ptr(), handler.as_ptr());
+                (lib.cef_v8_value_create_function)(CefString::new(name).as_ptr(), handler.as_ptr());
             Ok(V8Value::from_ptr_unchecked(func))
         }
     }
