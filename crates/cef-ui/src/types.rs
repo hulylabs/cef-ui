@@ -535,9 +535,6 @@ pub enum ErrorCode {
     /// The request was blocked by a Content Security Policy
     BlockedByCsp,
 
-    /// The request was blocked because of no H/2 or QUIC session.
-    H2OrQuicRequired,
-
     /// The request was blocked by CORB or ORB.
     BlockedByOrb,
 
@@ -1484,7 +1481,6 @@ impl From<&cef_errorcode_t> for ErrorCode {
             cef_errorcode_t::ERR_BLOCKED_BY_RESPONSE => ErrorCode::BlockedByResponse,
             cef_errorcode_t::ERR_CLEARTEXT_NOT_PERMITTED => ErrorCode::CleartextNotPermitted,
             cef_errorcode_t::ERR_BLOCKED_BY_CSP => ErrorCode::BlockedByCsp,
-            cef_errorcode_t::ERR_H2_OR_QUIC_REQUIRED => ErrorCode::H2OrQuicRequired,
             cef_errorcode_t::ERR_BLOCKED_BY_ORB => ErrorCode::BlockedByOrb,
             cef_errorcode_t::ERR_CONNECTION_CLOSED => ErrorCode::ConnectionClosed,
             cef_errorcode_t::ERR_CONNECTION_RESET => ErrorCode::ConnectionReset,
@@ -1740,7 +1736,6 @@ impl From<&ErrorCode> for cef_errorcode_t {
             ErrorCode::BlockedByResponse => cef_errorcode_t::ERR_BLOCKED_BY_RESPONSE,
             ErrorCode::CleartextNotPermitted => cef_errorcode_t::ERR_CLEARTEXT_NOT_PERMITTED,
             ErrorCode::BlockedByCsp => cef_errorcode_t::ERR_BLOCKED_BY_CSP,
-            ErrorCode::H2OrQuicRequired => cef_errorcode_t::ERR_H2_OR_QUIC_REQUIRED,
             ErrorCode::BlockedByOrb => cef_errorcode_t::ERR_BLOCKED_BY_ORB,
             ErrorCode::ConnectionClosed => cef_errorcode_t::ERR_CONNECTION_CLOSED,
             ErrorCode::ConnectionReset => cef_errorcode_t::ERR_CONNECTION_RESET,
