@@ -43,6 +43,8 @@ impl AppBundleSettings {
 
         let target_dir = get_cef_target_dir(&self.profile, &self.target)?;
         let app_dir = target_dir.join(format!("{}.app", self.app_name));
+        info!("target directory: {:?}", target_dir);
+        info!("app bundle directory: {:?}", app_dir);
 
         info!("Remove any existing app");
         if app_dir.exists() {
