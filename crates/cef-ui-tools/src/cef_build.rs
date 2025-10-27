@@ -52,7 +52,7 @@ fn main() -> Result<()> {
         // Build the app bundle.
         AppBundleSettings {
             profile:         args.profile.to_string(),
-            target:          "".to_string(),
+            target:          args.target.to_string(),
             artifacts_dir:   get_cef_artifacts_dir()?,
             app_name:        String::from("cef-ui-simple"),
             main_exe_name:   String::from("cef-ui-simple"),
