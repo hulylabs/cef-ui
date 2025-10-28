@@ -30,12 +30,12 @@ pub use string::*;
 pub use v8_context::*;
 pub use values::*;
 
-use cef_ui_sys::CEF_API_VERSION_13800;
+use cef_ui_sys::CEF_API_VERSION_14100;
 
 pub fn cef_api_hash() {
     unsafe {
         let lib = &CEFLIB;
-        (lib.cef_api_hash)(CEF_API_VERSION_13800 as i32, 0);
+        (lib.cef_api_hash)(CEF_API_VERSION_14100 as i32, 0);
     }
 }
 

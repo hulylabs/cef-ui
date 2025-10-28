@@ -251,12 +251,16 @@ pub const CEF_API_VERSION_13800: u32 = 13800;
 pub const CEF_API_HASH_13800: &[u8; 41] = b"09110c1f3bbe0e8a8c26ddf6df3388d73a6593d1\0";
 pub const CEF_API_VERSION_13900: u32 = 13900;
 pub const CEF_API_HASH_13900: &[u8; 41] = b"9b3ef316d9a3f554899c36139cfccb17767ca254\0";
+pub const CEF_API_VERSION_14000: u32 = 14000;
+pub const CEF_API_HASH_14000: &[u8; 41] = b"a280e368310e8ea75a21dc7ba8f192657b7c8455\0";
+pub const CEF_API_VERSION_14100: u32 = 14100;
+pub const CEF_API_HASH_14100: &[u8; 41] = b"9537beb8d28175dca77510c03f5bea55617a9f22\0";
 pub const CEF_API_VERSION_999998: u32 = 999998;
-pub const CEF_API_HASH_999998: &[u8; 41] = b"9b3ef316d9a3f554899c36139cfccb17767ca254\0";
+pub const CEF_API_HASH_999998: &[u8; 41] = b"9537beb8d28175dca77510c03f5bea55617a9f22\0";
 pub const CEF_API_VERSION_999999: u32 = 999999;
-pub const CEF_API_HASH_999999: &[u8; 41] = b"fc21731f1caebb6377991ca96cd2201fdadd50fb\0";
+pub const CEF_API_HASH_999999: &[u8; 41] = b"2aa945d7dc8b5558f94eb983b0c76c986c420880\0";
 pub const CEF_API_VERSION_MIN: u32 = 13300;
-pub const CEF_API_VERSION_LAST: u32 = 13900;
+pub const CEF_API_VERSION_LAST: u32 = 14100;
 pub const CEF_API_VERSION_EXPERIMENTAL: u32 = 999999;
 pub const CEF_API_VERSION_NEXT: u32 = 999998;
 pub const CEF_NEXT: u32 = 999998;
@@ -1044,17 +1048,17 @@ pub const SYNC_VOLUME_FULLSYNC: u32 = 1;
 pub const SYNC_VOLUME_WAIT: u32 = 2;
 pub const kInvalidPlatformThreadId: u32 = 0;
 pub const kInvalidPlatformThreadHandle: u32 = 0;
-pub const CEF_VERSION: &[u8; 42] = b"139.0.40+g465474a+chromium-139.0.7258.139\0";
-pub const CEF_VERSION_MAJOR: u32 = 139;
+pub const CEF_VERSION: &[u8; 42] = b"141.0.11+g7e73ac4+chromium-141.0.7390.123\0";
+pub const CEF_VERSION_MAJOR: u32 = 141;
 pub const CEF_VERSION_MINOR: u32 = 0;
-pub const CEF_VERSION_PATCH: u32 = 40;
-pub const CEF_COMMIT_NUMBER: u32 = 3269;
-pub const CEF_COMMIT_HASH: &[u8; 41] = b"465474ae6b886430dc698be4a0e538c822425447\0";
+pub const CEF_VERSION_PATCH: u32 = 11;
+pub const CEF_COMMIT_NUMBER: u32 = 3299;
+pub const CEF_COMMIT_HASH: &[u8; 41] = b"7e73ac45f2979537f677e785383a04998f90d51d\0";
 pub const COPYRIGHT_YEAR: u32 = 2025;
-pub const CHROME_VERSION_MAJOR: u32 = 139;
+pub const CHROME_VERSION_MAJOR: u32 = 141;
 pub const CHROME_VERSION_MINOR: u32 = 0;
-pub const CHROME_VERSION_BUILD: u32 = 7258;
-pub const CHROME_VERSION_PATCH: u32 = 139;
+pub const CHROME_VERSION_BUILD: u32 = 7390;
+pub const CHROME_VERSION_PATCH: u32 = 123;
 pub type int_least8_t = i8;
 pub type int_least16_t = i16;
 pub type int_least32_t = i32;
@@ -1806,8 +1810,8 @@ pub enum cef_content_setting_types_t {
     CEF_CONTENT_SETTING_TYPE_NOTIFICATION_INTERACTIONS = 74,
     CEF_CONTENT_SETTING_TYPE_REDUCED_ACCEPT_LANGUAGE = 75,
     CEF_CONTENT_SETTING_TYPE_NOTIFICATION_PERMISSION_REVIEW = 76,
-    CEF_CONTENT_SETTING_TYPE_PRIVATE_NETWORK_GUARD = 77,
-    CEF_CONTENT_SETTING_TYPE_PRIVATE_NETWORK_CHOOSER_DATA = 78,
+    CEF_CONTENT_SETTING_TYPE_PRIVATE_NETWORK_GUARD_DEPRECATED = 77,
+    CEF_CONTENT_SETTING_TYPE_PRIVATE_NETWORK_CHOOSER_DATA_DEPRECATED = 78,
     CEF_CONTENT_SETTING_TYPE_FEDERATED_IDENTITY_IDENTITY_PROVIDER_SIGNIN_STATUS = 79,
     CEF_CONTENT_SETTING_TYPE_REVOKED_UNUSED_SITE_PERMISSIONS = 80,
     CEF_CONTENT_SETTING_TYPE_TOP_LEVEL_STORAGE_ACCESS = 81,
@@ -1852,7 +1856,9 @@ pub enum cef_content_setting_types_t {
     CEF_CONTENT_SETTING_TYPE_ON_DEVICE_SPEECH_RECOGNITION_LANGUAGES_DOWNLOADED = 120,
     CEF_CONTENT_SETTING_TYPE_INITIALIZED_TRANSLATIONS = 121,
     CEF_CONTENT_SETTING_TYPE_SUSPICIOUS_NOTIFICATION_IDS = 122,
-    CEF_CONTENT_SETTING_TYPE_NUM_VALUES = 123
+    CEF_CONTENT_SETTING_TYPE_GEOLOCATION_WITH_OPTIONS = 123,
+    CEF_CONTENT_SETTING_TYPE_DEVICE_ATTRIBUTES = 124,
+    CEF_CONTENT_SETTING_TYPE_NUM_VALUES = 125
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -1862,7 +1868,7 @@ pub enum cef_content_setting_values_t {
     CEF_CONTENT_SETTING_VALUE_BLOCK = 2,
     CEF_CONTENT_SETTING_VALUE_ASK = 3,
     CEF_CONTENT_SETTING_VALUE_SESSION_ONLY = 4,
-    CEF_CONTENT_SETTING_VALUE_DETECT_IMPORTANT_CONTENT = 5,
+    CEF_CONTENT_SETTING_VALUE_DETECT_IMPORTANT_CONTENT_DEPRECATED = 5,
     CEF_CONTENT_SETTING_VALUE_NUM_VALUES = 6
 }
 #[repr(C)]
@@ -2270,6 +2276,7 @@ pub enum cef_errorcode_t {
     ERR_INVALID_ECH_CONFIG_LIST = -182,
     ERR_ECH_NOT_NEGOTIATED = -183,
     ERR_ECH_FALLBACK_CERTIFICATE_INVALID = -184,
+    ERR_PROXY_UNABLE_TO_CONNECT_TO_DESTINATION = -186,
     ERR_CERT_COMMON_NAME_INVALID = -200,
     ERR_CERT_DATE_INVALID = -201,
     ERR_CERT_AUTHORITY_INVALID = -202,
@@ -3555,16 +3562,21 @@ pub enum cef_chrome_page_action_icon_type_t {
     CEF_CPAIT_COLLABORATION_MESSAGING = 32,
     CEF_CPAIT_CHANGE_PASSWORD = 33,
     CEF_CPAIT_LENS_OVERLAY_HOMEWORK = 34,
-    CEF_CPAIT_NUM_VALUES = 35
+    CEF_CPAIT_AI_MODE = 35,
+    CEF_CPAIT_NUM_VALUES = 36
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
 pub enum cef_chrome_toolbar_button_type_t {
-    CEF_CTBT_CAST = 0,
+    CEF_CTBT_CAST_DEPRECATED = 0,
     CEF_CTBT_DOWNLOAD_DEPRECATED = 1,
     CEF_CTBT_SEND_TAB_TO_SELF_DEPRECATED = 2,
-    CEF_CTBT_SIDE_PANEL = 3,
-    CEF_CTBT_NUM_VALUES = 4
+    CEF_CTBT_SIDE_PANEL_DEPRECATED = 3,
+    CEF_CTBT_MEDIA = 4,
+    CEF_CTBT_TAB_SEARCH = 5,
+    CEF_CTBT_BATTERY_SAVER = 6,
+    CEF_CTBT_AVATAR = 7,
+    CEF_CTBT_NUM_VALUES = 8
 }
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
@@ -3741,7 +3753,7 @@ pub enum cef_task_type_t {
     CEF_TASK_TYPE_RENDERER = 5,
     CEF_TASK_TYPE_EXTENSION = 6,
     CEF_TASK_TYPE_GUEST = 7,
-    CEF_TASK_TYPE_PLUGIN = 8,
+    CEF_TASK_TYPE_PLUGIN_DEPRECATED = 8,
     CEF_TASK_TYPE_SANDBOX_HELPER = 9,
     CEF_TASK_TYPE_DEDICATED_WORKER = 10,
     CEF_TASK_TYPE_SHARED_WORKER = 11,
@@ -10175,6 +10187,9 @@ pub struct _cef_command_line_t {
     >,
     pub prepend_wrapper: ::std::option::Option<
         unsafe extern "C" fn(self_: *mut _cef_command_line_t, wrapper: *const cef_string_t)
+    >,
+    pub remove_switch: ::std::option::Option<
+        unsafe extern "C" fn(self_: *mut _cef_command_line_t, name: *const cef_string_t)
     >
 }
 pub type cef_command_line_t = _cef_command_line_t;
@@ -10926,6 +10941,9 @@ extern "C" {
 }
 extern "C" {
     pub fn cef_quit_message_loop();
+}
+extern "C" {
+    pub fn cef_set_nestable_tasks_allowed(allowed: ::std::os::raw::c_int);
 }
 extern "C" {
     pub fn cef_resolve_url(

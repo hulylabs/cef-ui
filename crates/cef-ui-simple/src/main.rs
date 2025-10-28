@@ -5,7 +5,7 @@ use cef_ui::{
     LifeSpanHandler, LifeSpanHandlerCallbacks, LogSeverity, MainArgs, MenuModel, Settings,
     WindowInfo
 };
-use cef_ui_sys::{CEF_API_VERSION_13800, cef_api_hash, cef_quit_message_loop};
+use cef_ui_sys::{CEF_API_VERSION_14100, cef_api_hash, cef_quit_message_loop};
 use std::{fs::create_dir_all, path::PathBuf, process::exit};
 use tracing::{Level, error, info, level_filters::LevelFilter, subscriber::set_global_default};
 use tracing_log::LogTracer;
@@ -109,7 +109,7 @@ fn try_main() -> Result<()> {
     set_global_default(subscriber)?;
 
     unsafe {
-        cef_api_hash(CEF_API_VERSION_13800 as i32, 0);
+        cef_api_hash(CEF_API_VERSION_14100 as i32, 0);
     }
 
     let root_cache_dir = get_root_cache_dir()?;

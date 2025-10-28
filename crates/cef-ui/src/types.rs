@@ -1694,6 +1694,7 @@ impl From<&cef_errorcode_t> for ErrorCode {
             cef_errorcode_t::ERR_BLOB_DEREFERENCED_WHILE_BUILDING => ErrorCode::BlobDereferencedWhileBuilding,
             cef_errorcode_t::ERR_BLOB_REFERENCED_BLOB_BROKEN => ErrorCode::BlobReferencedBlobBroken,
             cef_errorcode_t::ERR_BLOB_REFERENCED_FILE_UNAVAILABLE => ErrorCode::BlobReferencedFileUnavailable,
+            cef_errorcode_t::ERR_PROXY_UNABLE_TO_CONNECT_TO_DESTINATION => todo!(),
         }
     }
 }
