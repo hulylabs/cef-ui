@@ -40,6 +40,9 @@ impl ScopedSandbox {
 
 impl Drop for ScopedSandbox {
     fn drop(&mut self) {
-        unsafe { cef_sandbox_destroy(self.context) };
+        unsafe {
+            let lib = &CEF_SANDBOX_LIB;
+            (lib.cef_sandbox_destroy)(self.context);
+        }
     }
 }

@@ -1,9 +1,9 @@
 use crate::{
     App, AppCallbacks, Browser, CEFLIB, Frame, MainArgs, RenderProcessHandlerCallbacks, V8Context,
-    V8Handler, V8HandlerCallbacks, V8Value, render_process_handler, sandbox::ScopedSandbox
+    V8Handler, V8HandlerCallbacks, V8Value, cef_api_hash, render_process_handler,
+    sandbox::ScopedSandbox
 };
 use anyhow::Result;
-use cef_ui_sys::CEF_API_VERSION_13800;
 use std::{process::exit, ptr::null_mut};
 use tracing::{Level, error, info, level_filters::LevelFilter, subscriber::set_global_default};
 use tracing_log::LogTracer;
@@ -27,6 +27,8 @@ pub fn run(sandbox: bool) {
 fn try_run(sandbox: bool, app: App) -> Result<i32> {
     // This routes log macros through tracing.
     LogTracer::init()?;
+
+    cef_api_hash();
 
     // Setup the tracing subscriber globally.
     let subscriber = FmtSubscriber::builder()

@@ -7,7 +7,7 @@ use cef_ui::{
 };
 use cef_ui_sys::{CEF_API_VERSION_13800, cef_api_hash, cef_quit_message_loop};
 use std::{fs::create_dir_all, path::PathBuf, process::exit};
-use tracing::{Level, error, level_filters::LevelFilter, subscriber::set_global_default};
+use tracing::{Level, error, info, level_filters::LevelFilter, subscriber::set_global_default};
 use tracing_log::LogTracer;
 use tracing_subscriber::FmtSubscriber;
 
