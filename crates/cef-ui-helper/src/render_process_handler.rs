@@ -29,8 +29,11 @@ impl RenderProcessHandlerWrapper {
     }
 
     unsafe extern "C" fn c_on_web_kit_initialized(this: *mut cef_render_process_handler_t) {
+        println!("RenderProcessHandlerWrapper::on_web_kit_initialized called");
+
         let this: &mut Self = Wrapped::wrappable(this);
         this.0.on_web_kit_initialized();
+        println!("RenderProcessHandlerWrapper::on_web_kit_initialized finished");
     }
 
     unsafe extern "C" fn c_on_context_created(
@@ -39,6 +42,7 @@ impl RenderProcessHandlerWrapper {
         frame: *mut cef_frame_t,
         context: *mut cef_v8_context_t
     ) {
+        println!("RenderProcessHandlerWrapper::c_on_context_created called");
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
         let frame = Frame::from_ptr_unchecked(frame);
@@ -46,6 +50,7 @@ impl RenderProcessHandlerWrapper {
 
         this.0
             .on_context_created(browser, frame, context);
+        println!("RenderProcessHandlerWrapper::c_on_context_created finished");
     }
 
     unsafe extern "C" fn c_on_context_released(
@@ -54,6 +59,7 @@ impl RenderProcessHandlerWrapper {
         frame: *mut cef_frame_t,
         context: *mut cef_v8_context_t
     ) {
+        println!("RenderProcessHandlerWrapper::c_on_context_released called");
         let this: &mut Self = Wrapped::wrappable(this);
         let browser = Browser::from_ptr_unchecked(browser);
         let frame = Frame::from_ptr_unchecked(frame);
@@ -61,6 +67,7 @@ impl RenderProcessHandlerWrapper {
 
         this.0
             .on_context_released(browser, frame, context);
+        println!("RenderProcessHandlerWrapper::c_on_context_released finished");
     }
 }
 

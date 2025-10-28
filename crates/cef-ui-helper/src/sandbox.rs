@@ -5,7 +5,6 @@ use std::{
     ffi::{CString, c_char, c_int},
     os::raw::c_void
 };
-use tracing::info;
 
 /// Declaring this will initialize the sandbox and
 /// keep it active until the object is dropped.
@@ -34,19 +33,13 @@ impl ScopedSandbox {
 
         match context.is_null() {
             true => Err(anyhow!("Failed to initialize sandbox!")),
-            false => {
-                info!("Sandbox initialized!");
-
-                Ok(Self { context })
-            }
+            false => Ok(Self { context })
         }
     }
 }
 
 impl Drop for ScopedSandbox {
     fn drop(&mut self) {
-        unsafe { (CEF_SANDBOX_LIB.cef_sandbox_destroy)(self.context) };
-
-        info!("Sandbox destroyed!");
+        unsafe { cef_sandbox_destroy(self.context) };
     }
 }

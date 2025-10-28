@@ -37,6 +37,20 @@ impl LifeSpanHandlerCallbacks for MyLifeSpanHandlerCallbacks {
     }
 }
 
+struct MyRequestHandler;
+impl cef_ui::RequestHandlerCallbacks for MyRequestHandler {
+    fn on_render_process_terminated(
+        &mut self,
+        _browser: Browser,
+        _status: cef_ui::TerminationStatus,
+        _error_code: i32,
+        _error_string: Option<String>
+    ) {
+        info!("Render process terminated, exiting application.");
+    }
+}
+
+/// Client callbacks.
 pub struct MyClientCallbacks;
 
 impl ClientCallbacks for MyClientCallbacks {
@@ -46,6 +60,10 @@ impl ClientCallbacks for MyClientCallbacks {
 
     fn get_life_span_handler(&mut self) -> Option<LifeSpanHandler> {
         Some(LifeSpanHandler::new(MyLifeSpanHandlerCallbacks {}))
+    }
+
+    fn get_request_handler(&mut self) -> Option<cef_ui::RequestHandler> {
+        Some(cef_ui::RequestHandler::new(MyRequestHandler {}))
     }
 }
 
