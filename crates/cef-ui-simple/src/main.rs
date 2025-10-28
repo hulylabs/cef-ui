@@ -1,13 +1,9 @@
 use anyhow::Result;
 use cef_ui::{
-    App, AppCallbacks, BeforeDownloadCallback, Browser, BrowserHost, BrowserProcessHandler,
-    BrowserSettings, Client, ClientCallbacks, CommandLine, Context, ContextMenuHandler,
-    ContextMenuHandlerCallbacks, ContextMenuParams, DialogHandler, DialogHandlerCallbacks,
-    DictionaryValue, DownloadHandler, DownloadHandlerCallbacks, DownloadItem, DownloadItemCallback,
-    EventFlags, FileDialogCallback, FileDialogMode, Frame, KeyboardHandler, LifeSpanHandler,
-    LifeSpanHandlerCallbacks, LogSeverity, MainArgs, MenuCommandId, MenuModel, Point,
-    PopupFeatures, QuickMenuEditStateFlags, RenderHandler, RunContextMenuCallback,
-    RunQuickMenuCallback, Settings, Size, WindowInfo, WindowOpenDisposition
+    App, AppCallbacks, Browser, BrowserHost, BrowserSettings, Client, ClientCallbacks, CommandLine,
+    Context, ContextMenuHandler, ContextMenuHandlerCallbacks, ContextMenuParams, Frame,
+    LifeSpanHandler, LifeSpanHandlerCallbacks, LogSeverity, MainArgs, MenuModel, Settings,
+    WindowInfo
 };
 use cef_ui_sys::cef_quit_message_loop;
 use std::{fs::create_dir_all, path::PathBuf, process::exit};
@@ -15,7 +11,6 @@ use tracing::{Level, error, info, level_filters::LevelFilter, subscriber::set_gl
 use tracing_log::LogTracer;
 use tracing_subscriber::FmtSubscriber;
 
-/// Context menu callbacks.
 pub struct MyContextMenuHandler;
 
 #[allow(unused_variables)]
@@ -34,7 +29,6 @@ impl ContextMenuHandlerCallbacks for MyContextMenuHandler {
     }
 }
 
-/// Life span callbacks.
 pub struct MyLifeSpanHandlerCallbacks;
 
 #[allow(unused_variables)]
@@ -46,7 +40,6 @@ impl LifeSpanHandlerCallbacks for MyLifeSpanHandlerCallbacks {
     }
 }
 
-/// Client callbacks.
 pub struct MyClientCallbacks;
 
 impl ClientCallbacks for MyClientCallbacks {
@@ -59,7 +52,6 @@ impl ClientCallbacks for MyClientCallbacks {
     }
 }
 
-/// Application callbacks.
 pub struct MyAppCallbacks;
 
 #[allow(unused_variables)]
@@ -168,8 +160,6 @@ fn try_main() -> Result<()> {
 
     Ok(())
 }
-
-// TODO: Make this platform-specific!
 
 /// Ensure the root cache directory exists.
 pub fn get_root_cache_dir() -> Result<PathBuf> {
