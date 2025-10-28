@@ -72,12 +72,12 @@ impl AppCallbacks for MyAppCallbacks {
 pub struct RenderProcessCallbacks;
 
 impl RenderProcessHandlerCallbacks for RenderProcessCallbacks {
-    fn on_context_created(&mut self, browser: Browser, frame: Frame, context: V8Context) {
+    fn on_context_created(&mut self, _browser: Browser, frame: Frame, _context: V8Context) {
         if !frame.is_main().unwrap() {
             return;
         }
 
-        let func =
+        let _func =
             V8Value::create_function("sendMessage", V8Handler::new(SendMessageHandler::new()))
                 .expect("failed to create func sendMessage");
     }
