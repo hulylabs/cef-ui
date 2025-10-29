@@ -149,11 +149,11 @@ impl V8Value {
         })
     }
 
-    pub fn create_string(s: &str) -> Result<Self> {
+    pub fn create_string(s: &str) -> Self {
         unsafe {
             let lib = &CEFLIB;
             let val = (lib.cef_v8_value_create_string)(CefString::new(s).as_ptr());
-            Ok(V8Value::from_ptr_unchecked(val))
+            V8Value::from_ptr_unchecked(val)
         }
     }
 
