@@ -12,4 +12,12 @@ impl ListValue {
             Ok(set_string(self.as_ptr(), index, value.as_ptr()) != 0)
         })
     }
+
+    pub fn get_string(&self, index: usize) -> Result<Option<String>> {
+        try_c!(self, get_string, {
+            let s = get_string(self.as_ptr(), index);
+
+            Ok(CefString::from_userfree_ptr(s).map(|s| s.into()))
+        })
+    }
 }
