@@ -33,6 +33,8 @@ type CefRegisterExtensionFn = unsafe extern "C" fn(
 ) -> c_int;
 type CefProcessMessageCreateFn =
     unsafe extern "C" fn(name: *const cef_string_t) -> *mut cef_process_message_t;
+type CefV8ValueCreateStringFn =
+    unsafe extern "C" fn(value: *const cef_string_t) -> *mut cef_v8value_t;
 type CefV8ValueCreateFunctionFn = unsafe extern "C" fn(
     name: *const cef_string_t,
     handler: *mut cef_v8handler_t
@@ -46,7 +48,8 @@ pub struct CefLibrary {
     pub cef_string_userfree_utf16_free: Symbol<'static, CefStringUsefreeUtf16FreeFn>,
     pub cef_register_extension:         Symbol<'static, CefRegisterExtensionFn>,
     pub cef_process_message_create:     Symbol<'static, CefProcessMessageCreateFn>,
-    pub cef_v8value_create_function:    Symbol<'static, CefV8ValueCreateFunctionFn>
+    pub cef_v8_value_create_string:     Symbol<'static, CefV8ValueCreateStringFn>,
+    pub cef_v8_value_create_function:   Symbol<'static, CefV8ValueCreateFunctionFn>
 }
 const CEF_PATH: &str = "../../../Chromium Embedded Framework.framework/Chromium Embedded Framework";
 
@@ -73,7 +76,10 @@ pub static CEFLIB: LazyLock<CefLibrary> = LazyLock::new(|| unsafe {
     let cef_process_message_create: Symbol<CefProcessMessageCreateFn> = lib
         .get(b"cef_process_message_create\0")
         .expect("failed to load cef_process_message_create");
-    let cef_v8value_create_function: Symbol<CefV8ValueCreateFunctionFn> = lib
+    let cef_v8_value_create_string: Symbol<CefV8ValueCreateStringFn> = lib
+        .get(b"cef_v8value_create_string\0")
+        .expect("failed to load cef_v8value_create_string");
+    let cef_v8_value_create_function: Symbol<CefV8ValueCreateFunctionFn> = lib
         .get(b"cef_v8value_create_function\0")
         .expect("failed to load cef_v8value_create_function");
 
@@ -85,7 +91,8 @@ pub static CEFLIB: LazyLock<CefLibrary> = LazyLock::new(|| unsafe {
         cef_string_userfree_utf16_free,
         cef_register_extension,
         cef_process_message_create,
-        cef_v8value_create_function
+        cef_v8_value_create_string,
+        cef_v8_value_create_function
     }
 });
 

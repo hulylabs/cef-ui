@@ -50,6 +50,14 @@ impl ProcessMessage {
         }
     }
 
+    pub fn get_name(&self) -> Result<String> {
+        try_c!(self, get_name, {
+            let s = get_name(self.as_ptr());
+
+            Ok(CefString::from_userfree_ptr_unchecked(s).into())
+        })
+    }
+
     pub fn get_argument_list(&self) -> Result<Option<ListValue>> {
         try_c!(self, get_argument_list, {
             Ok(ListValue::from_ptr(get_argument_list(self.as_ptr())))

@@ -1,5 +1,5 @@
 use anyhow::Result;
-use std::mem::zeroed;
+use std::{mem::zeroed, ptr::null_mut};
 
 use crate::{CEFLIB, CefString, RefCountedPtr, Wrappable, Wrapped, ref_counted_ptr, try_c};
 use cef_ui_sys::{
@@ -12,6 +12,39 @@ impl V8Context {
     pub fn get_global(&self) -> Result<V8Value> {
         try_c!(self, get_global, {
             Ok(V8Value::from_ptr_unchecked(get_global(self.as_ptr())))
+        })
+    }
+
+    pub fn enter(&self) -> Result<i32> {
+        try_c!(self, enter, { Ok(enter(self.as_ptr())) })
+    }
+
+    pub fn exit(&self) -> Result<i32> {
+        try_c!(self, exit, { Ok(exit(self.as_ptr())) })
+    }
+
+    pub fn eval(
+        &self,
+        code: &str,
+        script_url: &str,
+        start_line: i32,
+        retval: &mut V8Value
+    ) -> Result<bool> {
+        try_c!(self, eval, {
+            let mut retval_raw = null_mut();
+            let mut exception_raw = null_mut();
+
+            let result = eval(
+                self.as_ptr(),
+                CefString::new(code).as_ptr(),
+                CefString::new(script_url).as_ptr(),
+                start_line,
+                &mut retval_raw,
+                &mut exception_raw
+            );
+
+            *retval = V8Value::from_ptr_unchecked(retval_raw);
+            Ok(result != 0)
         })
     }
 }
@@ -116,12 +149,20 @@ impl V8Value {
         })
     }
 
+    pub fn create_string(s: &str) -> Result<Self> {
+        unsafe {
+            let lib = &CEFLIB;
+            let val = (lib.cef_v8_value_create_string)(CefString::new(s).as_ptr());
+            Ok(V8Value::from_ptr_unchecked(val))
+        }
+    }
+
     pub fn create_function(name: &str, handler: V8Handler) -> Result<V8Value> {
         unsafe {
             let lib = &CEFLIB;
-            let func =
-                (lib.cef_v8value_create_function)(CefString::new(name).as_ptr(), handler.as_ptr());
-            Ok(V8Value::from_ptr_unchecked(func))
+            let val =
+                (lib.cef_v8_value_create_function)(CefString::new(name).as_ptr(), handler.as_ptr());
+            Ok(V8Value::from_ptr_unchecked(val))
         }
     }
 }
