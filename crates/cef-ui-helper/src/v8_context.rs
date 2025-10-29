@@ -124,4 +124,12 @@ impl V8Value {
             Ok(V8Value::from_ptr_unchecked(func))
         }
     }
+
+    pub fn create_string(value: &str) -> Result<V8Value> {
+        unsafe {
+            let lib = &CEFLIB;
+            let func = (lib.cef_v8_value_create_string)(CefString::new(value).as_ptr());
+            Ok(V8Value::from_ptr_unchecked(func))
+        }
+    }
 }

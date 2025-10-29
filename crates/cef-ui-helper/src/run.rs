@@ -79,16 +79,45 @@ impl RenderProcessHandlerCallbacks for RenderProcessCallbacks {
             return;
         }
 
-        let global = context.get_global().unwrap();
+        // Enter the V8 context to safely interact with it
+        if context.enter().is_err() {
+            return;
+        }
 
-        // Create the handler and function
-        let handler = V8Handler::new(SendMessageHandler::new());
-        let func = V8Value::create_function("aa", handler).expect("failed to create func aa");
+        // Get the global object from the context
+        let global = match context.get_global() {
+            Ok(global) => global,
+            Err(_) => {
+                let _ = context.exit();
+                return;
+            }
+        };
 
-        // Attach to global object
-        global
-            .set_value_by_key("aa", func)
-            .expect("failed to set aa on window");
+        // Create the function with handler
+        let function =
+            match V8Value::create_function("sendMessage", V8Handler::new(SendMessageHandler {})) {
+                Ok(func) => func,
+                Err(_) => {
+                    let _ = context.exit();
+                    return;
+                }
+            };
+
+        // Set the function as a property on the global object
+        if let Err(_) = global.set_value_by_key("sendMessage", function) {
+            let _ = context.exit();
+            return;
+        }
+
+        // Create and set a string value as well
+        let value = V8Value::create_string("Hello from Rust!");
+        if let Err(_) = global.set_value_by_key("rustMessage", value) {
+            let _ = context.exit();
+            return;
+        }
+
+        // Exit the V8 context
+        let _ = context.exit();
     }
 }
 

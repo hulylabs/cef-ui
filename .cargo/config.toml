@@ -6,4 +6,4 @@ cef-artifacts = "run --bin cef-artifacts --release"
 
 [env]
 CEF_WORKSPACE_DIR = { relative = true, force = true, value = "" }
-CEF_ARTIFACTS_DIR = { relative = true, force = false, value = "artifacts/cef" }
+CEF_ARTIFACTS_DIR = { relative = true, force = false, value = "artifacts" }
