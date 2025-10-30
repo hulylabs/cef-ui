@@ -14,6 +14,13 @@ impl V8Context {
             Ok(V8Value::from_ptr_unchecked(get_global(self.as_ptr())))
         })
     }
+    pub fn enter(&self) -> Result<bool> {
+        try_c!(self, enter, { Ok(enter(self.as_ptr()) != 0) })
+    }
+
+    pub fn exit(&self) -> Result<bool> {
+        try_c!(self, exit, { Ok(exit(self.as_ptr()) != 0) })
+    }
 }
 
 pub trait V8HandlerCallbacks: Send + Sync + 'static {
@@ -62,9 +69,17 @@ impl V8HandlerWrapper {
             vec![]
         };
 
-        this.0
+        // Don't panic on errors - return 0 to indicate failure instead
+        match this
+            .0
             .execute(name, object, arguments_count, arguments)
-            .unwrap()
+        {
+            Ok(result) => result,
+            Err(e) => {
+                eprintln!("V8Handler execute error: {}", e);
+                0 // Return 0 to indicate failure without crashing
+            }
+        }
     }
 }
 
@@ -119,8 +134,10 @@ impl V8Value {
     pub fn create_function(name: &str, handler: V8Handler) -> Result<V8Value> {
         unsafe {
             let lib = &CEFLIB;
-            let func =
-                (lib.cef_v8_value_create_function)(CefString::new(name).as_ptr(), handler.as_ptr());
+            let func = (lib.cef_v8_value_create_function)(
+                CefString::new(name).as_ptr(),
+                handler.into_raw()
+            );
             Ok(V8Value::from_ptr_unchecked(func))
         }
     }

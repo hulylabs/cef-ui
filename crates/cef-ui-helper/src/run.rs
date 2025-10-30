@@ -66,58 +66,58 @@ impl AppCallbacks for MyAppCallbacks {
         &mut self
     ) -> Option<render_process_handler::RenderProcessHandler> {
         Some(render_process_handler::RenderProcessHandler::new(
-            RenderProcessCallbacks {}
+            RenderProcessCallbacks {
+                func:    None,
+                handler: None
+            }
         ))
     }
 }
 
-pub struct RenderProcessCallbacks;
+pub struct RenderProcessCallbacks {
+    func:    Option<V8Value>,
+    handler: Option<V8Handler>
+}
 
 impl RenderProcessHandlerCallbacks for RenderProcessCallbacks {
     fn on_context_created(&mut self, _browser: Browser, frame: Frame, context: V8Context) {
-        if !frame.is_main().unwrap() {
-            return;
-        }
+        // let object = context.get_global().unwrap();
 
-        // Enter the V8 context to safely interact with it
-        if context.enter().is_err() {
-            return;
-        }
+        let handler = V8Handler::new(SendMessageHandler::new());
 
-        // Get the global object from the context
-        let global = match context.get_global() {
-            Ok(global) => global,
-            Err(_) => {
-                let _ = context.exit();
-                return;
-            }
-        };
+        // // Use unsafe to create function and manually manage the handler pointer
+        // let func = unsafe {
+        //     let lib = &crate::CEFLIB;
+        //     let name_str = crate::CefString::new("myFunc");
+        //     // Transfer ownership of handler to CEF using into_raw()
+        //     let func_ptr =
+        //         (lib.cef_v8_value_create_function)(name_str.as_ptr(), handler.clone().into_raw());
+        //     V8Value::from_ptr_unchecked(func_ptr)
+        // };
 
-        // Create the function with handler
+        // // Store references to prevent premature dropping
+        // self.handler = Some(handler);
+        // self.func = Some(func.clone());
+
+        // object
+        //     .set_value_by_key("myFunc", func)
+        //     .unwrap();
+
+        let object = context.get_global().unwrap();
+
         let function =
-            match V8Value::create_function("sendMessage", V8Handler::new(SendMessageHandler {})) {
-                Ok(func) => func,
-                Err(_) => {
-                    let _ = context.exit();
-                    return;
-                }
-            };
+            V8Value::create_function("sendMessage", V8Handler::new(SendMessageHandler::new()))
+                .unwrap();
 
-        // Set the function as a property on the global object
-        if let Err(_) = global.set_value_by_key("sendMessage", function) {
-            let _ = context.exit();
-            return;
-        }
+        object
+            .set_value_by_key("sendMessage", function)
+            .unwrap();
+    }
 
-        // Create and set a string value as well
-        let value = V8Value::create_string("Hello from Rust!");
-        if let Err(_) = global.set_value_by_key("rustMessage", value) {
-            let _ = context.exit();
-            return;
-        }
-
-        // Exit the V8 context
-        let _ = context.exit();
+    fn on_context_released(&mut self, _browser: Browser, _frame: Frame, _context: V8Context) {
+        // Clear our references when the context is released
+        self.handler = None;
+        self.func = None;
     }
 }
 
