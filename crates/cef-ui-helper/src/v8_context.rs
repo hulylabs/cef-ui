@@ -160,8 +160,10 @@ impl V8Value {
     pub fn create_function(name: &str, handler: V8Handler) -> Result<V8Value> {
         unsafe {
             let lib = &CEFLIB;
-            let val =
-                (lib.cef_v8_value_create_function)(CefString::new(name).as_ptr(), handler.as_ptr());
+            let val = (lib.cef_v8_value_create_function)(
+                CefString::new(name).as_ptr(),
+                handler.into_raw()
+            );
             Ok(V8Value::from_ptr_unchecked(val))
         }
     }

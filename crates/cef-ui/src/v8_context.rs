@@ -698,7 +698,7 @@ impl V8Value {
         unsafe {
             Ok(V8Value::from_ptr_unchecked(cef_v8value_create_function(
                 CefString::new(name).as_ptr(),
-                handler.as_ptr()
+                handler.into_raw()
             )))
         }
     }
